@@ -1,0 +1,29 @@
+.qcklnk {
+  width: 160px;
+  height: 220px;
+  border-radius: 8px;
+  box-shadow: 9.192px 9.192px 7px rgba(0,0,0,0.16);
+  background-color: #c8e1f0;
+  border: 1px solid #b2d6f5;
+}
+.qcklnk h1 {
+  font-size: 16px;
+  color: #f26b24;
+  font-family: "Roboto";
+  font-weight: 400;
+  text-align: center;
+
+}
+.qcklnk p {
+  font-size: 16px;
+  color: #2699fb;
+  font-family: "Roboto";
+  font-weight: 400;
+}
+a {
+  font-size: 12px;
+  color: #2699fb;
+  font-family: "Roboto";
+  font-weight: 400;
+  padding-left: 10px;
+}
