@@ -17,16 +17,17 @@ class DeleteModal extends React.Component {
             </Modal.Header>
             <Modal.Body>
             <div>
-                <h>Delete Sales Invoice</h>
+                <h1>Delete Sales Invoice</h1>
                 <p style={{color:'red'}}>Are you Sure you want to delete this Sales Invoice ??</p>
                 <table>
+                <thead>
                   <tr>
                     <th>INVOICE NO</th>
                     <th>DATE</th>
                     <th>CUSTOMER</th>
                     <th>GRAND TOTAL</th>
                   </tr>
-
+                  </thead>
                   <tbody>
                     <tr>
                       <td>{this.props.formData.invoice_no}</td>

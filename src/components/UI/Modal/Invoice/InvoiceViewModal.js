@@ -14,7 +14,6 @@ class PopUp extends React.Component {
 
       return (
         <Modal
-        {...this.props}
         size="xl"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -25,7 +24,7 @@ class PopUp extends React.Component {
         </Modal.Header>
         <Modal.Body>
         <div >
-          <h>Sales Invoice</h>
+          <h1>Sales Invoice</h1>
           <p>status:</p>
           <div className="invoiceviewWrapper">
               <div>
@@ -53,20 +52,23 @@ class PopUp extends React.Component {
           </div>
           <br />
           <table className="tables">
-            <tr >
-              <th className="ths">NO</th>
-              <th className="ths">ITEM</th>
-              <th className="ths">QTY</th>
-              <th className="ths">PRICE</th>
-              <th className="ths">AMOUNT</th>
-            </tr >
+            <thead>
+              <tr >
+                <th className="ths">NO</th>
+                <th className="ths">ITEM</th>
+                  <th className="ths">QTY</th>
+                  <th className="ths">PRICE</th>
+                <th className="ths">AMOUNT</th>
+              </tr >
+              </thead>
             <tbody>
           {this.props.formData.child.map((shareholder, idx) => (
                           <tr key={idx}>
                             <td className="tds">
                               <input
                                   size="5"
-                                  value={idx +this.state.serial_no+1}/>
+                                  value={idx +this.state.serial_no+1}
+                                  readOnly/>
                             </td>
                             <td className="tds">
                                   <input
@@ -104,18 +106,17 @@ class PopUp extends React.Component {
           <p>{this.props.formData.narration}</p>
 
         </div>
-
         </Modal.Body>
-        <div className="invoiceviewfooter">
-          <div >
+
+  <Modal.Footer>
             <Link to="/home"><button className="OkBtn">OK</button></Link>
-          </div>
-          <div >
+
             <Link to="/home"><i className="fas fa-plus"></i></Link>
-            <Button  type="submit" onClick={(e,id) => this.props.editwindow(e,this.props.formData.id)} ><i className="fas fa-pencil-alt"></i></Button>
+            <Button  type="submit" onClick={(e,editObject) => this.props.editwindow(e,this.props.formData.id)} ><i className="fas fa-pencil-alt"></i></Button>
             <Button  type="submit"  onClick={(e,id) => this.props.deletewindow(e,this.props.formData.id)}><i className="fas fa-trash"></i></Button>
-          </div>
-        </div>
+            </Modal.Footer>
+
+
 
 
 
@@ -126,3 +127,13 @@ class PopUp extends React.Component {
 
 
 export default PopUp;
+// <div className="invoiceviewfooter">
+//   <div >
+//     <Link to="/home"><button className="OkBtn">OK</button></Link>
+//   </div>
+//   <div >
+//     <Link to="/home"><i className="fas fa-plus"></i></Link>
+//     <Button  type="submit" onClick={(e,editObject) => this.props.editwindow(e,this.props.formData.id)} ><i className="fas fa-pencil-alt"></i></Button>
+//     <Button  type="submit"  onClick={(e,id) => this.props.deletewindow(e,this.props.formData.id)}><i className="fas fa-trash"></i></Button>
+//   </div>
+// </div>

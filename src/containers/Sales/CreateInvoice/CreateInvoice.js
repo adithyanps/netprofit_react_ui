@@ -5,6 +5,7 @@ import moment from 'moment';
 import axios from '../../../axios'
 import InvoiceViewModal from '../../../components/UI/Modal/Invoice/InvoiceViewModal';
 import DeleteModal from '../../../components/UI/Modal/Invoice/DeleteInvoiceModal';
+import EditModal from '../../../components/UI/Modal/Invoice/EditInvoiceModal';
 import QuickLink from '../../../components/UI/QuickLink/QuickLink';
 
 class CreateInvoice extends Component {
@@ -14,7 +15,7 @@ class CreateInvoice extends Component {
     branchList:[],
     serial_no:0,
     invoice_no:null,
-    doc_no:null,
+    doc_no:'',
     selectedName:'',
     selectedBranch:'',
     narration:'',
@@ -81,7 +82,7 @@ class CreateInvoice extends Component {
     axios.post('/invoice/parantdata/',formData).then(
       response=>{
         console.log(response.data)
-        this.setState({openModel:true,formData:response.data})
+        this.setState({openModel:true,viewObject:response.data})
 
       }
     ).catch(error=>{
@@ -94,6 +95,7 @@ class CreateInvoice extends Component {
     let key = event.target.name
     let  value = event.target.value
   this.setState({[key]:value})
+
   }
   handlePriceChange =(idx) => {
     const newHolder = this.state.holder.map(
@@ -194,6 +196,9 @@ class CreateInvoice extends Component {
     });
     this.setState({ holder: newShareholders });
   }
+  toggleHandleChange=(e)=>{
+    let isChecked = e.target.checked;
+  }
   submitDataHandler = (evt) => {
     let formData={
       invoice_no:this.state.invoice_no,
@@ -248,7 +253,7 @@ class CreateInvoice extends Component {
       <InvoiceViewModal
         show={this.state.openModel}
         close={this.modalWindowClose}
-        formData={this.state.formData}
+        formData={this.state.viewObject}
         deletewindow={this.deleteWindowOpen}
         editwindow={this.editWindowOpen}
         />
@@ -268,15 +273,17 @@ class CreateInvoice extends Component {
   deleteHandler = (event) => {
     event.preventDefault()
     let id = this.state.deleteId
-    // const updatedOrders = this.state.invoiceData;
-    // let deleteObject = this.state.invoiceData.filter(item =>  item.id === id)
+    const updatedOrders = this.state.invoiceData;
+    let deleteObject = this.state.parantdataList.filter(item =>  item.id === id)
     // let delIndex = updatedOrders.indexOf(deleteObject[0])
     axios.delete('/invoice/parantdata/'+id).then(
        response => {
            // updatedOrders.splice(delIndex,1)
            this.setState({
+               // parantdataList:updatedOrders,
                isDelete: false,
-           })
+               openModel:false
+             })
            // this.viewWindowClose()
        }
     )
@@ -289,24 +296,60 @@ class CreateInvoice extends Component {
           show={this.state.isDelete}
           close={this.deleteWindowClose}
           deleteHandler = {this.deleteHandler}
-          formData={this.state.formData}/>
+          formData={this.state.viewObject}/>
         )
   }
   deleteWindowClose = () => {
       this.setState({
           isDelete: false,
+          formData:[]
       })
   }
-
+  editWindowOpen = (e,editObject) => {
+    e.preventDefault()
+      // const filterData = this.state.invoiceData.filter(item => { return item.id === id})
+      this.setState({
+          isEdit: true,
+          editId:editObject.id,
+          editObject:editObject,
+      })
+  }
+  editModal = () => {
+      return(
+          <EditModal
+                show={this.state.isEdit}
+                close={this.editWindowClose}
+                formData={this.state.formData}
+                editId={this.state.editId}
+            />
+      );
+  }
+  editWindowClose = () => {
+      this.setState({
+          isEdit: false,
+          formData: {},
+      })
+  }
   render() {
     console.log(this.state)
     return(
-
       <div >
         {this.state.openModel ? (this.ModalHandler()) : (null)}
         {this.state.isDelete ? (this.deleteModal()) : (null)}
 
-      <h1 className="ptag">create sales invoice</h1>
+        {this.state.isEdit ? (this.editModal()) : null}
+        <br />
+        <div className="row-wrapper1">
+          <div><h1 className="ptag">create sales invoice</h1></div>
+          <div className="center">
+            <input
+                className="toggle"
+                type="checkbox"
+                name="test"
+                onChange={e => this.toggleHandleChange(e)}/></div>
+
+        </div>
+        <br />
         <div className="row-wrapper">
           <div>
           {this.invoice_noChangeHandler()}
@@ -343,7 +386,7 @@ class CreateInvoice extends Component {
                   value={this.state.doc_no}
                   onChange={this.handleInputChange}
                   name='doc_no'
-                  type="number"/>
+                  />
           </div>
           <div>
             <label>BRANCH</label><br />
@@ -439,6 +482,7 @@ class CreateInvoice extends Component {
                   <label>GRAND TOTAL</label><br />
                   <input
                         className='grand'
+                        readOnly
                         value={this.state.grant_total}
                         onChange={this.handleGrandTotalChange()}/>
                   </div>

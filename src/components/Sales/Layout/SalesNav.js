@@ -8,10 +8,10 @@ class SalesNav extends Component {
       <div className="salesSideNav">
         <a href="/sales">SALES</a>
         <a href="/create-invoice">create invoice</a>
-        <a href="/services">Customer Reciept</a>
-        <a href="#clients">partner Ledger</a>
-        <a href="#contact">customer Ageing Report</a>
-        <a href="#contact">Create Expense</a>
+        <a href="/create-reciept">Create Reciept</a>
+        <a href="/sales-invoices">Sales Invoices</a>
+        <a href="/customer-reciepts">Customer Reciepts</a>
+        <a href="/customers">Customers</a>
 
       </div>
 

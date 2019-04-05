@@ -4,9 +4,8 @@ import {Col, Raw,FormControl, FormGroup, Form, ControlLabel, Button, Glyphicon, 
 import { Link } from 'react-router-dom';
 
 class BranchEdit extends React.Component {
-  constructor() {
-    super();
-    this.state = {
+
+state = {
       items:[],
       child:[],
       parent:[],
@@ -18,24 +17,24 @@ class BranchEdit extends React.Component {
       amountList:[],
       customer:[],
       name:'',
-      newLine: [{
+      test: [{
            item:'',
            price:'',
            quantity:null,
            sub_total:null,
          }],
+    }
 
-
-    };
-  }
   componentWillMount(){
     this.setState({holder:this.props.formData})
+    this.setState({child: this.props.childObject})
     this.loadItems()
     this.loadCustomer()
+    console.log('will')
   }
 
   loadItems = () => {
-    axios.get('invoice/items/').then(
+    axios.get('invoice/item/').then(
       res => {
         this.setState({items:res.data});
         console.log(res.data)
@@ -65,14 +64,11 @@ class BranchEdit extends React.Component {
           }
         });
   }
+
   handleNameChange = (e) => {
-    console.log("hello")
-
     this.setState({...this.state.holder,name:e.target.value});
-    console.log(e.target.value)
-
-    console.log(this.state.holder)
   }
+
   handleItemChange = (idx) => (evt) => {
     const newShareholders = this.state.holder.child.map((shareholder, sidx) => {
       if (idx !== sidx) {
@@ -84,7 +80,7 @@ class BranchEdit extends React.Component {
     this.state.holder.child= newShareholders;
     this.setState({...this.state.holder,child: newShareholders});
   }
-  handleQtyChange =(idx)=>(evt)=>{
+  handleQtyChange = idx => evt => {
     const newShareholders = this.state.holder.child.map((shareholder, sidx) => {
       if (idx !== sidx) return shareholder;
       return { ...shareholder, quantity: evt.target.value };
@@ -95,8 +91,8 @@ class BranchEdit extends React.Component {
     console.log(newShareholders)
     this.SubTotalHandler(idx)
   }
+
   SubTotalHandler = (idx)=>{
-  // event.preventDefault()
   let invoice =  this.props.formData.invoice_no
   let holder = this.state.holder.child
   const newShareholders = holder.map((field, sidx) => {
@@ -123,50 +119,19 @@ this.totalHandler()
 totalHandler=()=>{
   let list=[]
   let editedList=[]
-  console.log(this.state.total)
-  console.log(this.state.holder)
-  console.log(this.props.formData)
   this.state.holder.child.map((value)=>{
     list.push(value.sub_total)
-  })
+    })
     if (list !== null){
     var li = list.map(Number);
-      console.log(list)
       var total = li.reduce(add, 0);
-      console.log(total)
       function add(a, b) {
         return a + b;
       }
-      console.log(total)
     this.state.holder.total_amount=total
     }
 }
-handleAddForm = (event,id) => {
-  event.preventDefault()
-  let child = this.state.holder.child.concat({ item:'',
-                                   price:'',
-                                   quantity:null,
-                                   sub_total:null,})
 
-this.setState({...this.state.holder.child,child:this.state.holder.child.concat({ item:'',
-                                 price:'',
-                                 quantity:null,
-                                 sub_total:null,})})
-  console.log(this.state.holder)
-}
-  handleRemoveForm =(e,idx)=> {
-    console.log(idx)
-    let holder = this.state.holder.child
-    console.log(holder)
-    let sample = holder.filter(
-          (field,index) => index === idx)[0]
-          // this.setState({...this.stare.holder,child:this.})
-      console.log(holder)
-
-
-
-
-  }
 
 
   handleSubmit=(e)=>{
@@ -178,19 +143,37 @@ this.setState({...this.state.holder.child,child:this.state.holder.child.concat({
       console.log(error)
     })
     this.props.close()
-
   }
+  addItemHandler=(e)=> {
+      this.setState((prevState) =>{
+        return
+        {
+            child: prevState.child.concat({
+                 item:'',
+                 price:'',
+                 quantity:null,
+                 sub_total:null,
+               })
+          }
+      }
+      )
+      e.preventDefault()
+       }
 
     render() {
+      console.log(this.props.formData)
+      console.log(this.state.holder)
       console.log(this.state.holder.child)
+      console.log(this.state.child)
+      console.log(this.props.childObject)
+
       return (
         <Modal
-
-        size="xl"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={this.props.show} onHide={this.props.close}
-      >
+          size="xl"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+          show={this.props.show} onHide={this.props.close}
+          >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             edit
@@ -201,10 +184,11 @@ this.setState({...this.state.holder.child,child:this.state.holder.child.concat({
           <h4>Update Modal</h4>
           <h3>Name:{this.props.formData.customer}</h3>
           <h3>InvoiceNumber:{this.props.formData.invoice_no}</h3>
+          <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
 
-          {(this.state.holder.child !== undefined ) ? (
+          {(this.state.child !== undefined ) ? (
             <div>
-            {this.state.holder.child.map((shareholder, idx) => (
+            {this.state.child.map((shareholder, idx) => (
                   <div key={idx} >
                   <select onChange={this.handleItemChange(idx)}>
                   <option value="">{shareholder.item}</option>
@@ -233,19 +217,12 @@ this.setState({...this.state.holder.child,child:this.state.holder.child.concat({
                         placeholder="sub-total"
                         value={shareholder.sub_total}
                         readOnly/>
-
                   </div>
                 ))}
                   Total:{this.state.holder.total_amount}
-
-
-
-
             </div>
-
           ): null}
       </div>
-
         </Modal.Body>
         <Modal.Footer>
           <Button variant="info" onClick={(e)=>this.handleSubmit(e)}>Update</Button>
@@ -254,5 +231,4 @@ this.setState({...this.state.holder.child,child:this.state.holder.child.concat({
       );
     }
   }
-
 export default BranchEdit;

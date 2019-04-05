@@ -17,6 +17,7 @@ import AccountsPage from './containers/MainPages/AccountsPage';
 import ReportsPage from './containers/MainPages/ReportsPage';
 
 import CreateInvoice from './containers/Sales/CreateInvoicePage';
+import SalesInvoicesPage from './containers/Sales/SalesInvoicesPage';
 import QuickLink from './components/UI/QuickLink/QuickLink';
 
 class App extends Component {
@@ -39,6 +40,8 @@ class App extends Component {
             <Route path="/accounts" exact component={AccountsPage} />
             <Route path="/reports" exact component={ReportsPage} />
             <Route path="/create-invoice" exact component={CreateInvoice} />
+            <Route path="/sales-invoices" exact component={SalesInvoicesPage} />
+
             <Route path="/qck" exact component={QuickLink} />
 
           </Switch>

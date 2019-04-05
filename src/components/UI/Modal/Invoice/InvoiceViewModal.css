@@ -32,8 +32,6 @@
   margin-left:800px;
 }
 .invoiceviewfooter{
-    text-align: center;
-}
-.invoiceviewfooterB {
-  text-align: right;
+  display: grid;
+  grid-template-columns:  1fr 1fr;
 }
