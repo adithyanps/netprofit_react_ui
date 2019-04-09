@@ -7,6 +7,11 @@ import InvoiceViewModal from '../../../components/UI/Modal/Invoice/InvoiceViewMo
 import DeleteModal from '../../../components/UI/Modal/Invoice/DeleteInvoiceModal';
 import EditModal from '../../../components/UI/Modal/Invoice/EditInvoiceModal';
 import QuickLink from '../../../components/UI/QuickLink/QuickLink';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import SalesInvoice from '../SalesInvoicesPage';
+import * as actions from '../../../store/actions/index';
 
 class CreateInvoice extends Component {
   state={
@@ -36,6 +41,7 @@ class CreateInvoice extends Component {
     deleteId:null,
     isEdit:false,
     editId:null,
+    salesPage:false,
 
   }
   componentDidMount(){
@@ -82,12 +88,19 @@ class CreateInvoice extends Component {
     axios.post('/invoice/parantdata/',formData).then(
       response=>{
         console.log(response.data)
-        this.setState({openModel:true,viewObject:response.data})
+        // this.setState({openModel:true,viewObject:response.data})
+        // this.openSalesInvoice()
 
       }
     ).catch(error=>{
       console.log(error)
     alert("something wrong.please try again !!!")})
+  }
+  openSalesInvoice=()=>{
+    console.log('success')
+    return(
+      <Redirect  to="/sales-invoices"/>
+    )
   }
   handleInputChange = (event) => {
     event.preventDefault();
@@ -200,7 +213,7 @@ class CreateInvoice extends Component {
     let isChecked = e.target.checked;
   }
   submitDataHandler = (evt) => {
-    let formData={
+    let data={
       invoice_no:this.state.invoice_no,
       doc_no:this.state.doc_no,
       customer:this.state.selectedName,
@@ -212,9 +225,11 @@ class CreateInvoice extends Component {
       grant_total:this.state.grant_total,
       child:this.state.holder
     }
-    console.log(formData)
-    this.postData(formData)
-  }
+    console.log(data)
+    // this.postData(formData)
+    this.props.onCreateInvoice(data)
+    this.setState({salesPage:true})
+    }
   addItemHandler=(e)=> {
 
       this.setState((prevState) => {
@@ -248,20 +263,27 @@ class CreateInvoice extends Component {
          sub_total:null,
        }],doc_no:'',selectedName:'',discount:null,total:0,narration:''})
   }
-  ModalHandler=(e)=>{
+  viewModal=(e)=>{
     return(
       <InvoiceViewModal
         show={this.state.openModel}
-        close={this.modalWindowClose}
+        close={this.viewWindowClose}
         formData={this.state.viewObject}
         deletewindow={this.deleteWindowOpen}
         editwindow={this.editWindowOpen}
         />
     )
   }
-  modalWindowClose = (e) => {
+  viewWindowOpen=(id)=>{
+    // e.preventDefault()
+      this.setState({
+          isView: true,
+      })
+  }
+  viewWindowClose = (e) => {
       this.setState({
           openModel: false,
+          viewObject: {},
       })
   }
   deleteWindowOpen= (e,id) =>{
@@ -305,13 +327,19 @@ class CreateInvoice extends Component {
           formData:[]
       })
   }
-  editWindowOpen = (e,editObject) => {
+  editWindowOpen = (e,id) => {
+    console.log(id)
     e.preventDefault()
-      // const filterData = this.state.invoiceData.filter(item => { return item.id === id})
+    const filterData = this.state.parantdataList.filter(item => { return item.id === id})
+    // filterData[0].child.map(item => delete item.id)
+    // filterData[0].child.map(item=> delete item.key)
+
+    console.log(filterData[0])
       this.setState({
           isEdit: true,
-          editId:editObject.id,
-          editObject:editObject,
+          editId:id,
+          editObject:this.state.viewObject,
+          // editObject:filterData[0],
       })
   }
   editModal = () => {
@@ -319,10 +347,23 @@ class CreateInvoice extends Component {
           <EditModal
                 show={this.state.isEdit}
                 close={this.editWindowClose}
-                formData={this.state.formData}
+                formData={this.state.editObject}
                 editId={this.state.editId}
+                editHandler={this.objEditHandler}
             />
       );
+  }
+  objEditHandler = (event,obj) => {
+      event.preventDefault()
+      axios.patch('/invoice/parantdata/' + obj.id + '/', obj).then(
+          response => {
+              console.log(response.data)
+              this.setState({
+                  isEdit: false,
+              })
+              this.viewWindowOpen(obj.id)
+          }
+      )
   }
   editWindowClose = () => {
       this.setState({
@@ -334,7 +375,8 @@ class CreateInvoice extends Component {
     console.log(this.state)
     return(
       <div >
-        {this.state.openModel ? (this.ModalHandler()) : (null)}
+        {this.state.salesPage ? (this.openSalesInvoice()) : (null)}
+        {this.state.openModel ? (this.viewModal()) : (null)}
         {this.state.isDelete ? (this.deleteModal()) : (null)}
 
         {this.state.isEdit ? (this.editModal()) : null}
@@ -455,8 +497,7 @@ class CreateInvoice extends Component {
                    </div>
           </div>
           ))}
-          <ul className="List">
-          </ul>
+
         </div>
         <br />
         <div className="row-wrapper-btm">
@@ -508,4 +549,10 @@ class CreateInvoice extends Component {
     )
   }
 }
-export default CreateInvoice;
+const mapDispatchToProps = dispatch => {
+    return {
+        onCreateInvoice: (data) => dispatch(actions.createInvoice(data))
+    };
+};
+
+export default connect(null,mapDispatchToProps)(CreateInvoice);

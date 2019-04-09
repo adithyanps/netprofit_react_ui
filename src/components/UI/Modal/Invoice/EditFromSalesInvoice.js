@@ -225,7 +225,7 @@ handleGrandTotalChange=()=>{
       this.props.formData.discount=this.state.holder.discount
       this.props.formData.child=this.state.holder.child
 
-    this.props.editHandler(e,this.props.formData)
+    this.props.editHandler(this.props.formData)
 
   }
 
@@ -423,81 +423,3 @@ handleGrandTotalChange=()=>{
     }
   }
 export default BranchEdit;
-
-// handleItemChange = (idx) => (evt) => {
-//   const newShareholders = this.state.child.map((shareholder, sidx) => {
-//     if (idx !== sidx) {
-//       return shareholder
-//     } else {
-//       return { ...shareholder, item: evt.target.value };
-//     }
-//   });
-//   this.state.holder.child= newShareholders;
-//   this.setState({...this.state.holder,child: newShareholders});
-// }
-
-// handleQtyChange = idx => evt => {
-//   const newShareholders = this.state.child.map((shareholder, sidx) => {
-//     if (idx !== sidx) return shareholder;
-//     return { ...shareholder, quantity: evt.target.value };
-//   });
-//   this.setState({ ...this.state.child,child: newShareholders });
-//   this.state.child = [...newShareholders]
-//   console.log(this.state.holder)
-//   console.log(newShareholders)
-//   this.SubTotalHandler(idx)
-// }
-
-//   SubTotalHandler = (idx)=>{
-//   let invoice =  this.props.formData.invoice_no
-//   let holder = this.state.child
-//   const newShareholders = holder.map((field, sidx) => {
-//       if (idx === sidx) {
-//         const sample = this.state.items.filter(
-//           ({item,price,id}) => item === field.item)[0]
-//         let price1 = sample["price"]
-//         let qty = field.quantity
-//         let sub_total = price1 * qty
-//         this.setState({sub_total})
-//         if (field !== null){
-//             this.state.child[idx]["sub_total"]=sub_total
-//         }
-//         if (sample !== undefined) {
-//             this.state.sub_total = sub_total
-//             field.sub_total = sub_total
-//         }
-//     }
-//   })
-//
-// this.totalHandler()
-// }
-// totalHandler=()=>{
-//   let list=[]
-//   let editedList=[]
-//   this.state.child.map((value)=>{
-//     list.push(value.sub_total)
-//     })
-//     if (list !== null){
-//     var li = list.map(Number);
-//       var total = li.reduce(add, 0);
-//       function add(a, b) {
-//         return a + b;
-//       }
-//       console.log(total)
-//     this.state.total=total
-//     }
-// }
-// handlePriceChange =(idx) => {
-//   const newHolder =this.state.child.map(
-//     (field, sidx) => {
-//       if (idx === sidx) {
-//         const sample = this.state.items.filter(
-//           ({item,price}) => item === field.item)[0]
-//           console.log(sample)
-//           if (sample !== undefined) {
-//             this.state.selectedPrice = sample["price"]
-//             field.price = sample["price"]
-//           }
-//         }
-//       });
-// }

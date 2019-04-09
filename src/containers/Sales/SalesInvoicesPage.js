@@ -4,10 +4,18 @@ import SalesNav from '../../components/Sales/Layout/SalesNav';
 import axios from '../../axios';
 import Pagex from '../../components/UI/Pagination/Pagination';
 import { withRouter } from "react-router";
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
 import {Button, Table, Modal} from 'react-bootstrap';
 import ViewModal from '../../components/UI/Modal/Invoice/InvoiceViewModal';
 import DeleteModal from '../../components/UI/Modal/Invoice/DeleteInvoiceModal';
 import EditModal from '../../components/UI/Modal/Invoice/EditInvoiceModal';
+import ViewFromSalesInvoice from '../../components/UI/Modal/Invoice/ViewFromSalesInvoice';
+import DeleteFromSalesInvoice from '../../components/UI/Modal/Invoice/DeleteFromSalesInvoice';
+import EditFromSalesInvoice from '../../components/UI/Modal/Invoice/EditFromSalesInvoice';
+
+import * as actions from '../../store/actions/index';
 
 class SalesInvoicesPage extends Component {
   state={
@@ -35,7 +43,10 @@ class SalesInvoicesPage extends Component {
     this.loadInvoiceData()
     this.setState({
         end_point: this.state.start_point + this.state.perpage
-    })
+          })
+  }
+  componentWillMount(){
+    this.setState({salesPageOpen:this.props.salesPageOpen})
   }
   loadInvoiceData(){
     axios.get('invoice/parantdata').then(
@@ -112,15 +123,37 @@ class SalesInvoicesPage extends Component {
       }
   }
 
-  viewWindowOpen=(e,id)=>{
-    e.preventDefault()
-      const filterData = this.state.invoiceData.filter(item => { return item.id === id})
-      console.log(filterData)
-      console.log(filterData[0])
-      this.setState({
-          isView: true,
-          viewObject: filterData[0],
-      })
+  salesViewModal =()=>{
+    return(
+      <ViewFromSalesInvoice
+            show={this.props.salesPageOpen}
+            close={this.props.salesViewWindowClose}
+            formData={this.props.invoiceData}
+            deletewindow={this.props.salesDeleteWindowOpen}
+            editwindow={this.props.salesEditWindowOpen}
+      />
+    )
+  }
+
+  salesDeleteModal = () => {
+    return(
+      <DeleteFromSalesInvoice
+          show={this.props.isDeletePage}
+          close={this.props.salesDeleteWindowClose}
+          deleteHandler = {this.props.salesDeleteHandler}
+          formData={this.props.invoiceData}/>
+        )
+  }
+
+  salesEditModal=()=>{
+    return(
+      <EditFromSalesInvoice
+          show={this.props.isEditPage}
+          close={this.props.salesEditWindowClose}
+          formData={this.props.invoiceData}
+          editId={this.state.editId}
+          editHandler={this.props.salseObjEditHandler}/>
+    )
   }
 
   viewModal = () => {
@@ -135,10 +168,22 @@ class SalesInvoicesPage extends Component {
     )
   }
 
+  viewWindowOpen=(id)=>{
+    // e.preventDefault()
+      const filterData = this.state.invoiceData.filter(item => { return item.id === id})
+      console.log(filterData)
+      console.log(filterData[0])
+      this.setState({
+          isView: true,
+          viewObject: filterData[0],
+      })
+  }
+
   viewWindowClose = () => {
       this.setState({
           isView: false,
           viewObject: {},
+
       })
   }
 
@@ -189,18 +234,36 @@ class SalesInvoicesPage extends Component {
                 close={this.editWindowClose}
                 formData={this.state.editObject}
                 editId={this.state.editId}
-                childObject={this.state.editObject.child}
+                editHandler={this.objEditHandler}
             />
       );
+  }
+  objEditHandler = (event,obj) => {
+      event.preventDefault()
+      axios.patch('/invoice/parantdata/' + obj.id + '/', obj).then(
+          response => {
+              console.log(response.data)
+              this.setState({
+                  isEdit: false,
+              })
+              this.viewWindowOpen(obj.id)
+          }
+      )
   }
   editWindowOpen = (e,id) => {
     e.preventDefault()
       const filterData = this.state.invoiceData.filter(item => { return item.id === id})
+      filterData[0].child.map(item => delete item.id)
+      filterData[0].child.map(item=> delete item.key)
+
+      console.log(filterData[0])
+
       this.setState({
           isEdit: true,
           editObject: filterData[0],
           editId:id,
       })
+      console.log(filterData[0])
   }
   editWindowClose = () => {
       this.setState({
@@ -210,7 +273,12 @@ class SalesInvoicesPage extends Component {
   }
 
   render(){
-    console.log(this.state)
+    console.log(this.props.invoiceData)
+    console.log(this.props.salesPageOpen)
+
+    console.log('edit' , this.state)
+    console.log('props' , this.props)
+
     const itemlist = this.state.invoiceData.slice(this.state.start_point,this.state.end_point).map((branch, index)=> {
         return(
           <tr key={branch.id}>
@@ -221,7 +289,7 @@ class SalesInvoicesPage extends Component {
                  <td>vehicle Expense</td>
                  <td>{branch.total_amount}</td>
                  <td>
-                   <i onClick={(e)=>this.viewWindowOpen(e,branch.id)} className="w3-margin-left fa fa-eye"></i>
+                   <i onClick={()=>this.viewWindowOpen(branch.id)} className="w3-margin-left fa fa-eye"></i>
                  </td>
         </tr>
         );
@@ -231,6 +299,9 @@ class SalesInvoicesPage extends Component {
       {this.state.isView ? (this.viewModal()) : null}
       {this.state.isDelete ? (this.deleteModal()) : (null)}
       {this.state.isEdit ? (this.editModal()) : null}
+      {this.props.salesPageOpen ? (this.salesViewModal()) : (null)}
+      {this.props.isDeletePage ? (this.salesDeleteModal()) : (null)}
+      {this.props.isEditPage ? (this.salesEditModal()) : (null)}
 
         <div>
            <SalesNav />
@@ -275,53 +346,26 @@ class SalesInvoicesPage extends Component {
     )
   }
   }
-export default SalesInvoicesPage;
 
+  const mapStateToProps = state => {
+    return {
 
-//   return(
-//     <div>
-//     <div className="SalesInvoicesWrapper">
-//       <div>
-//       <SalesNav />
-//       </div>
-//       <div className="CreateInvoiceBox">
-//
-//           <table>
-//             <thead>
-//               <tr>
-//                 <th>SL NO</th>
-//                 <th>Doc No</th>
-//                 <th>DATE</th>
-//                 <th>CATEGORY</th>
-//                 <th>EXP. ACCOUNT</th>
-//                 <th>AMOUNT</th>
-//                 <th>VIEW</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//             {this.state.InvoiceDataList.length >0 ? (itemlist): (<div>there is no saved data</div>)}
-//             </tbody>
-//           </table>
-//
-//
-//
-//       </div>
-//       </div>
-//       <div style={{textAlign:'center'}}>
-//       <Pagex item_count={this.state.InvoiceDataList.length}
-//           perpage_count={this.state.perpage}
-//           page={this.state.curr_page}
-//           click={this.pagexClickHandler}
-//           prevClick={this.previousClickHandler}
-//           nxtClick={this.nextClickHandler}
-//           firstClick = {this.firstClickHandler}
-//           lastClick = {this.lastClickHandler}
-//           nxtDisabled = {this.state.nxtDisabled}
-//           prevDisabled = {this.state.prevDisabled}
-//           firstDisabled = {this.state.firstDisabled}
-//           lastDisabled = {this.state.lastDisabled}  />
-//       </div>
-//     </div>
-//   )
-// }
-// }
+      invoiceData:state.salesInvoice.invoiceData,
+      salesPageOpen:state.salesInvoice.salesPageOpen,
+      isDeletePage:state.salesInvoice.isDeletePage,
+      isEditPage:state.salesInvoice.isEditPage,
+
+    }
+  }
+  const mapDispatchToProps = (dispatch) => {
+    return{
+      salesViewWindowClose:()=>dispatch(actions.salesViewWindowClose()),
+      salesDeleteWindowOpen:()=>dispatch(actions.salesDeleteWindowOpen()),
+      salesDeleteWindowClose:()=>dispatch(actions.salesDeleteWindowClose()),
+      salesDeleteHandler:(id)=>dispatch(actions.salesDeleteHandler(id)),
+      salesEditWindowOpen:()=>dispatch(actions.salesEditWindowOpen()),
+      salesEditWindowClose:()=>dispatch(actions.salesEditWindowClose()),
+      salseObjEditHandler:(obj)=>dispatch(actions.salseObjEditHandler(obj)),
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(SalesInvoicesPage);

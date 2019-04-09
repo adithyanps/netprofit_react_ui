@@ -17,11 +17,11 @@ class SalesPage extends Component {
           </div>
           <div>
             <div className="salesbox">
-             <h >Sales</h> 
+             <p>Sales</p>
             </div>
             <div className="salesbox">
-            <h>Customer Reciepts</h>
-            </div> 
+            <p>Customer Reciepts</p>
+            </div>
           </div>
           <div>
             <QuickLink />

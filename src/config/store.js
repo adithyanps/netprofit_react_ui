@@ -5,13 +5,14 @@ import loginReducer from '../store/reducers/login';
 import logoutReducer from '../store/reducers/logout';
 import authReducer from '../store/reducers/auth';
 import currentUserReducer from '../store/reducers/currentUser';
+import SalesInvoiceReducer from '../store/reducers/salesInvoice';
 
 const rootReducer = combineReducers({
   login:loginReducer,
   logout:logoutReducer,
   auth:authReducer,
   currentUser:currentUserReducer,
-
+  salesInvoice:SalesInvoiceReducer,
 
 })
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

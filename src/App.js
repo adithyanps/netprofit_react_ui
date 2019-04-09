@@ -23,6 +23,8 @@ import QuickLink from './components/UI/QuickLink/QuickLink';
 class App extends Component {
   componentDidMount(){
     this.props.onTryAutoSignup()
+
+
   }
   render() {
     console.log(this.props.user_choice)
@@ -76,15 +78,14 @@ const mapStateToProps = (state)=> {
   return {
     loginToken:state.login.token,
     user_choice:state.login.user_choice,
-    currentUser:state.currentUser
+    currentUserData:state.currentUser.userData
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onTryAutoSignup: () => dispatch(actions.authCheckState()),
-    onRedirect : ()=>dispatch(actions.redirect())
-
+    onRedirect : ()=>dispatch(actions.redirect()),
   }
 }
 
