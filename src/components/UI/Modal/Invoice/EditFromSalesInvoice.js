@@ -252,12 +252,7 @@ handleGrandTotalChange=()=>{
         <div style={{"textAlign":"center"}}>
         <div className="row-wrapper1">
           <div><h1 className="ptag">create sales invoice</h1></div>
-          <div className="center">
-            <input
-                className="toggle"
-                type="checkbox"
-                name="test"
-                onChange={e => this.toggleHandleChange(e)}/></div>
+          
 
         </div>
         <br />
