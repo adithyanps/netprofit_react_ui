@@ -6,6 +6,7 @@ import Pagex from '../../components/UI/Pagination/Pagination';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import moment from 'moment';
 
 import {Button, Table, Modal} from 'react-bootstrap';
 import ViewModal from '../../components/UI/Modal/Invoice/InvoiceViewModal';
@@ -29,6 +30,9 @@ class SalesInvoicesPage extends Component {
     formData:[],
     editObject:[],
 
+    start_date:new Date(),
+    end_date:new Date(),
+
     perpage: 10,
     curr_page: 1,
     start_point: 0,
@@ -40,6 +44,10 @@ class SalesInvoicesPage extends Component {
   }
 
   componentDidMount(){
+    this.setState({
+      start_date:moment(new Date()).format('YYYY-MM-DD'),
+      end_date:moment(new Date()).format('YYYY-MM-DD'),
+    })
     this.loadInvoiceData()
     this.setState({
         end_point: this.state.start_point + this.state.perpage
@@ -271,6 +279,14 @@ class SalesInvoicesPage extends Component {
           editObject: {},
       })
   }
+  handleInputChange = (event) => {
+    event.preventDefault();
+    console.log(event.target.name,event.target.value)
+    let key = event.target.name
+    let  value = event.target.value
+  this.setState({[key]:value})
+
+  }
 
   render(){
     console.log(this.props.invoiceData)
@@ -283,11 +299,11 @@ class SalesInvoicesPage extends Component {
         return(
           <tr key={branch.id}>
                  <td>{index+this.state.start_point+1}</td>
-                 <td>{branch.doc_no}</td>
+                 <td>{branch.invoice_no}</td>
                  <td>{branch.date}</td>
-                 <td>car fuel</td>
-                 <td>vehicle Expense</td>
-                 <td>{branch.total_amount}</td>
+                 <td>{branch.customer}</td>
+                 <td>{branch.grant_total}</td>
+                 <td>{String(branch.status)}</td>
                  <td>
                    <i onClick={()=>this.viewWindowOpen(branch.id)} className="w3-margin-left fa fa-eye"></i>
                  </td>
@@ -307,16 +323,49 @@ class SalesInvoicesPage extends Component {
            <SalesNav />
        </div>
         <div className="SalesInvoiceBox">
+          <br />
+          <div className="sales-invoice-filter">
 
+            <div>
+              <label>START DATE</label><br />
+              <input
+                className="dates"
+                type='date'
+                name='date'
+                value={this.state.start_date}
+                onChange={this.handleInputChange}
+                required='required'/>
+            </div>
+            <div>
+              <label>END DATE</label><br />
+              <input
+                className="dates"
+                type='date'
+                name='date'
+                value={this.state.end_date}
+                onChange={this.handleInputChange}
+                required='required'/>
+            </div>
+            <div>
+              <label>COSTUMER</label><br />
+              <select className="select" onChange={(e) => this.setState({selectedName:e.target.value})}>
+                <option value=""></option>
+                
+            </select>
+            </div>
+            <div>d</div>
+            <div>e</div>
+
+          </div>
           <table className="SalesInvoiceTable" >
               <thead>
                 <tr>
                   <th>SL NO</th>
-                  <th>Doc No</th>
+                  <th>INVOICE No</th>
                   <th>DATE</th>
-                  <th>CATEGORY</th>
-                  <th>EXP. ACCOUNT</th>
-                  <th>AMOUNT</th>
+                  <th>CUSTOMER</th>
+                  <th>GRAND TOTAL</th>
+                  <th>STATUS</th>
                   <th>VIEW</th>
                 </tr>
               </thead>

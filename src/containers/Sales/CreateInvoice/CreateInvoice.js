@@ -10,7 +10,7 @@ import QuickLink from '../../../components/UI/QuickLink/QuickLink';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import SalesInvoice from '../SalesInvoicesPage';
+// import SalesInvoice from '../SalesInvoicesPage';
 import * as actions from '../../../store/actions/index';
 
 class CreateInvoice extends Component {
@@ -35,12 +35,7 @@ class CreateInvoice extends Component {
        }],
     itemList:[],
     parantdataList:[],
-    openModel:false,
     formData:[],
-    isDelete:false,
-    deleteId:null,
-    isEdit:false,
-    editId:null,
     salesPage:false,
 
   }
@@ -148,9 +143,11 @@ class CreateInvoice extends Component {
     }
   }
   totalHandler=()=>{
+    console.log(this.state.holder)
       let list=[]
       this.state.holder.map((value)=>{
         list.push(value.sub_total)
+        console.log(list)
         if (list !== null){
           var total = list.reduce(add, 0);
           function add(a, b) {
@@ -263,127 +260,33 @@ class CreateInvoice extends Component {
          sub_total:null,
        }],doc_no:'',selectedName:'',discount:null,total:0,narration:''})
   }
-  viewModal=(e)=>{
-    return(
-      <InvoiceViewModal
-        show={this.state.openModel}
-        close={this.viewWindowClose}
-        formData={this.state.viewObject}
-        deletewindow={this.deleteWindowOpen}
-        editwindow={this.editWindowOpen}
-        />
-    )
-  }
-  viewWindowOpen=(id)=>{
-    // e.preventDefault()
-      this.setState({
-          isView: true,
-      })
-  }
-  viewWindowClose = (e) => {
-      this.setState({
-          openModel: false,
-          viewObject: {},
-      })
-  }
-  deleteWindowOpen= (e,id) =>{
+  removeLineHandler=(e,id)=>{
+    if (this.state.holder.length !== 1) {
+      const updatedOrders = this.state.holder;
+      let deleteObject = updatedOrders.filter((item,index)=> index === id)
+      let delIndex = updatedOrders.indexOf(deleteObject[0])
+      // delete updatedOrders[delIndex]
+      console.log(delIndex)
+      updatedOrders.splice(delIndex,1)
+      console.log(updatedOrders)
+      this.setState({holder:updatedOrders})
+      // this.setState({holder.slice(delIndex,1)})
+      this.totalHandler()
+      console.log(this.state.holder)
+    }
     e.preventDefault()
-    this.setState({isDelete:true,deleteId:id})
-    console.log(id)
-    console.log(this.state.isDelete)
   }
-  deleteHandler = (event) => {
-    event.preventDefault()
-    let id = this.state.deleteId
-    const updatedOrders = this.state.invoiceData;
-    let deleteObject = this.state.parantdataList.filter(item =>  item.id === id)
-    // let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('/invoice/parantdata/'+id).then(
-       response => {
-           // updatedOrders.splice(delIndex,1)
-           this.setState({
-               // parantdataList:updatedOrders,
-               isDelete: false,
-               openModel:false
-             })
-           // this.viewWindowClose()
-       }
-    )
 
-  }
-  deleteModal = () => {
-    console.log("modal error")
-    return(
-      <DeleteModal
-          show={this.state.isDelete}
-          close={this.deleteWindowClose}
-          deleteHandler = {this.deleteHandler}
-          formData={this.state.viewObject}/>
-        )
-  }
-  deleteWindowClose = () => {
-      this.setState({
-          isDelete: false,
-          formData:[]
-      })
-  }
-  editWindowOpen = (e,id) => {
-    console.log(id)
-    e.preventDefault()
-    const filterData = this.state.parantdataList.filter(item => { return item.id === id})
-    // filterData[0].child.map(item => delete item.id)
-    // filterData[0].child.map(item=> delete item.key)
-
-    console.log(filterData[0])
-      this.setState({
-          isEdit: true,
-          editId:id,
-          editObject:this.state.viewObject,
-          // editObject:filterData[0],
-      })
-  }
-  editModal = () => {
-      return(
-          <EditModal
-                show={this.state.isEdit}
-                close={this.editWindowClose}
-                formData={this.state.editObject}
-                editId={this.state.editId}
-                editHandler={this.objEditHandler}
-            />
-      );
-  }
-  objEditHandler = (event,obj) => {
-      event.preventDefault()
-      axios.patch('/invoice/parantdata/' + obj.id + '/', obj).then(
-          response => {
-              console.log(response.data)
-              this.setState({
-                  isEdit: false,
-              })
-              this.viewWindowOpen(obj.id)
-          }
-      )
-  }
-  editWindowClose = () => {
-      this.setState({
-          isEdit: false,
-          formData: {},
-      })
-  }
   render() {
     console.log(this.state)
     return(
       <div >
-        {this.state.salesPage ? (this.openSalesInvoice()) : (null)}
-        {this.state.openModel ? (this.viewModal()) : (null)}
-        {this.state.isDelete ? (this.deleteModal()) : (null)}
+      {this.state.salesPage ? (this.openSalesInvoice()) : (null)}
 
-        {this.state.isEdit ? (this.editModal()) : null}
         <br />
         <div className="row-wrapper1">
           <div><h1 className="ptag">create sales invoice</h1></div>
-          
+
         </div>
         <br />
         <div className="row-wrapper">
@@ -489,6 +392,13 @@ class CreateInvoice extends Component {
                   disabled={!shareholder.sub_total}
                    />
                    </div>
+                <div>
+                  <br />
+                  {this.state.holder.length !== Number(1) ? (
+                    <div>
+                    <i onClick={(e,id)=>this.removeLineHandler(e,idx)} className="fas fa-times"></i>
+                    </div>
+                  ) :(null)}                </div>
           </div>
           ))}
 

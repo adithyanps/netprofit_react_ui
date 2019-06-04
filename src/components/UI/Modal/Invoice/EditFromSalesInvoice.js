@@ -228,7 +228,31 @@ handleGrandTotalChange=()=>{
     this.props.editHandler(this.props.formData)
 
   }
+  addItemHandler=(e)=> {
 
+    var child = this.state.holder.child
+    child.push({
+             item:'',
+             price:'',
+             quantity:null,
+             sub_total:null,
+           })
+           this.setState({...this.state.holder,child:child})
+    e.preventDefault()
+       }
+
+  removeLineHandler=(e,id)=>{
+
+    const updatedOrders = this.state.holder.child;
+    let deleteObject = updatedOrders.filter((item,index)=> index === id)
+    let delIndex = updatedOrders.indexOf(deleteObject[0])
+         // delete updatedOrders[delIndex]
+    updatedOrders.splice(delIndex,1)
+    console.log(updatedOrders)
+    this.setState({...this.state.holder,child:updatedOrders})
+    this.totalHandler()
+    e.preventDefault()
+         }
     render() {
       console.log(this.props.formData)
       console.log(this.state.holder)
@@ -252,7 +276,7 @@ handleGrandTotalChange=()=>{
         <div style={{"textAlign":"center"}}>
         <div className="row-wrapper1">
           <div><h1 className="ptag">create sales invoice</h1></div>
-          
+
 
         </div>
         <br />
@@ -305,9 +329,7 @@ handleGrandTotalChange=()=>{
           </div>
         </div>
         <br />
-
-
-          <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
+        <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
 
           {(this.state.holder.child !== undefined ) ? (
             <div className="itemBox">
@@ -358,6 +380,10 @@ handleGrandTotalChange=()=>{
                         placeholder="sub-total"
                         value={shareholder.sub_total}
                         readOnly/>
+                    </div>
+                    <div>
+                      <br />
+                       <i onClick={(e,id)=>this.removeLineHandler(e,idx)} className="fas fa-times"></i>
                     </div>
                   </div>
                 ))}
@@ -411,7 +437,8 @@ handleGrandTotalChange=()=>{
       </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" onClick={(e)=>this.handleSubmit(e)}>Update</Button>
+        <Button variant="info" onClick={this.props.close}>CANCEL</Button>
+        <Button variant="info" onClick={(e)=>this.handleSubmit(e)}>SAVE</Button>
         </Modal.Footer>
       </Modal>
       );

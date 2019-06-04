@@ -9,6 +9,8 @@ import { Button,Navbar,Nav,NavDropdown } from 'react-bootstrap';
 import './Navbar.css'
 import axios from '../../../axios';
 
+import {NavLink} from 'react-router-dom';
+
 class Navbars extends Component {
   state={
     userData:[],
@@ -34,7 +36,6 @@ class Navbars extends Component {
   document.documentElement.scrollTop = 0;
 }
   render() {
-    console.log(this.props)
     let token = null;
     token = this.props.loginToken
 
@@ -49,19 +50,27 @@ class Navbars extends Component {
           <li ><a className="nav-link-t" href="/reports">REPORTS</a></li>
 
 
-            <img src={UserLogo} />
+          <a href="/settings">  <img src={SettingsLogo} /></a>
             <img src={SearhLogo} />
-            <img src={SettingsLogo} />
-            <img src={AlarmLogo} />
 
+            <img src={AlarmLogo} />
+            <div className="dropdown" style={{"float":"right"}}>
+              <button className="dropbtn">
+            <img src={UserLogo} style={{"fontsize":"30px","color":"green"}}/>
+              </button>
+              <div className="dropdown-content" >
+                <Link to="/logout" className="nav-link">logout</Link>
+              </div>
+            </div>
         </div>
+
         <div className="idBox">
           <div>
             <p>id:{this.state.userData.email}</p>
           </div>
         </div>
         <div className="breadCrmbBox">
-        brdcrmb
+
         </div>
         <div>{this.props.children}</div>
         <div className="footer">

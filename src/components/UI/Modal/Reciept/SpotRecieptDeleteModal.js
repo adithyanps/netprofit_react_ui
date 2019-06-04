@@ -6,7 +6,16 @@ import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, Over
 
 
 
-class SpotDeleteModal extends React.Component {
+class DeleteModal extends React.Component {
+  state={
+    selectedAcnt:null
+  }
+  componentWillMount(){
+    let accntName = this.props.accountList.filter(item=>item.id === this.props.creditJrnlItem[0].account)
+    console.log(accntName)
+    this.setState({selectedAcnt:accntName[0].name})
+
+  }
 
     render() {
       return (
@@ -17,23 +26,27 @@ class SpotDeleteModal extends React.Component {
             </Modal.Header>
             <Modal.Body>
             <div>
-                <h1>Delete Sales Invoice</h1>
+                <h1>Delete Customer Reciept</h1>
                 <p style={{color:'red'}}>Are you Sure you want to delete this Sales Invoice ??</p>
                 <table>
                 <thead>
                   <tr>
-                    <th>INVOICE NO</th>
+                    <th>RECEIPT NO</th>
                     <th>DATE</th>
-                    <th>CUSTOMER</th>
-                    <th>GRAND TOTAL</th>
+                    <th>ACCOUNT</th>
+                    <th>TOTAL</th>
                   </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{this.props.formData.invoice_no}</td>
-                      <td>{this.props.formData.date}</td>
-                      <td>{this.props.formData.customer}</td>
-                      <td>{this.props.formData.grant_total}</td>
+                      <td>{this.props.formData.reciept_no}</td>
+                      <td>{this.props.formData.journal_entry.date}</td>
+                      <td>{this.state.selectedAcnt}</td>
+                      {this.props.formData.journal_entry.journal_item.map(item=>(
+                        (item.debit_amount > Number(0)) ? (
+                            <td>{item.debit_amount}</td>
+                        ) :(null))
+                      )}
                     </tr>
                   </tbody>
                 </table>
@@ -50,4 +63,4 @@ class SpotDeleteModal extends React.Component {
     }
   }
 
-export default SpotDeleteModal;
+export default DeleteModal;

@@ -6,9 +6,9 @@ import { Redirect } from 'react-router-dom';
 
 import SalesNav from '../../components/Sales/Layout/SalesNav';
 import QuickLink from '../../components/UI/QuickLink/QuickLink';
-import CreateInvoice from './CreateInvoice/CreateInvoice';
+import CreateReciept from './CreateReciept/CreateReciept';
 
-class CreateInvoicePage extends Component {
+class CreateRecieptPage extends Component {
 
   render(){
     return(
@@ -18,7 +18,7 @@ class CreateInvoicePage extends Component {
             <SalesNav />
           </div>
           <div className="CreateInvoiceBox">
-            <CreateInvoice />
+                <CreateReciept />
           </div>
           <div>
             <QuickLink />
@@ -27,4 +27,4 @@ class CreateInvoicePage extends Component {
     )
   }
 }
-export default CreateInvoicePage
+export default CreateRecieptPage

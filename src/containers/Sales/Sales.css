@@ -32,3 +32,12 @@
 .pagination {
   margin-left: 100px;
 }
+/*  */
+.customer-top {
+  display: grid;
+  grid-template-columns: 5fr 5fr ;
+}
+.sales-invoice-filter {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr 1fr ;
+}

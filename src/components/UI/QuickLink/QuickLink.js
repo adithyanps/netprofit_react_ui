@@ -14,7 +14,7 @@ class QuickLink extends Component {
                <li><a  href="/invoice">Partner Ledger</a></li>
                <li><a  href="/invoice">Customer Balances</a></li>
                <li><a  href="/invoice">Customer Ageing Report</a></li>
-               <li><a  href="/invoice">Create Expense</a></li>
+               <li><a  href="/create-expense">Create Expense</a></li>
             </ul>
 
       </div>

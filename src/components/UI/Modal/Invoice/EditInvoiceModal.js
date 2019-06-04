@@ -76,18 +76,6 @@ class BranchEdit extends React.Component {
   }
 
 
-  addItemHandler=(e)=> {
-    this.setState({
-      child:this.state.child.concat({
-                 item:'',
-                 price:'',
-                 quantity:null,
-                 sub_total:null,
-               })
-    })
-      e.preventDefault()
-       }
-
   DynamicInputChangeHandler = (event)=> {
     event.preventDefault();
 
@@ -229,6 +217,33 @@ handleGrandTotalChange=()=>{
 
   }
 
+  addItemHandler=(e)=> {
+
+    var child = this.state.holder.child
+    child.push({
+             item:'',
+             price:'',
+             quantity:null,
+             sub_total:null,
+           })
+           this.setState({...this.state.holder,child:child})
+    e.preventDefault()
+       }
+
+  removeLineHandler=(e,id)=>{
+
+    const updatedOrders = this.state.holder.child;
+    let deleteObject = updatedOrders.filter((item,index)=> index === id)
+    let delIndex = updatedOrders.indexOf(deleteObject[0])
+    // delete updatedOrders[delIndex]
+    updatedOrders.splice(delIndex,1)
+    console.log(updatedOrders)
+    this.setState({...this.state.holder,child:updatedOrders})
+    this.totalHandler()
+    e.preventDefault()
+
+    }
+
     render() {
       console.log(this.props.formData)
       console.log(this.state.holder)
@@ -252,7 +267,7 @@ handleGrandTotalChange=()=>{
         <div style={{"textAlign":"center"}}>
         <div className="row-wrapper1">
           <div><h1 className="ptag">create sales invoice</h1></div>
-          
+
 
         </div>
         <br />
@@ -305,9 +320,7 @@ handleGrandTotalChange=()=>{
           </div>
         </div>
         <br />
-
-
-          <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
+        <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
 
           {(this.state.holder.child !== undefined ) ? (
             <div className="itemBox">
@@ -358,6 +371,10 @@ handleGrandTotalChange=()=>{
                         placeholder="sub-total"
                         value={shareholder.sub_total}
                         readOnly/>
+                    </div>
+                    <div>
+                      <br />
+                       <i onClick={(e,id)=>this.removeLineHandler(e,idx)} className="fas fa-times"></i>
                     </div>
                   </div>
                 ))}
@@ -411,88 +428,11 @@ handleGrandTotalChange=()=>{
       </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" onClick={(e)=>this.handleSubmit(e)}>Update</Button>
+          <Button variant="info" onClick={this.props.close}>CANCEL</Button>
+          <Button variant="info" onClick={(e)=>this.handleSubmit(e)}>SAVE</Button>
         </Modal.Footer>
       </Modal>
       );
     }
   }
 export default BranchEdit;
-
-// handleItemChange = (idx) => (evt) => {
-//   const newShareholders = this.state.child.map((shareholder, sidx) => {
-//     if (idx !== sidx) {
-//       return shareholder
-//     } else {
-//       return { ...shareholder, item: evt.target.value };
-//     }
-//   });
-//   this.state.holder.child= newShareholders;
-//   this.setState({...this.state.holder,child: newShareholders});
-// }
-
-// handleQtyChange = idx => evt => {
-//   const newShareholders = this.state.child.map((shareholder, sidx) => {
-//     if (idx !== sidx) return shareholder;
-//     return { ...shareholder, quantity: evt.target.value };
-//   });
-//   this.setState({ ...this.state.child,child: newShareholders });
-//   this.state.child = [...newShareholders]
-//   console.log(this.state.holder)
-//   console.log(newShareholders)
-//   this.SubTotalHandler(idx)
-// }
-
-//   SubTotalHandler = (idx)=>{
-//   let invoice =  this.props.formData.invoice_no
-//   let holder = this.state.child
-//   const newShareholders = holder.map((field, sidx) => {
-//       if (idx === sidx) {
-//         const sample = this.state.items.filter(
-//           ({item,price,id}) => item === field.item)[0]
-//         let price1 = sample["price"]
-//         let qty = field.quantity
-//         let sub_total = price1 * qty
-//         this.setState({sub_total})
-//         if (field !== null){
-//             this.state.child[idx]["sub_total"]=sub_total
-//         }
-//         if (sample !== undefined) {
-//             this.state.sub_total = sub_total
-//             field.sub_total = sub_total
-//         }
-//     }
-//   })
-//
-// this.totalHandler()
-// }
-// totalHandler=()=>{
-//   let list=[]
-//   let editedList=[]
-//   this.state.child.map((value)=>{
-//     list.push(value.sub_total)
-//     })
-//     if (list !== null){
-//     var li = list.map(Number);
-//       var total = li.reduce(add, 0);
-//       function add(a, b) {
-//         return a + b;
-//       }
-//       console.log(total)
-//     this.state.total=total
-//     }
-// }
-// handlePriceChange =(idx) => {
-//   const newHolder =this.state.child.map(
-//     (field, sidx) => {
-//       if (idx === sidx) {
-//         const sample = this.state.items.filter(
-//           ({item,price}) => item === field.item)[0]
-//           console.log(sample)
-//           if (sample !== undefined) {
-//             this.state.selectedPrice = sample["price"]
-//             field.price = sample["price"]
-//           }
-//         }
-//       });
-// }

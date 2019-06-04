@@ -50,6 +50,7 @@ componentDidMount(){
   }
 }
 const mapStateToProps = state => {
+  console.log(state)
   return {
     loginToken:state.login.token,
     user_choice:state.login.user_choice,
@@ -63,41 +64,3 @@ const mapDispatchToProps = dispatch => {
     };
 };
 export default connect(mapStateToProps,mapDispatchToProps)(Home);
-// <div>
-//     <div className="row">
-//       <div className="HomeRectangles" >
-//         <h2>sales</h2>
-//       </div>
-//
-//       <div className="HomeRectangles" >
-//         <h2>Purchase</h2>
-//       </div>
-//     </div>
-//     <div className="row">
-//       <div className="HomeRectangles" >
-//         <h2>Customer Reciept</h2>
-//       </div>
-//
-//       <div className="HomeRectangles" >
-//         <h2>Bank/Cash Accounts</h2>
-//       </div>
-//     </div>
-//
-// </div>
-
-// <Container>
-// <Row>
-// <Col xs={5}>
-// <div className="HomeRectangles" >
-//       <h2>sales</h2>
-//   </div></Col>
-// <Col xs={5}>
-// <div className="HomeRectangles" >
-//      <h2>Purchase</h2>
-// </div>
-//
-// </Col>
-//
-// <Col xs={1}><QuickLink /></Col>
-// </Row>
-// </Container>
