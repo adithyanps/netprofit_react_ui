@@ -12,6 +12,7 @@ class SalesNav extends Component {
         <a href="/sales-invoices">Sales Invoices</a>
         <a href="/customer-reciepts">Customer Reciepts</a>
         <a href="/customers">Customers</a>
+        <a href="/expense-list">Expenses-list</a>
 
       </div>
 

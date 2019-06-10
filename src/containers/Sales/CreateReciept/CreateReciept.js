@@ -83,17 +83,6 @@ class CreateRecieptPage extends Component {
 
   }
 
-
-  handleInputChange = (event) => {
-    event.preventDefault();
-    console.log(event.target.name,event.target.value)
-    let key = event.target.name
-    let  value = event.target.value
-  this.setState({[key]:value})
-
-  }
-
-
   addItemHandler=(e)=> {
 
       this.setState((prevState) => {
@@ -184,13 +173,15 @@ class CreateRecieptPage extends Component {
     let cashAccntObj = this.state.accountList.filter(item=>item.type === 'CASH')
     console.log(this.state.accountList)
     console.log(cashAccntObj)
+    let transactionObj = this.state.accountList.filter(item => item.name === this.state.selectedAcnt)
+
     let debitSection={}
-    debitSection.account = cashAccntObj[0].id
+    // debitSection.account = cashAccntObj[0].id
+    debitSection.account = transactionObj[0].id
     debitSection.partner = null
     debitSection.debit_amount = this.state.total
     debitSection.credit_amount = 0
     console.log(debitSection)
-    let transactionObj = this.state.accountList.filter(item => item.name === this.state.selectedAcnt)
     let output =[]
     this.state.holder.forEach(a=>{
       let creditSection = {}

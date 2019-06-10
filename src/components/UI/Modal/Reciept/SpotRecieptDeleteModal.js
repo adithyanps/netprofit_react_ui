@@ -27,7 +27,7 @@ class DeleteModal extends React.Component {
             <Modal.Body>
             <div>
                 <h1>Delete Customer Reciept</h1>
-                <p style={{color:'red'}}>Are you Sure you want to delete this Sales Invoice ??</p>
+                <p style={{color:'red'}}>Are you Sure you want to delete this  Customer Reciept  ??</p>
                 <table>
                 <thead>
                   <tr>

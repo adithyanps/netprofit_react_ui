@@ -21,6 +21,8 @@ import CreateInvoice from './containers/Sales/CreateInvoicePage';
 import SalesInvoicesPage from './containers/Sales/SalesInvoicesPage';
 import CreateRecieptPage from './containers/Sales/CreateRecieptPage';
 import CustomerRecieptsPage from './containers/Sales/CustomerRecieptsPage';
+import ExpenseListPage from './containers/QuickLink/ExpenseListPage';
+
 import Customers from './containers/Sales/Customers';
 import CreateExpensePage from './containers/QuickLink/CreateExpensePage';
 
@@ -50,6 +52,7 @@ class App extends Component {
             <Route path="/sales-invoices" exact component={SalesInvoicesPage} />
             <Route path="/create-reciept" exact component={CreateRecieptPage} />
             <Route path="/customer-reciepts" exact component={CustomerRecieptsPage} />
+            <Route path="/expense-list" exact component={ExpenseListPage} />
             <Route path="/Customers" exact component={Customers} />
             <Route  path="/logout" component={Logout} />
             <Route path="/create-expense" exact component={CreateExpensePage} />

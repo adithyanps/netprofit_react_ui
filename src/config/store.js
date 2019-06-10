@@ -8,6 +8,8 @@ import currentUserReducer from '../store/reducers/currentUser';
 import salesInvoiceReducer from '../store/reducers/salesInvoice';
 import accountReducer from '../store/reducers/account';
 import recieptReducer from '../store/reducers/reciept';
+import expenseReducer from '../store/reducers/expense';
+
 
 const rootReducer = combineReducers({
   login:loginReducer,
@@ -17,6 +19,7 @@ const rootReducer = combineReducers({
   salesInvoice:salesInvoiceReducer,
   account:accountReducer,
   reciept:recieptReducer,
+  expense:expenseReducer
   // order:accountReducer,
 
 })

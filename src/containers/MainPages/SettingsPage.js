@@ -28,13 +28,17 @@ class SettingsPage extends Component {
   render() {
     console.log(this.state)
     console.log(this.props)
+    console.log(this.props.currentUserData.user_choice)
+
 
     return(
       <div>
        settings
-       <DefaultSettings
-        
-          />
+       {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
+         <DefaultSettings
+            />
+       ):(<div>YOU HAVE NO PERMISSION TO ACCESS THIS PAGE</div>)}
+
       </div>
     )
   }
@@ -45,7 +49,7 @@ const mapStateToProps =(state)=>{
   return {
     accountList: state.account.account,
     defaultAccountList: state.account.defaultAccount,
-
+    currentUserData:state.currentUser.userData
   }
 }
 

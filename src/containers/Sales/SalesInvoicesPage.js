@@ -21,6 +21,7 @@ import * as actions from '../../store/actions/index';
 class SalesInvoicesPage extends Component {
   state={
     invoiceData:[],
+    customerList:[],
     isEdit:false,
     invoice_number:null,
     isDelete:false,
@@ -49,6 +50,7 @@ class SalesInvoicesPage extends Component {
       end_date:moment(new Date()).format('YYYY-MM-DD'),
     })
     this.loadInvoiceData()
+    this.loadCustomer()
     this.setState({
         end_point: this.state.start_point + this.state.perpage
           })
@@ -56,6 +58,16 @@ class SalesInvoicesPage extends Component {
   componentWillMount(){
     this.setState({salesPageOpen:this.props.salesPageOpen})
   }
+
+  loadCustomer=()=>{
+    axios.get('invoice/customer/').then(
+      res => {
+        this.setState({customerList:res.data});
+        console.log(res.data)
+      }
+    )
+  }
+
   loadInvoiceData(){
     axios.get('invoice/parantdata').then(
       res => {
@@ -350,7 +362,10 @@ class SalesInvoicesPage extends Component {
               <label>COSTUMER</label><br />
               <select className="select" onChange={(e) => this.setState({selectedName:e.target.value})}>
                 <option value=""></option>
-                
+                {this.state.customerList.map((m ,index)=>
+                    <option key={m.id}
+                          value={m.customer}>{m.customer}</option>)
+                }
             </select>
             </div>
             <div>d</div>

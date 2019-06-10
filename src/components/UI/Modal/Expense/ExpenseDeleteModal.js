@@ -6,7 +6,7 @@ import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, Over
 
 
 
-class DeleteModal extends React.Component {
+class ExpenseDeleteModal extends React.Component {
 
     render() {
       return (
@@ -16,23 +16,23 @@ class DeleteModal extends React.Component {
             </Modal.Header>
             <Modal.Body>
             <div>
-                <h1>Delete Customer Reciept</h1>
-                <p style={{color:'red'}}>Are you Sure you want to delete this Customer Reciept ?</p>
+                <h1>Delete Expense</h1>
+                <p style={{color:'red'}}>Are you Sure you want to delete this Expense ??</p>
                 <table>
                 <thead>
                   <tr>
-                    <th>INVOICE NO</th>
+                    <th>Doc NO</th>
                     <th>DATE</th>
-                    <th>CUSTOMER</th>
+                    <th>CATEGORY</th>
                     <th>TOTAL</th>
                   </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{this.props.formData.reciept_no}</td>
-                      <td>{this.props.formData.journal_entry.date}</td>
-                      <td>{this.props.formData.journal_entry.creditJrnlItem[0].account}</td>
-                      <td>{this.props.formData.journal_entry.debitJrnlItem.debit_amount}</td>
+                      <td>{this.props.formData.Doc_no}</td>
+                      <td>{this.props.formData.Date}</td>
+                      <td>{this.props.formData.ExpenseCategory}</td>
+                      <td>{this.props.formData.Amount}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -49,4 +49,4 @@ class DeleteModal extends React.Component {
     }
   }
 
-export default DeleteModal;
+export default ExpenseDeleteModal;

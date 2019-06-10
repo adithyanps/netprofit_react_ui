@@ -148,15 +148,18 @@ class RecieptEdit extends React.Component {
     this.props.formData.journal_entry.debitJrnlItem.debit_amount = this.state.total
 
     let cashAccntObj = this.state.accountList.filter(item=>item.type === 'CASH')
+    let transactionObj = this.state.accountList.filter(item => item.name === this.state.selectedAcnt)
+
     console.log(this.state.accountList)
     console.log(cashAccntObj)
     let debitSection={}
-    debitSection.account = cashAccntObj[0].id
+    // debitSection.account = cashAccntObj[0].id
+    debitSection.account = transactionObj[0].id
+
     debitSection.partner = null
     debitSection.debit_amount = this.state.total
     debitSection.credit_amount = 0
     console.log(debitSection)
-    let transactionObj = this.state.accountList.filter(item => item.name === this.state.selectedAcnt)
     let output =[]
     console.log(this.state.selectedAcnt)
     console.log(transactionObj)
@@ -219,9 +222,8 @@ class RecieptEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
         <div >
-          <h1>Edit - Customer Receipt</h1>
+          <h1 className="ptag">Edit - Customer Receipt</h1>
           <div className="row-wrapper1">
-            <div><h1 className="ptag">Create Customer Reciept</h1></div>
           </div>
           <br />
           <div className="row-wrapper">
