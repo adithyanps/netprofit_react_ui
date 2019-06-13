@@ -81,7 +81,7 @@ class SettingsEditModel extends React.Component {
       return (
         <Modal
         {...this.props}
-        size="s"
+        size="xl"
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={this.props.show} onHide={this.props.close}
@@ -91,38 +91,56 @@ class SettingsEditModel extends React.Component {
       </Modal.Header>
       <Modal.Body>
       <div>
-      <div>
-      Sales Account:  <select className="select" onChange={(e)=>this.salesHandler(e)}>
-      <option value="">{this.props.SalesObj.name}</option>
-        {this.state.salesAccntList.map((m,index) =>
-          <option key={m.id} value={m.name} >{m.name}</option>
-        )}
-        </select>
-      </div><br />
-      <div>Purchase Account: <select className="select" onChange={(e)=>this.purchseHandler(e)}>
-      <option value="">{this.props.PurchaseObj.name}</option>
-        {this.state.purchaseAccntList.map((m,index) =>
-          <option key={m.id} value={m.name} >{m.name}</option>
-        )}
-        </select></div><br />
-      <div>Customer Account:<select className="select" onChange={(e)=>this.customerHandler(e)}>
-      <option value="">{this.props.CustomerObj.name}</option>
-        {this.state.customerAccntList.map((m,index) =>
-          <option key={m.id} value={m.name}>{m.name}</option>
-        )}
-        </select></div><br />
-      <div>Supplier Account:<select className="select" onChange={(e)=>this.supplierHandler(e)}>
-      <option value="">{this.props.SupplierObj.name}</option>
-        {this.state.supplierAccntList.map((m,index) =>
-          <option key={m.id} value={m.name}>{m.name}</option>
-        )}
-        </select></div><br />
+        <div className="SettingsAcntBoxwrapper">
+        <div>
 
+          <label>Sales Account: </label><br />
+          <select className="select" onChange={(e)=>this.salesHandler(e)}>
+            <option value="">{this.props.SalesObj.name}</option>
+              {this.state.salesAccntList.map((m,index) =>
+            <option key={m.id} value={m.name} >{m.name}</option>
+            )}
+          </select>
+        </div>
+        <div>
+          <label>Purchase Account:</label><br />
+          <select className="select" onChange={(e)=>this.purchseHandler(e)}>
+            <option value="">{this.props.PurchaseObj.name}</option>
+              {this.state.purchaseAccntList.map((m,index) =>
+            <option key={m.id} value={m.name} >{m.name}</option>
+            )}
+          </select>
+        </div>
+        </div>
+        <br />
+        <div className="SettingsAcntBoxwrapper">
+        <div>
+            <label>Customer Account:</label><br />
+            <select className="select" onChange={(e)=>this.customerHandler(e)}>
+              <option value="">{this.props.CustomerObj.name}</option>
+                {this.state.customerAccntList.map((m,index) =>
+                  <option key={m.id} value={m.name}>{m.name}</option>
+                )}
+            </select>
+        </div>
+        <div>
+            <label>Supplier Account:</label><br />
+            <select className="select" onChange={(e)=>this.supplierHandler(e)}>
+              <option value="">{this.props.SupplierObj.name}</option>
+                {this.state.supplierAccntList.map((m,index) =>
+              <option key={m.id} value={m.name}>{m.name}</option>
+              )}
+            </select>
+        </div>
+        </div>
+        <br />
       </div>
       </Modal.Body>
 
 <Modal.Footer>
 <button className="cancelBtn" onClick={this.submitDataHandler}>SAVE </button>
+<button className="cancelBtn" onClick={this.props.close}>CANCEL </button>
+
 
           </Modal.Footer>
 

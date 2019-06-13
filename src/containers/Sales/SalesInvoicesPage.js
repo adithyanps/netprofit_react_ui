@@ -22,18 +22,19 @@ class SalesInvoicesPage extends Component {
   state={
     invoiceData:[],
     customerList:[],
+    settingsAcnt:[],
+    formData:[],
+    editObject:[],
     isEdit:false,
     invoice_number:null,
     isDelete:false,
     deleteId:null,
     editId:null,
     isView: false,
-    formData:[],
-    editObject:[],
+
 
     start_date:new Date(),
     end_date:new Date(),
-
     perpage: 10,
     curr_page: 1,
     start_point: 0,
@@ -48,12 +49,13 @@ class SalesInvoicesPage extends Component {
     this.setState({
       start_date:moment(new Date()).format('YYYY-MM-DD'),
       end_date:moment(new Date()).format('YYYY-MM-DD'),
+      end_point: this.state.start_point + this.state.perpage
+
     })
     this.loadInvoiceData()
     this.loadCustomer()
-    this.setState({
-        end_point: this.state.start_point + this.state.perpage
-          })
+    this.loadSettingsAccnt()
+
   }
   componentWillMount(){
     this.setState({salesPageOpen:this.props.salesPageOpen})
@@ -76,6 +78,16 @@ class SalesInvoicesPage extends Component {
       }
     )
   }
+
+  loadSettingsAccnt=()=>{
+    axios.get('invoice/accountDefault/1/').then(
+      res => {
+        this.setState({settingsAcnt:res.data});
+        console.log(res.data)
+      }
+    )
+  }
+
   pagexClickHandler = (pageNo) => {
       console.log(pageNo)
       let length = this.state.invoiceData.length
@@ -172,7 +184,10 @@ class SalesInvoicesPage extends Component {
           close={this.props.salesEditWindowClose}
           formData={this.props.invoiceData}
           editId={this.state.editId}
-          editHandler={this.props.salseObjEditHandler}/>
+          editHandler={this.props.salseObjEditHandler}
+          settingsAcnt={this.state.settingsAcnt}
+          customerList={this.state.customerList}
+          />
     )
   }
 
@@ -255,6 +270,9 @@ class SalesInvoicesPage extends Component {
                 formData={this.state.editObject}
                 editId={this.state.editId}
                 editHandler={this.objEditHandler}
+                settingsAcnt={this.state.settingsAcnt}
+                customerList={this.state.customerList}
+
             />
       );
   }

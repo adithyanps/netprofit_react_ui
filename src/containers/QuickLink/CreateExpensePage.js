@@ -9,6 +9,7 @@ import { Redirect } from 'react-router-dom';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 class CreateExpensePage extends Component {
+
   render() {
     return (
       <div className="saleswrapper">
@@ -16,7 +17,8 @@ class CreateExpensePage extends Component {
           <SalesNav />
          </div>
          <div className="CreateInvoiceBox">
-            <CreateExpense />
+            <CreateExpense
+            />
          </div>
          <div>
           <QuickLink />

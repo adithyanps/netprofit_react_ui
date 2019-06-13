@@ -1,0 +1,18 @@
+.SettingsAcntBox {
+  width: 1000px;
+  height: 400px;
+  border-radius: 9px;
+  box-shadow: 9.192px 9.192px 7px rgba(0,0,0,0.16);
+  background-color: #ffffff;
+  border: 1px solid #cbc8c8;
+  margin-top: 10px;
+  margin-left: 200px;
+  margin-right: 5px;
+  text-align: left;
+
+}
+.SettingsAcntBoxwrapper{
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  margin-left: 200px;
+}

@@ -18,6 +18,7 @@ class BranchEdit extends React.Component {
       amountList:[],
       customerList:[],
       branchList:[],
+      settingsAcnt:[],
       serial_no:0
     };
   }
@@ -26,6 +27,8 @@ class BranchEdit extends React.Component {
 
     this.setState({
       holder:this.props.formData,
+      settingsAcnt:this.props.settingsAcnt,
+      customerList:this.props.customerList,
       selectedName:this.props.formData.customer,
       selectedBranch:this.props.formData.branch,
       // doc_no:this.props.formData.doc_no,
@@ -200,21 +203,54 @@ handleGrandTotalChange=()=>{
 }
   handleSubmit=(e)=>{
     // e.preventDefault()
+    let creditSection = {}
+    let salesAcntObjct = {}
+    let customerAcntObj ={}
+    console.log(this.state.selectedName)
+    let partnerObj = this.state.customerList.filter(item => item.customer === this.state.selectedName)
+    salesAcntObjct = this.state.settingsAcnt.SalesAccont
+    customerAcntObj = this.state.settingsAcnt.CustomerAccount
+
+    console.log(partnerObj)
+    console.log(salesAcntObjct)
+
+    creditSection.partner = null
+    creditSection.account = salesAcntObjct.id
+    creditSection.credit_amount = this.state.holder.grant_total
+    creditSection.debit_amount = 0
+
+    let debitSection = {}
+    debitSection.partner = partnerObj[0].id
+    debitSection.account = customerAcntObj.id
+    debitSection.debit_amount = this.state.holder.grant_total
+    debitSection.credit_amount = 0
+
+    let output = []
+    output.push(creditSection)
+    output.push(debitSection)
+    console.log(output)
+
     delete this.state.child.id
     console.log(this.state.child)
       this.props.formData.invoice_no=this.props.formData.invoice_no
       this.props.formData.doc_no=this.state.holder.doc_no
       this.props.formData.customer=this.state.selectedName
       this.props.formData.branch=this.state.selectedBranch
-      this.props.formData.narration=this.state.narration
+      this.props.formData.narrationchildObject=this.state.narration
       this.props.formData.date=this.state.holder.date
       this.props.formData.total_amount=this.state.holder.total_amount
       this.props.formData.grant_total=this.state.holder.grant_total
       this.props.formData.discount=this.state.holder.discount
       this.props.formData.child=this.state.holder.child
+      this.props.formData.journal_entry = {
+        date:this.state.holder.date,
+        transaction_type:"SALES",
+        description:this.state.narration,
+        journal_item:output,
+      }
 
     this.props.editHandler(e,this.props.formData)
-
+    console.log(this.props.formData)
   }
 
   addItemHandler=(e)=> {
@@ -247,9 +283,9 @@ handleGrandTotalChange=()=>{
     render() {
       console.log(this.props.formData)
       console.log(this.state.holder)
-      console.log(this.state.holder.child)
+      console.log(this.state)
       console.log(this.state.child)
-      console.log(this.props.childObject)
+      console.log(this.props)
 
       return (
         <Modal

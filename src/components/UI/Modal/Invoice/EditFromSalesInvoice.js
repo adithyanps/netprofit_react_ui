@@ -17,6 +17,7 @@ class BranchEdit extends React.Component {
       parentData:[],
       amountList:[],
       customerList:[],
+      settingsAcnt:[],
       branchList:[],
       serial_no:0
     };
@@ -26,6 +27,8 @@ class BranchEdit extends React.Component {
 
     this.setState({
       holder:this.props.formData,
+      settingsAcnt:this.props.settingsAcnt,
+      customerList:this.props.customerList,
       selectedName:this.props.formData.customer,
       selectedBranch:this.props.formData.branch,
       // doc_no:this.props.formData.doc_no,
@@ -37,7 +40,7 @@ class BranchEdit extends React.Component {
     })
     // this.setState({child: this.props.childObject})
     this.loadItems()
-    this.loadCustomer()
+    // this.loadCustomer()
     this.loadBranch()
     console.log('will')
     console.log(this.state)
@@ -212,6 +215,33 @@ handleGrandTotalChange=()=>{
 }
   handleSubmit=(e)=>{
     // e.preventDefault()
+    let creditSection = {}
+    let salesAcntObjct = {}
+    let customerAcntObj ={}
+    console.log(this.state.selectedName)
+    let partnerObj = this.state.customerList.filter(item => item.customer === this.state.selectedName)
+    salesAcntObjct = this.state.settingsAcnt.SalesAccont
+    customerAcntObj = this.state.settingsAcnt.CustomerAccount
+
+    console.log(partnerObj)
+    console.log(salesAcntObjct)
+
+    creditSection.partner = null
+    creditSection.account = salesAcntObjct.id
+    creditSection.credit_amount = this.state.holder.grant_total
+    creditSection.debit_amount = 0
+
+    let debitSection = {}
+    debitSection.partner = partnerObj[0].id
+    debitSection.account = customerAcntObj.id
+    debitSection.debit_amount = this.state.holder.grant_total
+    debitSection.credit_amount = 0
+
+    let output = []
+    output.push(creditSection)
+    output.push(debitSection)
+    console.log(output)
+
     delete this.state.child.id
     console.log(this.state.child)
       this.props.formData.invoice_no=this.props.formData.invoice_no
@@ -224,6 +254,13 @@ handleGrandTotalChange=()=>{
       this.props.formData.grant_total=this.state.holder.grant_total
       this.props.formData.discount=this.state.holder.discount
       this.props.formData.child=this.state.holder.child
+      this.props.formData.journal_entry = {
+        date:this.state.holder.date,
+        transaction_type:"SALES",
+        description:this.state.narration,
+        journal_item:output,
+      }
+    console.log(this.props.formData)
 
     this.props.editHandler(this.props.formData)
 

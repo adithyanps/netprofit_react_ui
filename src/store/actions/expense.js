@@ -88,6 +88,7 @@ export const expenseObjDeleteHandler=(id)=>{
 }
 
 export const expenseObjEditHandler=(obj)=>{
+  console.log(obj)
   return dispatch => {
     axios.patch('/invoice/expenses/' + obj.id + '/',obj).then(
       response => {

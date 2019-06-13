@@ -3,6 +3,7 @@ import axios from '../../axios'
 import EditSettingsModel from '../../components/UI/Modal/Settings/SettingsEditModel';
 import * as actions from '../../store/actions/index';
 import { connect } from 'react-redux';
+import './Settings.css';
 
 class DefaultSettings extends Component {
   state={
@@ -128,15 +129,32 @@ class DefaultSettings extends Component {
     console.log(this.props)
 
     return (
-      <div className="salesbox">
+      <div className="SettingsAcntBox">
         {this.state.isEditSettings ? (this.editWindowOpen()) : null }
         <p>DefaultSettings</p>
-        <div>
-        Sales Account:<input value={this.state.SalesObj.name} readOnly /></div><br />
-        <div>Purchase Account:<input value={this.state.PurchaseObj.name} readOnly/></div><br />
-        <div>Customer Account:<input value={this.state.CustomerObj.name} readOnly/></div><br />
-        <div>Supplier Account: <input value={this.state.SupplierObj.name} readOnly /></div><br />
-        <div>
+        <div className="SettingsAcntBoxwrapper">
+          <div>
+            <label>Sales Account</label><br />
+            <input value={this.state.SalesObj.name} readOnly />
+          </div>
+          <div>
+            <label>Purchase Account</label><br />
+            <input value={this.state.PurchaseObj.name} readOnly/>
+          </div>
+        </div>
+        <br />
+        <div className="SettingsAcntBoxwrapper">
+          <div>
+            <label>Customer Account</label><br />
+            <input value={this.state.CustomerObj.name} readOnly/>
+          </div>
+          <div>
+              <label>Supplier Account</label><br />
+              <input value={this.state.SupplierObj.name} readOnly />
+          </div>
+        </div><br />
+
+        <div style={{marginLeft:"200px"}}>
           <button className="cancelBtn" onClick={this.EditSettings}>EDIT</button>
         </div>
       </div>

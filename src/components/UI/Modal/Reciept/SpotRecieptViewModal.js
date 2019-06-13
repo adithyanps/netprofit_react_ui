@@ -4,7 +4,7 @@ import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, Over
 import { Link } from 'react-router-dom';
 
 
-class ViewFromSalesInvoice extends React.Component {
+class SpotRecieptViewModal extends React.Component {
   state={
     serial_no:0,
     formData:[],
@@ -143,4 +143,4 @@ class ViewFromSalesInvoice extends React.Component {
   }
 
 
-export default ViewFromSalesInvoice;
+export default SpotRecieptViewModal;

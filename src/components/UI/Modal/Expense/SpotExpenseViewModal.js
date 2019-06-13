@@ -27,9 +27,37 @@ class SpotExpenseView extends React.Component {
       <Modal.Body>
       <div >
         <h1>Expenses View</h1>
-
-
-
+        <div className="invoiceviewWrapper">
+            <div>
+              <p>DOC NO :</p>
+              {this.props.formData.Doc_no}
+            </div>
+            <div>
+              <p>CATOGORY:</p>
+              {this.props.categoryList.filter(item=>item.id === this.props.formData.ExpenseCategory)[0].name}
+            </div>
+            <div>
+                <p>DATE:</p>
+                {this.props.formData.Date}
+            </div>
+        </div>
+        <br />
+        <div className="invoiceviewWrapper">
+            <div>
+              <p>EXPENSE ACCOUNT :</p>
+              {this.props.expenseAccnts.filter(item=>item.id === this.props.formData.ExpenseAcct)[0].name}
+            </div>
+            <div>
+              <p>CASH ACCOUNT:</p>
+              {this.props.cashAccnts.filter(item=>item.id === this.props.formData.CreditAcct)[0].name}
+            </div>
+            <div>
+                <p>TOTAL:</p>
+                {this.props.formData.Amount}
+            </div>
+        </div>
+        <p>NARRATION:</p>
+        <p>{this.props.formData.journal_entry.description}</p>
       </div>
       </Modal.Body>
 

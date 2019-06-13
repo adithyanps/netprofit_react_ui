@@ -36,6 +36,7 @@ class CreateInvoice extends Component {
     itemList:[],
     parantdataList:[],
     formData:[],
+    settingsAcnt:[],
     salesPage:false,
 
   }
@@ -47,7 +48,16 @@ class CreateInvoice extends Component {
     this.loadBranch()
     this.loadItem()
     this.loadParantData()
+    this.loadSettingsAccnt()
 
+  }
+  loadSettingsAccnt=()=>{
+    axios.get('invoice/accountDefault/1/').then(
+      res => {
+        this.setState({settingsAcnt:res.data});
+        console.log(res.data)
+      }
+    )
   }
   loadCustomer=()=>{
     axios.get('invoice/customer/').then(
@@ -210,6 +220,33 @@ class CreateInvoice extends Component {
     let isChecked = e.target.checked;
   }
   submitDataHandler = (evt) => {
+    let creditSection = {}
+    let salesAcntObjct = {}
+    let customerAcntObj ={}
+
+    let partnerObj = this.state.customerList.filter(item => item.customer === this.state.selectedName)
+    salesAcntObjct = this.state.settingsAcnt.SalesAccont
+    customerAcntObj = this.state.settingsAcnt.CustomerAccount
+
+    console.log(partnerObj)
+    console.log(salesAcntObjct)
+
+    creditSection.partner = null
+    creditSection.account = salesAcntObjct.id
+    creditSection.credit_amount = this.state.grant_total
+    creditSection.debit_amount = 0
+
+    let debitSection = {}
+    debitSection.partner = partnerObj[0].id
+    debitSection.account = customerAcntObj.id
+    debitSection.debit_amount = this.state.grant_total
+    debitSection.credit_amount = 0
+
+    let output = []
+    output.push(creditSection)
+    output.push(debitSection)
+
+
     let data={
       invoice_no:this.state.invoice_no,
       doc_no:this.state.doc_no,
@@ -220,7 +257,13 @@ class CreateInvoice extends Component {
       total_amount:this.state.total,
       discount:this.state.discount,
       grant_total:this.state.grant_total,
-      child:this.state.holder
+      child:this.state.holder,
+      journal_entry:{
+        date:this.state.date,
+        transaction_type:"SALES",
+        description:this.state.narration,
+        journal_item:output,
+      }
     }
     console.log(data)
     // this.postData(formData)

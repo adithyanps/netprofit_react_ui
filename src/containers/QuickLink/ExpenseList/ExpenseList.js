@@ -7,6 +7,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import SpotExpenseViewModal from '../../../components/UI/Modal/Expense/SpotExpenseViewModal';
+import SpotExpenseDeleteModal from '../../../components/UI/Modal/Expense/SpotExpenseDeleteModal';
+import SpotExpenseEditModal from '../../../components/UI/Modal/Expense/SpotExpenseEditModal';
+
 import ExpenseViewModal from '../../../components/UI/Modal/Expense/ExpenseViewModal';
 import ExpenseEditModal from '../../../components/UI/Modal/Expense/ExpenseEditModal';
 import ExpenseDeleteModal from '../../../components/UI/Modal/Expense/ExpenseDeleteModal';
@@ -19,6 +22,8 @@ class ExpenseList extends Component {
     expenseDataList:[],
     categoryList:[],
     accountList:[],
+    cashAccnts:[],
+    expenseAccnts:[],
     start_date:new Date(),
     end_date:new Date(),
 
@@ -36,16 +41,14 @@ class ExpenseList extends Component {
         end_point: this.state.start_point + this.state.perpage,
           })
     this.loadExpenseData()
+
     this.loadExpenseCategory()
     this.loadAccount()
+    this.loadExpenseAccnts()
+    this.loadCashAccnts()
+
   }
-  loadExpenseData=()=>{
-    axios.get('/invoice/expenses/').then(
-      res =>{
-        this.ExpenseDataHandler(res.data)
-      }
-    )
-  }
+
   loadExpenseCategory=()=>{
     axios.get('/invoice/expense-category/').then(
       response=>{this.setState({categoryList:response.data});
@@ -58,44 +61,91 @@ class ExpenseList extends Component {
     }
     )
   }
+  loadExpenseAccnts=()=>{
+    axios.get('/invoice/account/?search=EXPENSE').then(
+      res => {
+        this.setState({expenseAccnts:res.data})
+      }
+    )
+  }
 
-  ExpenseDataHandler=(data)=>{
+  loadCashAccnts=()=>{
+    axios.get('/invoice/account/?search=CASH').then(
+      res => {
+        this.setState({cashAccnts:res.data})
+      }
+    )
+  }
+
+  loadExpenseData=()=>{
+    axios.get('/invoice/expenses/').then(
+      res =>{
+        this.setState(
+          {
+            // expenseDataList:res.data,
+            creditJrnlItem:res.data.map(items=>items.journal_entry.journal_item.filter((item)=>item.credit_amount>0)),
+            debitJrnlItem:res.data.map(items=>items.journal_entry.journal_item.filter((item)=>item.debit_amount>0)),
+          });
+        this.ExpenseDataHandlers(res.data)
+      }
+    )
+  }
+  ExpenseDataHandlers=(data)=>{
     console.log(data)
-    data.map((sample,index) => {
-      this.state.categoryList.map((cat,idx)=>{
-        if(cat.id === sample.ExpenseCategory){
-          sample.ExpenseCategory = cat.name
-        }
-      });
 
-      this.state.accountList.map((acnt,idx)=>{
-        if(acnt.id === sample.CreditAcct) {
-          sample.CreditAcct = acnt.name
-        }
-        if (acnt.id === sample.ExpenseAcct) {
-            sample.ExpenseAcct = acnt.name
-          }
-      });
+    data.map((sample,index) => {
+
 
       let creditJrnlItem=[];
       let debitJrnlItem=[];
+      let accntName= ''
+
+      sample.ExpenseAcct = accntName
+      sample.CreditAcct = accntName
+
       sample.journal_entry.journal_item.map((child,index)=>{
         this.state.accountList.map((acc,accIndex)=>{
           if (acc.id === child.account) {
             child.account = acc.name;
+            accntName = acc.name
+            // alert(creditName)
           }
         });
 
         if(child.credit_amount > 0){
           // creditJrnlItem.push(child);
           creditJrnlItem = child
+          sample.CreditAcct = accntName
+
         } else {
           debitJrnlItem = child;
+          sample.ExpenseAcct = accntName
         }
       });
       sample.journal_entry.journal_item = null;
       sample.journal_entry.creditJrnlItem = creditJrnlItem;
       sample.journal_entry.debitJrnlItem = debitJrnlItem;
+      this.state.categoryList.map((cat,idx)=>{
+        console.log(sample)
+
+        // alert(sample.ExpenseCategory)
+        if(sample.ExpenseCategory === cat.id){
+          sample.ExpenseCategory = cat.name
+        }
+
+      });
+
+      // this.state.expenseAccnts.map((exAcnt,indx)=>{
+      //   if( sample.ExpenseAcct === exAcnt.id) {
+      //     sample.ExpenseAcct = exAcnt.name
+      //   }
+      // });
+      //
+      // this.state.cashAccnts.map((chAcnt,indx)=>{
+      //   if( sample.CreditAcct === chAcnt.id) {
+      //     sample.CreditAcct = chAcnt.name
+      //   }
+      // })
     });
     console.log(data)
     this.setState({expenseDataList:data})
@@ -204,11 +254,9 @@ class ExpenseList extends Component {
     e.preventDefault()
       const filterData = this.state.expenseDataList.filter(item => { return item.id === id})
       console.log(filterData)
-      filterData[0].journal_entry.creditJrnlItem.map(item => {
-        delete item.id
-        delete item.journal_entry
-      }
-      )
+      delete filterData[0].journal_entry.creditJrnlItem.id
+      delete filterData[0].journal_entry.creditJrnlItem.journal_entry
+
       delete filterData[0].journal_entry.debitJrnlItem.id
       delete filterData[0].journal_entry.debitJrnlItem.journal_entry
 
@@ -229,6 +277,7 @@ class ExpenseList extends Component {
           editObject: {},
       })
   }
+
   deleteHandler = (event) => {
     // event.preventDefault()
     let id = this.state.deleteId
@@ -248,10 +297,6 @@ class ExpenseList extends Component {
   }
 
   objEditHandler = (event,objTemp) => {
-
-    // let objTemp = obj
-    // delete objTemp.journal_entry.debitJrnlItem
-    // delete objTemp.journal_entry.creditJrnlItem
   console.log(objTemp)
       event.preventDefault()
       axios.patch('/invoice/expenses/' + objTemp.id + '/', objTemp).then(
@@ -284,8 +329,9 @@ class ExpenseList extends Component {
           formData={this.state.editObject}
           editId={this.state.editId}
           editHandler={this.objEditHandler}
-          accountList={this.state.accountList}
-          partnerList={this.state.partnerList}
+          categoryList={this.state.categoryList}
+          cashAccnts={this.state.cashAccnts}
+          expenseAccnts={this.state.expenseAccnts}
        />
     )
   }
@@ -297,6 +343,7 @@ class ExpenseList extends Component {
           close={this.deleteWindowClose}
           deleteHandler = {this.deleteHandler}
           formData={this.state.viewObject}
+
       />
     )
   }
@@ -307,10 +354,48 @@ class ExpenseList extends Component {
         show={this.props.expenseListPageOpen}
         close={this.props.spotViewWindowOpen}
         formData={this.props.expenseData}
+        categoryList={this.state.categoryList}
+        cashAccnts={this.state.cashAccnts}
+        expenseAccnts={this.state.expenseAccnts}
+        editwindow={this.props.spotEditWindowOpen}
+        deletewindow={this.props.spotDeleteWindowOpen}
       />
     )
   }
+  spotEditModal=()=>{
+      return(
+        <SpotExpenseEditModal
+          show={this.props.isEditPage}
+          close={this.props.spotEditWindowClose}
+          formData={this.props.expenseData}
+          editId={this.state.editId}
+          categoryList={this.state.categoryList}
+          cashAccnts={this.state.cashAccnts}
+          expenseAccnts={this.state.expenseAccnts}
+          editHandler={this.props.spotObjEditHandler}
+
+        />
+      )
+  }
+  spotDeletModal=()=>{
+      return(
+        <SpotExpenseDeleteModal
+          show={this.props.isDeletePage}
+          close={this.props.spotDeleteWindowClose}
+          formData={this.props.expenseData}
+          categoryList={this.state.categoryList}
+          cashAccnts={this.state.cashAccnts}
+          expenseAccnts={this.state.expenseAccnts}
+          deleteHandler={this.props.spotObjDeleteHandler}
+        />
+      )
+  }
+
   render() {
+    console.log(this.state)
+    console.log(this.props)
+
+    console.log(this.state.expenseDataList)
     const itemlist = this.state.expenseDataList.slice(this.state.start_point,this.state.end_point).map((branch, index)=> {
         return(
           <tr key={branch.id}>
@@ -334,6 +419,8 @@ class ExpenseList extends Component {
       {this.state.isDelete ? (this.deleteModal()) : (null)}
 
       {this.props.expenseListPageOpen ? (this.spotViewModal()) : (null)}
+      {this.props.isEditPage ? (this.spotEditModal()) : (null)}
+      {this.props.isDeletePage ? (this.spotDeletModal()) : (null)}
 
         Expense List
         <table className="SalesInvoiceTable" >
