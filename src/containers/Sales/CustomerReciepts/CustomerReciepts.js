@@ -23,6 +23,7 @@ class CustomerReciepts extends Component {
   state = {
     recieptData:[],
     accountList:[],
+    expenseAccnts:[],
     partnerList:[],
     isEdit:false,
     invoice_number:null,
@@ -32,6 +33,7 @@ class CustomerReciepts extends Component {
     isView: false,
     formData:[],
     editObject:[],
+    selectedName:null,
 
     start_date:new Date(),
     end_date:new Date(),
@@ -48,6 +50,8 @@ class CustomerReciepts extends Component {
 
 componentDidMount(){
     this.setState({
+        start_date:moment(new Date()).format('YYYY-MM-DD'),
+        end_date:moment(new Date()).format('YYYY-MM-DD'),
         end_point: this.state.start_point + this.state.perpage,
           })
     this.loadRecieptData()
@@ -113,7 +117,9 @@ RecieptDataHandler=(data)=>{
 loadAccount=()=>{
       axios.get('/invoice/account/').then(
         response=>{
-          this.setState({accountList:response.data})
+          this.setState(
+            {accountList:response.data,
+            expenseAccnts:response.data.filter(item=>item.type=== "EXPENSE")})
         }
       )
 
@@ -328,7 +334,7 @@ spotViewModal =()=>{
         formData={this.props.recieptData}
         accountList={this.state.accountList}
         partnerList={this.state.partnerList}
-        
+
         editwindow={this.props.spotEditWindowOpen}
         deletewindow={this.props.spotDeleteWindowOpen}
         debitJrnlItem={this.props.debitJrnlItem}
@@ -370,6 +376,33 @@ spotDeletModal=()=>{
     )
 }
 
+handleInputChange = (event) => {
+  event.preventDefault();
+  console.log(event.target.name,event.target.value)
+  let key = event.target.name
+  let  value = event.target.value
+this.setState({[key]:value})
+
+}
+
+filterHandler=(e)=>{
+  if (this.state.selectedName === null) {
+    axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+      response=>{
+        // this.setState({invoiceData:response.data});
+        console.log(response.data)
+        this.RecieptDataHandler(response.data)
+      }
+    )
+  } else {
+    axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
+      response=>{
+        // this.setState({invoiceData:response.data});
+        this.RecieptDataHandler(response.data)
+      }
+    )
+  }
+}
   render() {
     console.log(this.props.isEditPage)
     console.log(this.props)
@@ -380,7 +413,7 @@ spotDeletModal=()=>{
                  <td>{index+this.state.start_point+1}</td>
                  <td>{branch.reciept_no}</td>
                  <td>{branch.journal_entry.date}</td>
-                 <td>{branch.journal_entry.transaction_type}</td>
+                 <td>{branch.journal_entry.debitJrnlItem.account}</td>
                  <td>{branch.journal_entry.debitJrnlItem.debit_amount}</td>
                  <td>
                    <i onClick={()=>this.viewWindowOpen(branch.id)} className="w3-margin-left fa fa-eye"></i>
@@ -399,6 +432,44 @@ spotDeletModal=()=>{
       {this.props.isDeletePage ? (this.spotDeletModal()) : (null)}
 
         Customer Reciept List
+        <br />
+        <div className="sales-invoice-filter">
+
+          <div>
+            <label>START DATE</label><br />
+            <input
+              className="dates"
+              type='date'
+              name='start_date'
+              value={this.state.start_date}
+              onChange={this.handleInputChange}
+              required='required'/>
+          </div>
+          <div>
+            <label>END DATE</label><br />
+            <input
+              className="dates"
+              type='date'
+              name='end_date'
+              value={this.state.end_date}
+              onChange={this.handleInputChange}
+              required='required'/>
+          </div>
+          <div>
+            <label>COSTUMER</label><br />
+            <select className="select" onChange={(e) => this.setState({selectedName:e.target.value})}>
+              <option value=""></option>
+              {this.state.expenseAccnts.map((m ,index)=>
+                  <option key={m.id}
+                        value={m.name}>{m.name}</option>)
+              }
+          </select>
+          </div>
+          <div>
+          <label></label><br />
+            <button className="cancelBtn" onClick={(e)=>this.filterHandler()}>FILTER</button>
+          </div>
+        </div>
         <table className="SalesInvoiceTable" >
             <thead>
               <tr>

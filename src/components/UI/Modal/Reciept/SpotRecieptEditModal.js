@@ -320,10 +320,8 @@ class SpotRecieptEdit extends React.Component {
           <div className="btn-gap-reciept">
 
           <div>
-          <button className="cancelBtn" onClick={this.state.selectedAcnt ? (this.submitDataHandler) :(null)}>SAVE</button>
           </div>
           <div>
-          <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>
           </div>
           </div>
 
@@ -331,7 +329,8 @@ class SpotRecieptEdit extends React.Component {
         </Modal.Body>
 
   <Modal.Footer>
-            <button className="OkBtn" onClick={this.props.close}>OK</button>
+            <button className="OkBtn" onClick={this.props.close}>CANCEL</button>
+            <button className="cancelBtn" onClick={this.state.selectedAcnt ? (this.submitDataHandler) :(null)}>SAVE</button>
 
             <Link to="/create-reciept"><i className="fas fa-plus"></i></Link>
             </Modal.Footer>
@@ -343,3 +342,4 @@ class SpotRecieptEdit extends React.Component {
 
 
 export default SpotRecieptEdit;
+// <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>

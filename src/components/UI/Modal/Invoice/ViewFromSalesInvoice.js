@@ -3,7 +3,7 @@ import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, Over
 // import ControlLabel from 'react-bootstrap/lib/FormControl';
 import { Link } from 'react-router-dom';
 import './InvoiceViewModal.css';
-
+import Toggle from '../../Buttons/Toggle/Toggle';
 
 class ViewFromSalesInvoice extends React.Component {
   state={
@@ -25,8 +25,14 @@ class ViewFromSalesInvoice extends React.Component {
       </Modal.Header>
       <Modal.Body>
       <div >
-        <h1>Sales Invoice</h1>
-        <p>status:</p>
+        <div className="row-wrapper1">
+          <div><h1 className="ptag">Sales Invoice</h1></div>
+          <div  >
+          <label>status   :</label>
+         <label>CLOSE</label>  <Toggle checked={this.props.formData.status} /><label>OPEN</label>
+          </div>
+        </div>
+        <br />
         <div className="invoiceviewWrapper">
             <div>
               <p>INVOICE NO :</p>

@@ -243,6 +243,7 @@ class CreateRecieptPage extends Component {
       <div>
       {this.state.customerRecieptPage ? (this.openCustomerRecieptPage()): (null)}
           <br />
+
           <div className="row-wrapper1">
             <div><h1 className="ptag">Create Customer Reciept</h1></div>
           </div>

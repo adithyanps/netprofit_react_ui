@@ -2,6 +2,7 @@ import React from 'react';
 import axios from '../../../../axios';
 import {Col, Raw,FormControl, FormGroup, Form, ControlLabel, Button, Glyphicon, Table, Modal, OverlayTrigger} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Toggle from '../../Buttons/Toggle/Toggle';
 
 class BranchEdit extends React.Component {
   constructor() {
@@ -19,7 +20,8 @@ class BranchEdit extends React.Component {
       customerList:[],
       settingsAcnt:[],
       branchList:[],
-      serial_no:0
+      serial_no:0,
+      status:null,
     };
   }
 
@@ -31,6 +33,7 @@ class BranchEdit extends React.Component {
       customerList:this.props.customerList,
       selectedName:this.props.formData.customer,
       selectedBranch:this.props.formData.branch,
+      status:this.props.formData.status,
       // doc_no:this.props.formData.doc_no,
       date:this.props.formData.date,
       total:this.props.formData.total_amount,
@@ -248,6 +251,7 @@ handleGrandTotalChange=()=>{
       this.props.formData.doc_no=this.state.holder.doc_no
       this.props.formData.customer=this.state.selectedName
       this.props.formData.branch=this.state.selectedBranch
+      this.props.formData.state=this.state.status
       this.props.formData.narration=this.state.narration
       this.props.formData.date=this.state.holder.date
       this.props.formData.total_amount=this.state.holder.total_amount
@@ -290,6 +294,15 @@ handleGrandTotalChange=()=>{
     this.totalHandler()
     e.preventDefault()
          }
+
+  statusHandler=()=>{
+    if (this.state.status === false) {
+      this.setState({status:true})
+    } else {
+        this.setState({status:false})
+    }
+   }
+
     render() {
       console.log(this.props.formData)
       console.log(this.state.holder)
@@ -313,7 +326,13 @@ handleGrandTotalChange=()=>{
         <div style={{"textAlign":"center"}}>
         <div className="row-wrapper1">
           <div><h1 className="ptag">create sales invoice</h1></div>
-
+          <div  >
+          <label>status   :</label>
+         <label>CLOSE</label>
+         <Toggle
+            checked={this.state.status}
+            onChange={this.statusHandler}/><label>OPEN</label>
+          </div>
 
         </div>
         <br />

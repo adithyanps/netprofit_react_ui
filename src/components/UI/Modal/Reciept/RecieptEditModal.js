@@ -193,7 +193,7 @@ class RecieptEdit extends React.Component {
     console.log(Data)
     this.props.formData.reciept_no=this.state.reciept_no
     this.props.formData.journal_entry.description=this.state.narration
-
+    this.props.formData.journal_entry.debitJrnlItem.account = transactionObj[0].name
     this.props.formData.journal_entry.date=this.state.date
     this.props.formData.journal_entry.transaction_type="COSTOMER_RECIEPT"
     this.props.formData.journal_entry.journal_item=output
@@ -317,10 +317,8 @@ class RecieptEdit extends React.Component {
           <div className="btn-gap-reciept">
 
           <div>
-          <button className="cancelBtn" onClick={this.state.selectedAcnt ? (this.submitDataHandler) :(null)}>SAVE</button>
           </div>
           <div>
-          <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>
           </div>
           </div>
 
@@ -328,7 +326,8 @@ class RecieptEdit extends React.Component {
         </Modal.Body>
 
   <Modal.Footer>
-            <button className="OkBtn" onClick={this.props.close}>OK</button>
+            <button className="OkBtn" onClick={this.props.close}>CANCEL</button>
+            <button className="cancelBtn" onClick={this.state.selectedAcnt ? (this.submitDataHandler) :(null)}>SAVE</button>
 
             <Link to="/create-reciept"><i className="fas fa-plus"></i></Link>
             </Modal.Footer>
@@ -340,3 +339,4 @@ class RecieptEdit extends React.Component {
 
 
 export default RecieptEdit;
+// <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>

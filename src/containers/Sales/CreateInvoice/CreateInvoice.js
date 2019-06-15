@@ -1,42 +1,45 @@
 import React , { Component } from 'react';
-import SalesNav from '../../../components/Sales/Layout/SalesNav';
-import './CreateInvoice.css';
 import moment from 'moment';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import axios from '../../../axios'
+import Toggle from '../../../components/UI/Buttons/Toggle/Toggle';
+import SalesNav from '../../../components/Sales/Layout/SalesNav';
 import InvoiceViewModal from '../../../components/UI/Modal/Invoice/InvoiceViewModal';
 import DeleteModal from '../../../components/UI/Modal/Invoice/DeleteInvoiceModal';
 import EditModal from '../../../components/UI/Modal/Invoice/EditInvoiceModal';
 import QuickLink from '../../../components/UI/QuickLink/QuickLink';
-import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-// import SalesInvoice from '../SalesInvoicesPage';
 import * as actions from '../../../store/actions/index';
+import './CreateInvoice.css';
+
 
 class CreateInvoice extends Component {
   state={
     date:new Date(),
     customerList:[],
     branchList:[],
+    itemList:[],
+    parantdataList:[],
+    formData:[],
+    settingsAcnt:[],
     serial_no:0,
     invoice_no:null,
-    doc_no:'',
+    doc_no:null,
     selectedName:'',
-    selectedBranch:'',
+    selectedBranch:null,
     narration:'',
     total: null,
     grant_total: null,
     discount:null,
+    status:false,
     holder: [{
          item:'',
          price:'',
          quantity:null,
          sub_total:null,
        }],
-    itemList:[],
-    parantdataList:[],
-    formData:[],
-    settingsAcnt:[],
     salesPage:false,
 
   }
@@ -252,6 +255,7 @@ class CreateInvoice extends Component {
       doc_no:this.state.doc_no,
       customer:this.state.selectedName,
       branch:this.state.selectedBranch,
+      status:this.state.status,
       narration:this.state.narration,
       date:this.state.date,
       total_amount:this.state.total,
@@ -267,8 +271,12 @@ class CreateInvoice extends Component {
     }
     console.log(data)
     // this.postData(formData)
-    this.props.onCreateInvoice(data)
-    this.setState({salesPage:true})
+    if (this.state.selectedBranch !== null) {
+      this.props.onCreateInvoice(data)
+
+      this.setState({salesPage:true})
+    }
+
     }
   addItemHandler=(e)=> {
 
@@ -319,6 +327,15 @@ class CreateInvoice extends Component {
     }
     e.preventDefault()
   }
+  statusHandler=()=>{
+    if (this.state.status === false) {
+      this.setState({status:true})
+
+    } else {
+      this.setState({status:false})
+
+    }
+  }
 
   render() {
     console.log(this.state)
@@ -329,7 +346,10 @@ class CreateInvoice extends Component {
         <br />
         <div className="row-wrapper1">
           <div><h1 className="ptag">create sales invoice</h1></div>
-
+          <div  >
+          <label>status   :</label>
+         <label>CLOSE</label>  <Toggle checked={this.state.status}  onChange={this.statusHandler}/><label>OPEN</label>
+          </div>
         </div>
         <br />
         <div className="row-wrapper">
@@ -380,6 +400,7 @@ class CreateInvoice extends Component {
                 }
             </select>
           </div>
+
         </div>
         <br />
         <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
@@ -490,7 +511,7 @@ class CreateInvoice extends Component {
         </div>
         </form>
         <br />
-      <button className="cancelBtn" onClick={this.submitDataHandler}>SAVE</button>
+      <button className="cancelBtn" onClick={(this.state.selectedName ) ? (this.submitDataHandler) :(null)}>SAVE</button>
       <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>
       </div>
     )

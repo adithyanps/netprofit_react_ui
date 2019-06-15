@@ -32,7 +32,7 @@ class RecieptView extends React.Component {
               </div>
               <div>
                 <p>ACCOUNT:</p>
-                {this.props.formData.journal_entry.creditJrnlItem[0].account}
+                {this.props.formData.journal_entry.debitJrnlItem.account}
               </div>
               <div>
                   <p>DATE:</p>

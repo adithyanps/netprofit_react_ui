@@ -31,10 +31,10 @@ class SalesInvoicesPage extends Component {
     deleteId:null,
     editId:null,
     isView: false,
+    selectedName:null,
 
-
-    start_date:new Date(),
-    end_date:new Date(),
+    start_date:null,
+    end_date:null,
     perpage: 10,
     curr_page: 1,
     start_point: 0,
@@ -317,6 +317,25 @@ class SalesInvoicesPage extends Component {
   this.setState({[key]:value})
 
   }
+  filterHandler=(e)=>{
+    if (this.state.selectedName === null) {
+      axios.get('invoice/parantdata'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+        response=>{
+          this.setState({invoiceData:response.data});
+        }
+      )
+    } else {
+      axios.get('invoice/parantdata/'+ '?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&customer='+this.state.selectedName).then(
+        response=>{
+          this.setState({invoiceData:response.data});
+
+        }
+      )
+
+    }
+
+
+  }
 
   render(){
     console.log(this.props.invoiceData)
@@ -361,7 +380,7 @@ class SalesInvoicesPage extends Component {
               <input
                 className="dates"
                 type='date'
-                name='date'
+                name='start_date'
                 value={this.state.start_date}
                 onChange={this.handleInputChange}
                 required='required'/>
@@ -371,7 +390,7 @@ class SalesInvoicesPage extends Component {
               <input
                 className="dates"
                 type='date'
-                name='date'
+                name='end_date'
                 value={this.state.end_date}
                 onChange={this.handleInputChange}
                 required='required'/>
@@ -386,9 +405,10 @@ class SalesInvoicesPage extends Component {
                 }
             </select>
             </div>
-            <div>d</div>
-            <div>e</div>
-
+            <div>
+            <label></label><br />
+              <button className="cancelBtn" onClick={(e)=>this.filterHandler()}>FILTER</button>
+            </div>
           </div>
           <table className="SalesInvoiceTable" >
               <thead>
