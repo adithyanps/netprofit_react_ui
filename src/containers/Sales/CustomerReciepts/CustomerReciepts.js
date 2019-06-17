@@ -387,7 +387,7 @@ this.setState({[key]:value})
 
 filterHandler=(e)=>{
   if (this.state.selectedName === null) {
-    axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+    axios.get('invoice/customerReceipt/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
       response=>{
         // this.setState({invoiceData:response.data});
         console.log(response.data)
@@ -395,9 +395,11 @@ filterHandler=(e)=>{
       }
     )
   } else {
-    axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
+    axios.get('invoice/customerReceipt/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
       response=>{
         // this.setState({invoiceData:response.data});
+        console.log(response.data)
+
         this.RecieptDataHandler(response.data)
       }
     )
@@ -455,16 +457,7 @@ filterHandler=(e)=>{
               onChange={this.handleInputChange}
               required='required'/>
           </div>
-          <div>
-            <label>COSTUMER</label><br />
-            <select className="select" onChange={(e) => this.setState({selectedName:e.target.value})}>
-              <option value=""></option>
-              {this.state.expenseAccnts.map((m ,index)=>
-                  <option key={m.id}
-                        value={m.name}>{m.name}</option>)
-              }
-          </select>
-          </div>
+
           <div>
           <label></label><br />
             <button className="cancelBtn" onClick={(e)=>this.filterHandler()}>FILTER</button>

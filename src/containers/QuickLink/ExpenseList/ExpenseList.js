@@ -26,6 +26,7 @@ class ExpenseList extends Component {
     expenseAccnts:[],
     start_date:new Date(),
     end_date:new Date(),
+    selectedName:null,
 
     perpage: 10,
     curr_page: 1,
@@ -38,7 +39,9 @@ class ExpenseList extends Component {
   }
   componentDidMount(){
     this.setState({
-        end_point: this.state.start_point + this.state.perpage,
+      start_date:moment(new Date()).format('YYYY-MM-DD'),
+      end_date:moment(new Date()).format('YYYY-MM-DD'),
+      end_point: this.state.start_point + this.state.perpage,
           })
     this.loadExpenseData()
 
@@ -391,6 +394,34 @@ class ExpenseList extends Component {
       )
   }
 
+  handleInputChange = (event) => {
+    event.preventDefault();
+    console.log(event.target.name,event.target.value)
+    let key = event.target.name
+    let  value = event.target.value
+  this.setState({[key]:value})
+
+  }
+
+  filterHandler=(e)=>{
+    if (this.state.selectedName === null) {
+      axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+        response=>{
+          // this.setState({invoiceData:response.data});
+          console.log(response.data)
+          this.ExpenseDataHandlers(response.data)        }
+      )
+    } else {
+      axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
+        response=>{
+          // this.setState({invoiceData:response.data});
+          console.log(response.data)
+          this.ExpenseDataHandlers(response.data)
+        }
+      )
+    }
+  }
+
   render() {
     console.log(this.state)
     console.log(this.props)
@@ -423,6 +454,44 @@ class ExpenseList extends Component {
       {this.props.isDeletePage ? (this.spotDeletModal()) : (null)}
 
         Expense List
+        <br />
+        <div className="sales-invoice-filter">
+
+          <div>
+            <label>START DATE</label><br />
+            <input
+              className="dates"
+              type='date'
+              name='start_date'
+              value={this.state.start_date}
+              onChange={this.handleInputChange}
+              required='required'/>
+          </div>
+          <div>
+            <label>END DATE</label><br />
+            <input
+              className="dates"
+              type='date'
+              name='end_date'
+              value={this.state.end_date}
+              onChange={this.handleInputChange}
+              required='required'/>
+          </div>
+          <div>
+            <label>ACCOUNT</label><br />
+            <select className="select" onChange={(e) => this.setState({selectedName:e.target.value})}>
+              <option value=""></option>
+              {this.state.expenseAccnts.map((m ,index)=>
+                  <option key={m.id}
+                        value={m.name}>{m.name}</option>)
+              }
+          </select>
+          </div>
+          <div>
+          <label></label><br />
+            <button className="cancelBtn" onClick={(e)=>this.filterHandler()}>FILTER</button>
+          </div>
+        </div>
         <table className="SalesInvoiceTable" >
             <thead>
               <tr>
