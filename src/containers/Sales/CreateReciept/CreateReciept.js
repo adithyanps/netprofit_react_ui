@@ -47,7 +47,7 @@ class CreateRecieptPage extends Component {
   }
 
   loadPartner=()=>{
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({partnerList:res.data});
       }
@@ -56,7 +56,7 @@ class CreateRecieptPage extends Component {
 
 
   loadCustomer=()=>{
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({customerList:res.data});
         console.log(res.data)
@@ -186,7 +186,7 @@ class CreateRecieptPage extends Component {
     this.state.holder.forEach(a=>{
       let creditSection = {}
       this.state.customerList.forEach(partner=>{
-        if(partner.customer === a.customer){
+        if(partner.name === a.customer){
           creditSection.account = transactionObj[0].id
           creditSection.partner = partner.id
           creditSection.credit_amount = a.credit_amount
@@ -290,7 +290,7 @@ class CreateRecieptPage extends Component {
                           {this.state.partnerList.map((m,index) =>
                                 <option
                                   key={index}
-                                  value={m.customer}>{m.customer}</option>
+                                  value={m.name}>{m.name}</option>
                           )}
                         </select>
                       </div>

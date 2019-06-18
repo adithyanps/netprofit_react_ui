@@ -93,7 +93,7 @@ class SpotRecieptViewModal extends React.Component {
               <td className="tds">
                     <input
                       readOnly
-                      value={this.props.partnerList.filter(item=>item.id === shareholder.partner)[0].customer}/>
+                      value={this.props.partnerList.filter(item=>item.id === shareholder.partner)[0].name}/>
               </td>
               <td className="tds">
                     <input

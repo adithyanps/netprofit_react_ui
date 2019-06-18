@@ -47,7 +47,7 @@ class SpotRecieptEdit extends React.Component {
       let creditOutput = {}
       this.props.partnerList.forEach(x=>{
         if(x.id === item.partner){
-          creditOutput.customer = x.customer
+          creditOutput.customer = x.name
           creditOutput.credit_amount = item.credit_amount
           creditOutput.debit_amount = item.debit_amount
           output.push(creditOutput)
@@ -64,7 +64,7 @@ class SpotRecieptEdit extends React.Component {
     )
   }
   loadPartner=()=>{
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({partnerList:res.data});
       }
@@ -173,7 +173,7 @@ class SpotRecieptEdit extends React.Component {
     this.state.creditJrnlItem.forEach(a=>{
       let creditSection = {}
       this.state.partnerList.forEach(partner=>{
-        if(partner.customer === a.customer){
+        if(partner.name === a.customer){
           creditSection.account = transactionObj[0].id
           creditSection.partner = partner.id
           creditSection.credit_amount = a.credit_amount
@@ -270,7 +270,7 @@ class SpotRecieptEdit extends React.Component {
                           {this.state.partnerList.map((m,index) =>
                                 <option
                                   key={index}
-                                  value={m.customer}>{m.customer}</option>
+                                  value={m.name}>{m.name}</option>
                           )}
                         </select>
                       </div>

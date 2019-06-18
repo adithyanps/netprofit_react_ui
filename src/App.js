@@ -25,6 +25,9 @@ import ExpenseListPage from './containers/QuickLink/ExpenseListPage';
 
 import Customers from './containers/Sales/Customers';
 import CreateExpensePage from './containers/QuickLink/CreateExpensePage';
+import CreatePartnerPage from './containers/Settings/Partner/CreatePartnerPage';
+import PartnerListPage from './containers/Settings/Partner/PartnersListPage';
+
 
 class App extends Component {
 
@@ -56,6 +59,10 @@ class App extends Component {
             <Route path="/Customers" exact component={Customers} />
             <Route  path="/logout" component={Logout} />
             <Route path="/create-expense" exact component={CreateExpensePage} />
+            <Route path="/create-partner" exact component={CreatePartnerPage} />
+            <Route path="/partners" exact component={PartnerListPage} />
+            
+
           </Switch>
           </Navbar >
       </div>

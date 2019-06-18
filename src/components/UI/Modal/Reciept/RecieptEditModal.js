@@ -52,7 +52,7 @@ class RecieptEdit extends React.Component {
     )
   }
   loadPartner=()=>{
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({partnerList:res.data});
       }
@@ -167,7 +167,7 @@ class RecieptEdit extends React.Component {
     this.state.creditJrnlItem.forEach(a=>{
       let creditSection = {}
       this.state.partnerList.forEach(partner=>{
-        if(partner.customer === a.partner){
+        if(partner.name === a.partner){
           creditSection.account = transactionObj[0].id
           creditSection.partner = partner.id
           creditSection.credit_amount = a.credit_amount
@@ -267,7 +267,7 @@ class RecieptEdit extends React.Component {
                           {this.state.partnerList.map((m,index) =>
                                 <option
                                   key={index}
-                                  value={m.customer}>{m.customer}</option>
+                                  value={m.name}>{m.name}</option>
                           )}
                         </select>
                       </div>

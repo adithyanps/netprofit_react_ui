@@ -62,7 +62,7 @@ class SalesInvoicesPage extends Component {
   }
 
   loadCustomer=()=>{
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({customerList:res.data});
         console.log(res.data)
@@ -401,7 +401,7 @@ class SalesInvoicesPage extends Component {
                 <option value=""></option>
                 {this.state.customerList.map((m ,index)=>
                     <option key={m.id}
-                          value={m.customer}>{m.customer}</option>)
+                          value={m.name}>{m.name}</option>)
                 }
             </select>
             </div>

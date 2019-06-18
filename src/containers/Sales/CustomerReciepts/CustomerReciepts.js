@@ -60,7 +60,7 @@ componentDidMount(){
 }
 
 loadPartner=()=>{
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({partnerList:res.data});
       }
@@ -96,7 +96,7 @@ RecieptDataHandler=(data)=>{
         });
         this.state.partnerList.map((partner,pIndex)=>{
           if (partner.id === child.partner) {
-            child.partner = partner.customer;
+            child.partner = partner.name;
           }
         });
         if(child.credit_amount > 0){

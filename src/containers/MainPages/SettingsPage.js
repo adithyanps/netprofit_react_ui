@@ -3,6 +3,7 @@ import DefaultSettings from '../Settings/DefaultSettings';
 import axios from '../../axios'
 import * as actions from '../../store/actions/index';
 import { connect } from 'react-redux';
+import SettingsNav from '../../components/Settings/Layout/SettingsNav';
 
 class SettingsPage extends Component {
   state={
@@ -32,8 +33,10 @@ class SettingsPage extends Component {
 
 
     return(
+      <div className="saleswrapper">
       <div>
-       settings
+        <SettingsNav />
+      </div>
        {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
          <DefaultSettings
             />

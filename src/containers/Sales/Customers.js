@@ -7,8 +7,9 @@ import Pagex from '../../components/UI/Pagination/Pagination';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
+import CustomersList from './CustomersList/CustomersList';
 import {Button, Table, Modal} from 'react-bootstrap';
+
 class Customers extends Component {
   render() {
     return(
@@ -32,7 +33,7 @@ class Customers extends Component {
               </div>
             </div>
             <br />
-            <div>table</div>
+          <CustomersList />
      </div>
      <div>
        <QuickLink />

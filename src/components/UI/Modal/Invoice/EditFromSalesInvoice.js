@@ -60,7 +60,7 @@ class BranchEdit extends React.Component {
   }
 
   loadCustomer = () => {
-    axios.get('invoice/customer/').then(
+    axios.get('invoice/partner/').then(
       res => {
         this.setState({customerList:res.data});
         console.log(res.data)
@@ -222,7 +222,7 @@ handleGrandTotalChange=()=>{
     let salesAcntObjct = {}
     let customerAcntObj ={}
     console.log(this.state.selectedName)
-    let partnerObj = this.state.customerList.filter(item => item.customer === this.state.selectedName)
+    let partnerObj = this.state.customerList.filter(item => item.name === this.state.selectedName)
     salesAcntObjct = this.state.settingsAcnt.SalesAccont
     customerAcntObj = this.state.settingsAcnt.CustomerAccount
 
@@ -347,7 +347,7 @@ handleGrandTotalChange=()=>{
                 <option value="">{this.props.formData.customer}</option>
                 {this.state.customerList.map((m ,index)=>
                     <option key={m.id}
-                          value={m.customer}>{m.customer}</option>)
+                          value={m.name}>{m.name}</option>)
                 }
             </select>
           </div>
