@@ -10,6 +10,7 @@ class CreatePartner extends Component {
     customer_id:null,
     type:null,
     name:null,
+    partnerPage:false,
   }
   componentDidMount(){
     this.props.currentUser()
@@ -33,15 +34,23 @@ class CreatePartner extends Component {
     axios.post('invoice/partner/',Data).then(
       response=>{
         console.log(response.data)
-      }
+        this.props.onCreatePartnerSuccess(response.data)
+      },
+      this.setState({partnerPage:true})
     )
   }
-
+  openPartnerPage=()=>{
+    return(
+      <Redirect  to="/partners"/>
+    )
+  }
   render(){
     const typeList = [{'type':'BOTH'},{'type':'CUSTOMER'},{'type':'SUPPLIER'}]
 
     return(
       <div>
+      {this.state.partnerPage ? (this.openPartnerPage()) : (null)}
+
       <br />
       <div className="SettingsAcntBoxwrapper">
         <div>
@@ -97,6 +106,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
       currentUser: ()=>dispatch(actions.currentUser()),
+      onCreatePartnerSuccess: (data)=>dispatch(actions.createPartnerSuccess(data))
     };
 };
 export default  connect(mapStateToProps,mapDispatchToProps)(CreatePartner);

@@ -49,7 +49,7 @@ class CreateRecieptPage extends Component {
   loadPartner=()=>{
     axios.get('invoice/partner/').then(
       res => {
-        this.setState({partnerList:res.data});
+        this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER')});
       }
     )
   }
@@ -58,7 +58,7 @@ class CreateRecieptPage extends Component {
   loadCustomer=()=>{
     axios.get('invoice/partner/').then(
       res => {
-        this.setState({customerList:res.data});
+        this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER')});
         console.log(res.data)
       }
     )

@@ -4,7 +4,7 @@ import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, Over
 import { Link } from 'react-router-dom';
 
 
-class PartnerView extends React.Component {
+class SpotPartnerView extends React.Component {
 
     render() {
       console.log(this.props.formData)
@@ -57,4 +57,4 @@ class PartnerView extends React.Component {
   }
 
 
-export default PartnerView;
+export default SpotPartnerView;

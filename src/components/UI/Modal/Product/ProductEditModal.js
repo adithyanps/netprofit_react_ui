@@ -5,29 +5,29 @@ import { Link } from 'react-router-dom';
 import axios from '../../../../axios';
 
 
-class PartnerEdit extends React.Component {
+class ProductEdit extends React.Component {
   state={
-    partnerList:[],
-    customer_id:null,
-    type:null,
-    name:null,
+    product_CatList:[],
+    selectedCategory:null,
+    item:null,
+    price:null,
 
   }
   componentWillMount(){
     this.setState({
       formData:this.props.formData,
-      partnerList:this.props.partnerList,
-      customer_id:this.props.formData.customer_id,
-      type:this.props.formData.type,
-      name:this.props.formData.name
+      // product_CatList:this.props.product_CatList,
+      selectedCategory:this.props.formData.product_Cat,
+      item:this.props.formData.item,
+      price:this.props.formData.price
   })
-  this.loadPartner()
+  this.loadProductCats()
 }
 
-  loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+  loadProductCats=()=>{
+    axios.get('invoice/product-category/').then(
       res => {
-        this.setState({partnerList:res.data});
+        this.setState({product_CatList:res.data});
       }
     )
   }
@@ -42,20 +42,18 @@ class PartnerEdit extends React.Component {
 
 
   submitDataHandler=(e)=>{
-    this.props.formData.customer_id = this.state.customer_id
-    this.props.formData.name = this.state.name
-    this.props.formData.type = this.state.type
-    this.props.formData.edited_by = this.props.currentUserData.id
+    this.props.formData.item = this.state.item
+    this.props.formData.price = this.state.price
+    this.props.formData.product_Cat = this.state.selectedCategory
 
     let Data = {
-      customer_id:this.state.customer_id,
-      name:this.state.name,
-      type:this.state.type,
-      created_by:this.props.formData.created_by,
-      edited_by:this.props.currentUserData.id,
+      id:this.props.formData.id,
+      item:this.state.item,
+      price:this.state.price,
+      product_Cat: this.state.product_CatList.map(item=>item.name === this.state.selectedCategory)[0].id,
     }
     console.log(Data)
-    this.props.editHandler(e,this.props.formData)
+    this.props.editHandler(e,Data)
     console.log(this.props.formData)
 
   }
@@ -63,7 +61,6 @@ class PartnerEdit extends React.Component {
       console.log(this.props.formData)
       console.log(this.props)
       console.log(this.state)
-      const typeList = [{'type':'BOTH'},{'type':'CUSTOMER'},{'type':'SUPPLIER'}]
 
       return (
         <Modal
@@ -78,38 +75,39 @@ class PartnerEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
         <div >
-          <h1 className="ptag">Edit - Customer Receipt</h1>
+          <h1 className="ptag">Edit - Product</h1>
           <div className="row-wrapper1">
           </div>
           <br />
           <div className="row-wrapper">
             <div>
-              <label>CUSOTMER_ID:</label><br />
+              <label>PRODUCT NAME:</label><br />
               <input
                 className="grand"
-                name="customer_id"
-                value={this.state.customer_id}
+                name="item"
+                value={this.state.item}
                 onChange={this.handleInputChange}
                 />
             </div>
             <div>
-              <label>TYPE</label><br />
+              <label>PRODUCT CATEGORY</label><br />
               <select
                   className="select"
-                  onChange={(e) => this.setState({type:e.target.value})}
+                  onChange={(e) => this.setState({selectedCategory:e.target.value})}
                   >
-                  <option value=""> {this.state.type}</option>
-                  {typeList.map((m,index)=>
-                      <option key={m.id} value={m.type}>{m.type}</option>
+                  <option value=""> {this.state.selectedCategory}</option>
+                  {this.state.product_CatList.map((m,index)=>
+                      <option key={m.id} value={m.name}>{m.name}</option>
                   )}
               </select>
             </div>
             <div>
-            <label>NAME</label><br />
+            <label>PRICE</label><br />
             <input
                 className="dates"
-                name='name'
-                value={this.state.name}
+                type="number"
+                name='price'
+                value={this.state.price}
                 onChange={this.handleInputChange}
                 required='required'/>
             </div>
@@ -131,5 +129,5 @@ class PartnerEdit extends React.Component {
   }
 
 
-export default PartnerEdit;
+export default ProductEdit;
 // <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>

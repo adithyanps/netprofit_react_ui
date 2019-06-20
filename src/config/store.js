@@ -9,6 +9,12 @@ import salesInvoiceReducer from '../store/reducers/salesInvoice';
 import accountReducer from '../store/reducers/account';
 import recieptReducer from '../store/reducers/reciept';
 import expenseReducer from '../store/reducers/expense';
+import partnerReducer from '../store/reducers/partner';
+import productReducer from '../store/reducers/product';
+import productCategoryReducer from '../store/reducers/productCategory';
+
+
+
 
 
 const rootReducer = combineReducers({
@@ -19,7 +25,10 @@ const rootReducer = combineReducers({
   salesInvoice:salesInvoiceReducer,
   account:accountReducer,
   reciept:recieptReducer,
-  expense:expenseReducer
+  expense:expenseReducer,
+  partner:partnerReducer,
+  product:productReducer,
+  productCategory:productCategoryReducer,
   // order:accountReducer,
 
 })

@@ -5,29 +5,32 @@ import { Link } from 'react-router-dom';
 import axios from '../../../../axios';
 
 
-class PartnerEdit extends React.Component {
+class SpotProductCategoryEdit extends React.Component {
   state={
-    partnerList:[],
-    customer_id:null,
-    type:null,
+    product_CatList:[],
+    selectedCategory:null,
     name:null,
 
   }
   componentWillMount(){
     this.setState({
       formData:this.props.formData,
-      partnerList:this.props.partnerList,
-      customer_id:this.props.formData.customer_id,
-      type:this.props.formData.type,
+      // product_CatList:this.props.product_CatList,
       name:this.props.formData.name
   })
-  this.loadPartner()
+  if(this.props.formData.ParentCategory !== null) {
+    this.setState({
+      selectedCategory:this.props.product_CatList.filter(item=>item.id === this.props.formData.ParentCategory)[0].name,
+
+    })
+  }
+  this.loadProductCats()
 }
 
-  loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+  loadProductCats=()=>{
+    axios.get('invoice/product-category/').then(
       res => {
-        this.setState({partnerList:res.data});
+        this.setState({product_CatList:res.data});
       }
     )
   }
@@ -42,20 +45,27 @@ class PartnerEdit extends React.Component {
 
 
   submitDataHandler=(e)=>{
-    this.props.formData.customer_id = this.state.customer_id
     this.props.formData.name = this.state.name
-    this.props.formData.type = this.state.type
-    this.props.formData.edited_by = this.props.currentUserData.id
 
-    let Data = {
-      customer_id:this.state.customer_id,
-      name:this.state.name,
-      type:this.state.type,
-      created_by:this.props.formData.created_by,
-      edited_by:this.props.currentUserData.id,
+    let data = {}
+    if (this.state.selectedCategory === null) {
+       data = {
+         id:this.props.formData.id,
+         name:this.state.name,
+         ParentCategory:null
+      }
+      console.log(data)
+
+    } else {
+      this.props.formData.ParentCategory = this.state.product_CatList.filter(item=>item.name === this.state.selectedCategory)[0].id
+      data = {
+        id:this.props.formData.id,
+        name:this.state.name,
+        ParentCategory:this.state.product_CatList.filter(item=>item.name === this.state.selectedCategory)[0].id,
+      }
     }
-    console.log(Data)
-    this.props.editHandler(e,this.props.formData)
+    console.log(data)
+    this.props.editHandler(data)
     console.log(this.props.formData)
 
   }
@@ -63,7 +73,6 @@ class PartnerEdit extends React.Component {
       console.log(this.props.formData)
       console.log(this.props)
       console.log(this.state)
-      const typeList = [{'type':'BOTH'},{'type':'CUSTOMER'},{'type':'SUPPLIER'}]
 
       return (
         <Modal
@@ -78,40 +87,31 @@ class PartnerEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
         <div >
-          <h1 className="ptag">Edit - Customer Receipt</h1>
+          <h1 className="ptag">Edit - Product Category</h1>
           <div className="row-wrapper1">
           </div>
           <br />
           <div className="row-wrapper">
             <div>
-              <label>CUSOTMER_ID:</label><br />
+              <label>PRODUCT NAME:</label><br />
               <input
                 className="grand"
-                name="customer_id"
-                value={this.state.customer_id}
+                name="name"
+                value={this.state.name}
                 onChange={this.handleInputChange}
                 />
             </div>
             <div>
-              <label>TYPE</label><br />
+              <label>PRODUCT CATEGORY</label><br />
               <select
                   className="select"
-                  onChange={(e) => this.setState({type:e.target.value})}
+                  onChange={(e) => this.setState({selectedCategory:e.target.value})}
                   >
-                  <option value=""> {this.state.type}</option>
-                  {typeList.map((m,index)=>
-                      <option key={m.id} value={m.type}>{m.type}</option>
+                  <option value=""> {this.state.selectedCategory}</option>
+                  {this.state.product_CatList.map((m,index)=>
+                      <option key={m.id} value={m.name}>{m.name}</option>
                   )}
               </select>
-            </div>
-            <div>
-            <label>NAME</label><br />
-            <input
-                className="dates"
-                name='name'
-                value={this.state.name}
-                onChange={this.handleInputChange}
-                required='required'/>
             </div>
           </div>
           <br />
@@ -131,5 +131,5 @@ class PartnerEdit extends React.Component {
   }
 
 
-export default PartnerEdit;
+export default SpotProductCategoryEdit;
 // <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>

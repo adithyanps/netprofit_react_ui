@@ -65,7 +65,7 @@ class CreateInvoice extends Component {
   loadCustomer=()=>{
     axios.get('invoice/partner/').then(
       res => {
-        this.setState({customerList:res.data});
+        this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
         console.log(res.data)
       }
     )
@@ -227,7 +227,7 @@ class CreateInvoice extends Component {
     let salesAcntObjct = {}
     let customerAcntObj ={}
 
-    let partnerObj = this.state.customerList.filter(item => item.customer === this.state.selectedName)
+    let partnerObj = this.state.customerList.filter(item => item.name === this.state.selectedName)
     salesAcntObjct = this.state.settingsAcnt.SalesAccont
     customerAcntObj = this.state.settingsAcnt.CustomerAccount
 

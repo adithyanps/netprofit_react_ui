@@ -9,6 +9,9 @@ class SettingsNav extends Component {
         <a href="/products">Products</a>
         <a href="/create-partner">Create-Partner</a>
         <a href="/partners">Partners</a>
+        <a href="/create-productCategory">Create ProductCategory</a>
+        <a href="/productCategorys">ProductCategory's</a>
+
       </div>
     )
   }

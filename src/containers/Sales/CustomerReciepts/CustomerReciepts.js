@@ -62,7 +62,7 @@ componentDidMount(){
 loadPartner=()=>{
     axios.get('invoice/partner/').then(
       res => {
-        this.setState({partnerList:res.data});
+        this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
       }
     )
 }
@@ -273,9 +273,6 @@ deleteHandler = (event) => {
 }
 objEditHandler = (event,objTemp) => {
 
-  // let objTemp = obj
-  // delete objTemp.journal_entry.debitJrnlItem
-  // delete objTemp.journal_entry.creditJrnlItem
 console.log(objTemp)
     event.preventDefault()
     axios.patch('/invoice/customerReceipt/' + objTemp.id + '/', objTemp).then(

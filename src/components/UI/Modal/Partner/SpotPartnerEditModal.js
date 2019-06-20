@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from '../../../../axios';
 
 
-class PartnerEdit extends React.Component {
+class SpotPartnerEdit extends React.Component {
   state={
     partnerList:[],
     customer_id:null,
@@ -55,7 +55,7 @@ class PartnerEdit extends React.Component {
       edited_by:this.props.currentUserData.id,
     }
     console.log(Data)
-    this.props.editHandler(e,this.props.formData)
+    this.props.editHandler(this.props.formData)
     console.log(this.props.formData)
 
   }
@@ -131,5 +131,4 @@ class PartnerEdit extends React.Component {
   }
 
 
-export default PartnerEdit;
-// <button className="cancelBtn" onClick={(e)=>this.cancelDataHandler(e)}>CANCEL</button>
+export default SpotPartnerEdit;

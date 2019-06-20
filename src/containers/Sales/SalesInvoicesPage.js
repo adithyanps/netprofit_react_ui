@@ -64,7 +64,7 @@ class SalesInvoicesPage extends Component {
   loadCustomer=()=>{
     axios.get('invoice/partner/').then(
       res => {
-        this.setState({customerList:res.data});
+        this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER')});
         console.log(res.data)
       }
     )

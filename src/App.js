@@ -27,6 +27,10 @@ import Customers from './containers/Sales/Customers';
 import CreateExpensePage from './containers/QuickLink/CreateExpensePage';
 import CreatePartnerPage from './containers/Settings/Partner/CreatePartnerPage';
 import PartnerListPage from './containers/Settings/Partner/PartnersListPage';
+import CreateProduct from './containers/Settings/Product/CreateProductPage';
+import ProductListPage from './containers/Settings/Product/ProductsListPage';
+import CreateProductCategory from './containers/Settings/ProductCategory/CreateProductCategoryPage';
+import ProductCategoryListPage from './containers/Settings/ProductCategory/ProductCategoryListPage';
 
 
 class App extends Component {
@@ -61,7 +65,11 @@ class App extends Component {
             <Route path="/create-expense" exact component={CreateExpensePage} />
             <Route path="/create-partner" exact component={CreatePartnerPage} />
             <Route path="/partners" exact component={PartnerListPage} />
-            
+            <Route path="/create-products" exact component={CreateProduct} />
+            <Route path="/products" exact component={ProductListPage} />
+            <Route path="/create-productCategory" exact component={CreateProductCategory} />
+            <Route path="/productCategorys" exact component={ProductCategoryListPage} />
+
 
           </Switch>
           </Navbar >

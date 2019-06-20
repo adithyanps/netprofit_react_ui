@@ -66,7 +66,7 @@ class SpotRecieptEdit extends React.Component {
   loadPartner=()=>{
     axios.get('invoice/partner/').then(
       res => {
-        this.setState({partnerList:res.data});
+        this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
       }
     )
   }

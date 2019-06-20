@@ -4,11 +4,10 @@ import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, Over
 import { Link } from 'react-router-dom';
 
 
-class PartnerView extends React.Component {
+class ProductView extends React.Component {
 
     render() {
       console.log(this.props.formData)
-
       return (
         <Modal
         {...this.props}
@@ -18,23 +17,22 @@ class PartnerView extends React.Component {
         show={this.props.show} onHide={this.props.close}
       >
         <Modal.Header closeButton>
-
         </Modal.Header>
         <Modal.Body>
         <div >
-          <h1>Partner</h1>
+          <h1>Product</h1>
           <div className="invoiceviewWrapper">
               <div>
-                <p>CUSOTMER_ID  :</p>
-                {this.props.formData.customer_id}
+                <p>PRODUCT NAME  :</p>
+                {this.props.formData.item}
               </div>
               <div>
-                <p>TYPE:</p>
-                {this.props.formData.type}
+                <p>PRODUCT CATEGORY:</p>
+                {this.props.formData.product_Cat}
               </div>
               <div>
-                  <p>NAME:</p>
-                  {this.props.formData.name}
+                  <p>PRICE:</p>
+                  {this.props.formData.price}
               </div>
           </div>
           <br />
@@ -57,4 +55,4 @@ class PartnerView extends React.Component {
   }
 
 
-export default PartnerView;
+export default ProductView;

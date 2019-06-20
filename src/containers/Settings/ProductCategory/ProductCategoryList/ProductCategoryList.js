@@ -4,23 +4,25 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Pagex from '../../../../components/UI/Pagination/Pagination';
-import PartnerViewModal from '../../../../components/UI/Modal/Partner/PartnerViewModal';
-import PartnerEditModal from '../../../../components/UI/Modal/Partner/PartnerEditModal';
-import PartnerDeleteModal from '../../../../components/UI/Modal/Partner/PartnerDeleteModal';
-import SpotPartnerViewModal from '../../../../components/UI/Modal/Partner/SpotPartnerViewModal';
-import SpotPartnerEditModal from '../../../../components/UI/Modal/Partner/SpotPartnerEditModal';
-import SpotPartnerDeleteModal from '../../../../components/UI/Modal/Partner/SpotPartnerDeleteModal';
+import ProductCategoryViewModal from '../../../../components/UI/Modal/ProductCategory/ProductCategoryViewModal';
+import ProductCategoryEditModal from '../../../../components/UI/Modal/ProductCategory/ProductCategoryEditModal';
+import ProductCategoryDeleteModal from '../../../../components/UI/Modal/ProductCategory/ProductCategoryDeleteModal';
+import SpotProductCategoryViewModal from '../../../../components/UI/Modal/ProductCategory/SpotProductCategoryViewModal';
+import SpotProductCategoryEditModal from '../../../../components/UI/Modal/ProductCategory/SpotProductCategoryEditModal';
+import SpotProductCategoryDeleteModal from '../../../../components/UI/Modal/ProductCategory/SpotProductCategoryDeleteModal';
+
 import * as actions from '../../../../store/actions/index';
 
-class ParnerList extends Component {
+class ProductCategoryList extends Component {
   state ={
-    partnerList : [],
+    product_CatList:[],
     isEdit:false,
     isDelete:false,
     deleteId:null,
     editId:null,
     isView: false,
     editObject:[],
+
 
     perpage: 10,
     curr_page: 1,
@@ -32,24 +34,33 @@ class ParnerList extends Component {
     lastDisabled: false
   }
 
-  componentDidMount(){
+ componentDidMount(){
     this.setState({
         end_point: this.state.start_point + this.state.perpage,
-          })
-    this.props.currentUser()
+      })
+      this.loadProductCats()
 
-    this.loadPartner()
   }
-  loadPartner=()=>{
-      axios.get('invoice/partner/').then(
+  loadProductCats=()=>{
+      axios.get('invoice/product-category/').then(
         res => {
-          this.setState({partnerList:res.data});
+          let data = res.data;
+          let dataTemp = res.data;
+          data.map((sample,index)=>{
+            dataTemp.map((proCat)=>{
+              if (proCat.id === sample.ParentCategory) {
+                sample.ParentCategory = proCat.name;
+              }
+            })
+          })
+          this.setState({product_CatList:data});
         }
       )
   }
+
   pagexClickHandler = (pageNo) => {
         console.log(pageNo)
-        let length = this.state.partnerList.length
+        let length = this.state.product_CatList.length
         let pr_pg = this.state.perpage
         let page_count = Math.ceil(length/pr_pg)
         let st_pt = (pageNo-1)*pr_pg
@@ -96,7 +107,7 @@ class ParnerList extends Component {
   }
 
   nextClickHandler = () => {
-        let length = this.state.partnerList.length
+        let length = this.state.product_CatList.length
         let page_count = Math.ceil(length/this.state.perpage)
         if(this.state.curr_page < page_count){
             this.pagexClickHandler(this.state.curr_page+1)
@@ -110,7 +121,7 @@ class ParnerList extends Component {
   }
 
   lastClickHandler = () => {
-        let length = this.state.partnerList.length
+        let length = this.state.product_CatList.length
         let page_count = Math.ceil(length/this.state.perpage)
         if(this.state.curr_page < page_count){
             this.pagexClickHandler(page_count)
@@ -119,7 +130,7 @@ class ParnerList extends Component {
 
   viewWindowOpen=(id)=>{
       // e.preventDefault()
-        const filterData = this.state.partnerList.filter(item => { return item.id === id})
+        const filterData = this.state.product_CatList.filter(item => { return item.id === id})
         console.log(filterData)
         console.log(filterData[0])
         this.setState({
@@ -148,7 +159,7 @@ class ParnerList extends Component {
   }
   editWindowOpen = (e,id) => {
     e.preventDefault()
-      const filterData = this.state.partnerList.filter(item => { return item.id === id})
+      const filterData = this.state.product_CatList.filter(item => { return item.id === id})
       console.log(filterData)
       this.setState({
           isEdit: true,
@@ -166,42 +177,46 @@ class ParnerList extends Component {
   }
   viewModal = () => {
       return(
-        <PartnerViewModal
+        <ProductCategoryViewModal
               show={this.state.isView}
               close={this.viewWindowClose}
               formData={this.state.viewObject}
               deletewindow={this.deleteWindowOpen}
               editwindow={this.editWindowOpen}
+              product_CatList={this.state.product_CatList}
+
         />
       )
   }
 
   editModal =()=>{
     return(
-      <PartnerEditModal
+      <ProductCategoryEditModal
           show={this.state.isEdit}
           close={this.editWindowClose}
           formData={this.state.editObject}
           editId={this.state.editId}
           editHandler={this.objEditHandler}
-          partnerList={this.state.partnerList}
-          currentUserData={this.props.currentUserData}
+          product_CatList={this.state.product_CatList}
+
        />
     )
   }
   deleteModal =()=> {
     return(
-      <PartnerDeleteModal
+      <ProductCategoryDeleteModal
           show={this.state.isDelete}
           close={this.deleteWindowClose}
           deleteHandler = {this.deleteHandler}
           formData={this.state.viewObject}
+          product_CatList={this.state.product_CatList}
+
       />
     )
   }
   objEditHandler = (event,objTemp) => {
-      event.preventDefault()
-      axios.patch('/invoice/partner/' + objTemp.id + '/', objTemp).then(
+
+      axios.patch('/invoice/product-category/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -214,14 +229,14 @@ class ParnerList extends Component {
   deleteHandler = (event) => {
     // event.preventDefault()
     let id = this.state.deleteId
-    const updatedOrders = this.state.partnerList;
-    let deleteObject = this.state.partnerList.filter(item =>  item.id === id)
+    const updatedOrders = this.state.product_CatList;
+    let deleteObject = this.state.product_CatList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/partner/'+id).then(
+    axios.delete('invoice/product-category/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
-               partnerList: updatedOrders,
+               product_CatList: updatedOrders,
                isDelete: false,
                isView:false
            })
@@ -231,62 +246,66 @@ class ParnerList extends Component {
 
   spotViewModal =()=>{
       return(
-        <SpotPartnerViewModal
-          show={this.props.partnerListPageOpen}
+        <SpotProductCategoryViewModal
+          show={this.props.productCategoryListPageOpen}
           close={this.props.spotViewWindowClose}
-          formData={this.props.partnerData}
+          formData={this.props.productCategoryData}
           editwindow={this.props.spotEditWindowOpen}
           deletewindow={this.props.spotDeleteWindowOpen}
+          product_CatList={this.state.product_CatList}
           />
       )
   }
 
   spotEditModal=()=>{
       return(
-        <SpotPartnerEditModal
-          show={this.props.isEditPage}
-          close={this.props.spotEditWindowClose}
-          formData={this.props.partnerData}
-          editId={this.state.editId}
-          partnerList={this.state.partnerList}
-          editHandler={this.props.spotObjEditHandler}
-          currentUserData={this.props.currentUserData}
-
+        <SpotProductCategoryEditModal
+            show={this.props.isEditPage}
+            close={this.props.spotEditWindowClose}
+            formData={this.props.productCategoryData}
+            editId={this.state.editId}
+            editHandler={this.props.spotObjEditHandler}
+            product_CatList={this.state.product_CatList}
         />
       )
   }
 
   spotDeletModal=()=>{
       return(
-        <SpotPartnerDeleteModal
+        <SpotProductCategoryDeleteModal
         show={this.props.isDeletePage}
         close={this.props.spotDeleteWindowClose}
-        formData={this.props.partnerData}
+        formData={this.props.productCategoryData}
         deleteHandler={this.props.spotObjDeleteHandler}
+        product_CatList={this.state.product_CatList}
+
         />
       )
   }
   render(){
-    const itemlist = this.state.partnerList.slice(this.state.start_point,this.state.end_point).map((branch, index)=> {
+    console.log(this.state)
+    console.log(this.props)
+
+    const itemlist = this.state.product_CatList.slice(this.state.start_point,this.state.end_point).map((branch, index)=> {
         return(
           <tr key={branch.id}>
                  <td>{index+this.state.start_point+1}</td>
-                 <td>{branch.customer_id}</td>
-                 <td>{branch.created_date}</td>
                  <td>{branch.name}</td>
-                 <td>{branch.type}</td>
+                 <td>{branch.ParentCategory}</td>
                  <td>
                    <i onClick={()=>this.viewWindowOpen(branch.id)} className="w3-margin-left fa fa-eye"></i>
                  </td>
         </tr>
         );
     })
+
     return(
       <div>
+
       {this.state.isView ? (this.viewModal()) : null}
       {this.state.isDelete ? (this.deleteModal()) : (null)}
-      {this.state.isEdit ? (this.editModal()) : null}
-      {this.props.partnerListPageOpen ? (this.spotViewModal()) : (null)}
+      {this.state.isEdit ? (this.editModal()) : (null)}
+      {this.props.productCategoryListPageOpen ? (this.spotViewModal()) : (null)}
       {this.props.isEditPage ? (this.spotEditModal()) : (null)}
       {this.props.isDeletePage ? (this.spotDeletModal()) : (null)}
 
@@ -294,22 +313,20 @@ class ParnerList extends Component {
           <thead>
             <tr>
               <th>SL NO</th>
-              <th>CUSOTMER ID</th>
-              <th>CREATE DATE</th>
               <th>NAME</th>
-              <th>TYPE</th>
+              <th>CATEGORY</th>
               <th>VIEW</th>
             </tr>
 
           </thead>
           <tbody>
-          {this.state.partnerList.length >0 ? (itemlist): ( null )}
+          {this.state.product_CatList.length >0 ? (itemlist): ( null )}
           </tbody>
       </table>
       <br />
       <div className="pagination">
           <Pagex
-                  item_count={this.state.partnerList.length}
+                  item_count={this.state.product_CatList.length}
                   perpage_count={this.state.perpage}
                   page={this.state.curr_page}
                   click={this.pagexClickHandler}
@@ -327,27 +344,27 @@ class ParnerList extends Component {
     )
   }
 }
+
 const mapStateToProps = state => {
   return {
-    currentUserData:state.currentUser.userData,
-    partnerData:state.partner.partnerData,
-    partnerListPageOpen:state.partner.partnerListPageOpen,
-    isDeletePage:state.partner.isDeletePage,
-    isEditPage:state.partner.isEditPage,
+    productCategoryData:state.productCategory.productCategoryData,
+    productCategoryListPageOpen:state.productCategory.productCategoryListPageOpen,
+    isDeletePage:state.productCategory.isDeletePage,
+    isEditPage:state.productCategory.isEditPage,
 
   }
 }
+
 const mapDispatchToProps = dispatch => {
     return {
-      currentUser: ()=>dispatch(actions.currentUser()),
-      spotViewWindowClose: ()=>dispatch(actions.partnerViewWindowClose()),
-      spotEditWindowOpen: ()=>dispatch(actions.partnerEditWindowOpen()),
-      spotEditWindowClose: ()=>dispatch(actions.partnerEditWindowClose()),
-      spotDeleteWindowOpen: ()=>dispatch(actions.partnerDeleteWindowOpen()),
-      spotDeleteWindowClose: ()=>dispatch(actions.partnerDeleteWindowClose()),
-      spotObjEditHandler: (obj)=>dispatch(actions.partnerObjEditHandler(obj)),
-      spotObjDeleteHandler: (id)=>dispatch(actions.partnerObjDeleteHandler(id))
+      spotViewWindowClose: ()=>dispatch(actions.productCategoryViewWindowClose()),
+      spotEditWindowOpen: ()=>dispatch(actions.productCategoryEditWindowOpen()),
+      spotEditWindowClose: ()=>dispatch(actions.productCategoryEditWindowClose()),
+      spotDeleteWindowOpen: ()=>dispatch(actions.productCategoryDeleteWindowOpen()),
+      spotDeleteWindowClose: ()=>dispatch(actions.productCategoryDeleteWindowClose()),
+      spotObjEditHandler: (obj)=>dispatch(actions.productCategoryObjEditHandler(obj)),
+      spotObjDeleteHandler: (id)=>dispatch(actions.productCategoryObjDeleteHandler(id))
     };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(ParnerList)
+export default connect(mapStateToProps,mapDispatchToProps)(ProductCategoryList)
