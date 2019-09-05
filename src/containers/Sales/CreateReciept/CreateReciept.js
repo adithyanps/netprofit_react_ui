@@ -209,11 +209,16 @@ class CreateRecieptPage extends Component {
       }
     }
     console.log(Data)
-    // axios.post('invoice/customerReceipt/',Data).then(
-    //   res=>{console.log(res.data)}
-    // ).catch(error=>console.log(error))
-    this.props.onCreateCustomerReciept(Data)
-    this.setState({customerRecieptPage:true})
+    axios.post('invoice/customerReceipt/',Data).then(
+      res=>{
+        console.log(res.data)
+      this.props.onCreateCustomerReciept(res.data)
+      this.setState({customerRecieptPage:true})
+
+    }
+    ).catch(error=>{
+      this.props.onCreateCustomerRecieptFail(error)
+    })
 
   }
   reciept_noChangeHandler=()=> {
@@ -352,7 +357,10 @@ class CreateRecieptPage extends Component {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateCustomerReciept: (data) => dispatch(actions.createCustomerReciept(data))
+        // onCreateCustomerReciept: (data) => dispatch(actions.createCustomerReciept(data)),
+        onCreateCustomerReciept: (obj)=>dispatch(actions.createCustomerRecieptSuccess(obj)),
+        onCreateCustomerRecieptFail: (error)=>dispatch(actions.createCustomerRecieptFail(error)),
+
     };
 };
 export default connect(null,mapDispatchToProps)(CreateRecieptPage);

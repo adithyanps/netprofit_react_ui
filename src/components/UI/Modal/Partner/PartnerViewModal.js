@@ -32,9 +32,19 @@ class PartnerView extends React.Component {
                 <p>TYPE:</p>
                 {this.props.formData.type}
               </div>
+            </div>
+            <br />
+            <br />
+            
+            <div className="invoiceviewWrapper">
               <div>
                   <p>NAME:</p>
                   {this.props.formData.name}
+              </div>
+              <div>
+                <p>AREA</p>
+                {this.props.areaList.filter(item => item.id === this.props.formData.area)[0].area}
+
               </div>
           </div>
           <br />

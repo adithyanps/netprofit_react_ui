@@ -38,17 +38,18 @@ loadProductCats=()=>{
       price:this.state.price,
       product_Cat:this.state.product_CatList.filter(item=>item.name === this.state.selectedCategory)[0].id,
     }
+    console.log(Data['product_Cat'])
+    axios.post('invoice/item/',Data).then(
+      response=>{
+        console.log(response.data)
+        this.props.onCreateProductSuccess(response.data)
+        this.setState({productPage:true})
 
-    // axios.post('invoice/item/',Data).then(
-    //   response=>{
-    //     console.log(response.data)
-    //     this.props.onCreateProductSuccess(response.data)
-    //   },
-    //   this.setState({productPage:true})
-    // )
-    this.props.onCreateProductSuccess(Data)
-    this.setState({productPage:true})
-    
+      }
+    )
+    // this.props.onCreateProductSuccess(Data)
+    // this.setState({productPage:true})
+
   }
   openProductPage=()=>{
     return(
@@ -62,7 +63,7 @@ loadProductCats=()=>{
       {this.state.productPage ? (this.openProductPage()) : (null)}
 
       <br />
-      <div className="SettingsAcntBoxwrapper">
+      <div ccreateProductlassName="SettingsAcntBoxwrapper">
         <div>
           <label>PRODUCT NAME</label><br />
           <input
@@ -102,7 +103,7 @@ loadProductCats=()=>{
       </div>
       <br/>
       <div style={{marginLeft:"200px"}}>
-        <button className="cancelBtn" onClick={this.submitDataHandler}>SAVE</button>
+        <button className="cancelBtn" onClick={(this.state.selectedCategory !== null) ?(this.submitDataHandler):(null)}>SAVE</button>
       </div>
       </div>
     )
@@ -111,7 +112,9 @@ loadProductCats=()=>{
 
 const mapDispatchToProps = dispatch => {
     return {
-      onCreateProductSuccess: (data)=>dispatch(actions.createProduct(data))
+      onCreateProductSuccess: (data)=>dispatch(actions.createProduct(data)),
+      // onCreateProductSuccess: (data)=>dispatch(actions.createProductSuccess(data)),
+
     };
 };
 export default  connect(null,mapDispatchToProps)(CreatePartner);

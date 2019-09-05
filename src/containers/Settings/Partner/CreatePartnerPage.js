@@ -7,9 +7,12 @@ import { Redirect } from 'react-router-dom';
 import SettingsNav from '../../../components/Settings/Layout/SettingsNav';
 import QuickLink from '../../../components/UI/QuickLink/QuickLink';
 import CreatePartner from './CreatePartner/CreatePartner';
+import * as actions from '../../../store/actions/index';
 
 class CreatePartnerPage extends Component {
-
+  componentDidMount(){
+    this.props.currentUser()
+  }
   render(){
     return(
 
@@ -18,7 +21,9 @@ class CreatePartnerPage extends Component {
             <SettingsNav />
           </div>
           <div className="SettingsAcntBox">
+          {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
             <CreatePartner />
+          ):(<div>YOU HAVE NO PERMISSION TO ACCESS THIS PAGE</div>)}
           </div>
           <div>
             <QuickLink />
@@ -27,4 +32,16 @@ class CreatePartnerPage extends Component {
     )
   }
 }
-export default CreatePartnerPage
+const mapStateToProps =(state)=>{
+  console.log(state)
+  return {
+    currentUserData:state.currentUser.userData
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    currentUser: ()=>dispatch(actions.currentUser()),
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(CreatePartnerPage)

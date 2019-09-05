@@ -64,7 +64,7 @@ class SpotRecieptViewModal extends React.Component {
             </div>
             <div>
               <p>ACCOUNT:</p>
-              {this.props.accountList.filter(item=>item.id === this.props.formData.journal_entry.journal_item[0].account)[0].name}
+              {(this.props.accountList.length !== 0)?(this.props.accountList.filter(item=>item.id === this.props.formData.journal_entry.journal_item[0].account)[0].name) : (null)}
             </div>
             <div>
                 <p>DATE:</p>
@@ -93,7 +93,7 @@ class SpotRecieptViewModal extends React.Component {
               <td className="tds">
                     <input
                       readOnly
-                      value={this.props.partnerList.filter(item=>item.id === shareholder.partner)[0].name}/>
+                      value={(this.props.partnerList.length !== 0 ) ?(this.props.partnerList.filter(item=>item.id === shareholder.partner)[0].name) : (null)}/>
               </td>
               <td className="tds">
                     <input

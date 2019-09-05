@@ -272,12 +272,17 @@ class CreateInvoice extends Component {
     console.log(data)
     // this.postData(formData)
     if (this.state.selectedBranch !== null) {
-      this.props.onCreateInvoice(data)
+      axios.post('invoice/parantdata/',data).then(
+        res => {
+          this.props.onCreateInvoice(res.data)
+          this.setState({salesPage:true})
 
-      this.setState({salesPage:true})
+        }
+      ).catch(error=>{
+        this.props.onCreateInvoiceFail(error)
+      })
     }
-
-    }
+  }
   addItemHandler=(e)=> {
 
       this.setState((prevState) => {
@@ -519,7 +524,10 @@ class CreateInvoice extends Component {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateInvoice: (data) => dispatch(actions.createInvoice(data))
+        // onCreateInvoice: (data) => dispatch(actions.createInvoice(data)),
+        onCreateInvoice: (obj)=>dispatch(actions.createInvoiceSuccess(obj)),
+        onCreateInvoiceFail: (error)=>dispatch(actions.createInvoiceFail(error)),
+
     };
 };
 

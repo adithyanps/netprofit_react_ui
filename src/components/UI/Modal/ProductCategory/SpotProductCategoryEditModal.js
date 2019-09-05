@@ -65,7 +65,7 @@ class SpotProductCategoryEdit extends React.Component {
       }
     }
     console.log(data)
-    this.props.editHandler(data)
+    this.props.editHandler(e,data)
     console.log(this.props.formData)
 
   }

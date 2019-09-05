@@ -8,6 +8,7 @@ class SpotPartnerView extends React.Component {
 
     render() {
       console.log(this.props.formData)
+      console.log(this.props)
 
       return (
         <Modal
@@ -32,9 +33,17 @@ class SpotPartnerView extends React.Component {
                 <p>TYPE:</p>
                 {this.props.formData.type}
               </div>
+            </div>
+            <br />
+            <br />
+            <div className="invoiceviewWrapper">
               <div>
                   <p>NAME:</p>
                   {this.props.formData.name}
+              </div>
+              <div>
+              <p>AREA</p>
+                  {this.props.areaList.length !== 0 ?(this.props.areaList.filter(item => item.id === this.props.formData.area)[0].area) : (null)}
               </div>
           </div>
           <br />

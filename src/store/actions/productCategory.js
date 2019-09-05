@@ -74,6 +74,12 @@ export const deleteProductCategoryFail=()=>{
   }
 }
 
+export const getAllProductCategoryData =(productCategoryDataList)=>{
+  return {
+    type:actionTypes.GET_ALL_PRODUCT_CATEGORY_DATA,
+    productCategoryDataList:productCategoryDataList
+  }
+}
 export const productCategoryObjDeleteHandler=(id)=>{
   return dispatch =>{
     axios.delete('/invoice/product-category/'+ id).then(
@@ -102,20 +108,53 @@ export const productCategoryObjEditHandler=(obj)=>{
   }
 }
 
+// export const createProductCategory=(data)=>{
+//   return dispatch => {
+//     axios.post('/invoice/product-category/',data,{
+//         headers: {
+//             'Content-Type': 'application/json',
+//         }
+//     }).then(
+//       response=> {
+//         dispatch(createProductCategorySuccess(response.data))
+//         // dispatch(getAllProductCategory())
+//
+//         axios.get('/invoice/product-category/').then(
+//           response=>{
+//             console.log(response.data)
+//             dispatch(getAllProductCategoryData(response.data))
+//           }
+//         )
+//
+//       }
+//     )
+//     .catch(error => {
+//       console.log(error)
+//       dispatch(createProductCategoryFail(error))
+//     })
+//   }
+// }
+
 export const createProductCategory=(data)=>{
   return dispatch => {
-    axios.post('/invoice/product-category/',data,{
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(
-      response=> {
-        dispatch(createProductCategorySuccess(response.data))
+    dispatch(createProductCategorySuccess(data))
+    axios.get('invoice/product-category/').then(
+      res => {
+        dispatch(getAllProductCategoryData(res.data))
       }
     )
-    .catch(error => {
-      console.log(error)
-      dispatch(createProductCategoryFail(error))
-    })
+  }
+}
+
+export const getAllProductCategory=(data)=>{
+  return dispatch => {
+    axios.get('invoice/product-category/').then(
+      response => {
+        console.log(response.data)
+
+        dispatch(getAllProductCategoryData(response.data))
+
+      }
+    )
   }
 }

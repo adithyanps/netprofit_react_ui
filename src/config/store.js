@@ -12,6 +12,8 @@ import expenseReducer from '../store/reducers/expense';
 import partnerReducer from '../store/reducers/partner';
 import productReducer from '../store/reducers/product';
 import productCategoryReducer from '../store/reducers/productCategory';
+import branchReducer from '../store/reducers/branch';
+import areaReducer from '../store/reducers/area';
 
 
 
@@ -29,7 +31,8 @@ const rootReducer = combineReducers({
   partner:partnerReducer,
   product:productReducer,
   productCategory:productCategoryReducer,
-  // order:accountReducer,
+  branch:branchReducer,
+  area:areaReducer,
 
 })
 

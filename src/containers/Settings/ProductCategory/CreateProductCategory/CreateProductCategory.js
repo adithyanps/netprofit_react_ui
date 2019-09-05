@@ -52,10 +52,13 @@ class createProductCategory extends Component{
       response=>{
         console.log(response.data)
         this.props.onCreateProductCategorySuccess(response.data)
-      },
-      this.setState({productCategoryPage:true})
+        // if (response.data !== null) {
+          this.setState({productCategoryPage:true})
+
+        // }
+      }
     )
-    // this.props.onCreateProductSuccess(Data)
+    // this.props.onCreateProductCategorySuccess(data)
     // this.setState({productPage:true})
 
   }
@@ -103,9 +106,14 @@ class createProductCategory extends Component{
     )
   }
 }
+const mapStateToProps = (state)=>{
+  return{
+    productCategoryListPageOpen:state.productCategory.productCategoryListPageOpen
+  }
+}
 const mapDispatchToProps = dispatch => {
     return {
-      onCreateProductCategorySuccess: (data)=>dispatch(actions.createProductCategorySuccess(data))
+      onCreateProductCategorySuccess: (data)=>dispatch(actions.createProductCategory(data))
     };
 };
-export default connect(null,mapDispatchToProps)(createProductCategory)
+export default connect(mapStateToProps,mapDispatchToProps)(createProductCategory)

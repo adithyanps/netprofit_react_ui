@@ -202,7 +202,7 @@ class SpotRecieptEdit extends React.Component {
     this.props.formData.journal_entry.description=this.state.narration
     this.props.formData.journal_entry.transaction_type="COSTOMER_RECIEPT"
     this.props.formData.journal_entry.journal_item=output
-    this.props.editHandler(this.props.formData)
+    this.props.editHandler(e,this.props.formData)
     console.log(this.props.formData)
 
   }

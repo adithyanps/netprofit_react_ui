@@ -34,7 +34,7 @@ class SpotExpenseView extends React.Component {
             </div>
             <div>
               <p>CATOGORY:</p>
-              {this.props.categoryList.filter(item=>item.id === this.props.formData.ExpenseCategory)[0].name}
+              {(this.props.categoryList.length !== 0) ? (this.props.categoryList.filter(item=>item.id === this.props.formData.ExpenseCategory)[0].name) : (null)}
             </div>
             <div>
                 <p>DATE:</p>
@@ -45,11 +45,11 @@ class SpotExpenseView extends React.Component {
         <div className="invoiceviewWrapper">
             <div>
               <p>EXPENSE ACCOUNT :</p>
-              {this.props.expenseAccnts.filter(item=>item.id === this.props.formData.ExpenseAcct)[0].name}
+              {(this.props.expenseAccnts.length !== 0)?(this.props.expenseAccnts.filter(item=>item.id === this.props.formData.ExpenseAcct)[0].name):(null)}
             </div>
             <div>
               <p>CASH ACCOUNT:</p>
-              {this.props.cashAccnts.filter(item=>item.id === this.props.formData.CreditAcct)[0].name}
+              {(this.props.cashAccnts.length !== 0) ? (this.props.cashAccnts.filter(item=>item.id === this.props.formData.CreditAcct)[0].name) : (null)}
             </div>
             <div>
                 <p>TOTAL:</p>

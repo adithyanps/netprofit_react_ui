@@ -34,7 +34,7 @@ class DefaultSettings extends Component {
   loadAccountDefault =()=>{
     axios.get('invoice/accountDefault/1/').then(
       res => {
-        console.log(res.data.SalesAccont)
+        console.log(res.data)
         this.setState({
           accountIdObj:res.data,
           SalesObj:res.data.SalesAccont,
@@ -84,11 +84,19 @@ class DefaultSettings extends Component {
   }
   objEditHandler=(obj)=>{
     console.log(obj)
-    axios.patch("invoice/accountDefault/1/",obj).then(
-      response => {
+    // console.log(this.state.accountIdObj.isEmpty)
+    if(JSON.stringify(this.state.accountIdObj) === '{}') {
+      axios.post("invoice/accountDefault/",obj).then(response=>{
         console.log(response.data)
-      }
-    )
+      })
+    } else {
+      axios.patch("invoice/accountDefault/1/",obj).then(
+        response => {
+          console.log(response.data)
+        }
+      )
+    }
+
     let SalesObj1 = this.state.accountList.filter(item=> item.id === obj.SalesAccont)[0]
     let PurchaseObj1 = this.state.accountList.filter(item=> item.id === obj.PurchaseAccont)[0]
     let CustomerObj1 = this.state.accountList.filter(item=> item.id === obj.CustomerAccount)[0]

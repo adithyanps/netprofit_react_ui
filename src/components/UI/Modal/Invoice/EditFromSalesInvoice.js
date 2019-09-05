@@ -266,7 +266,7 @@ handleGrandTotalChange=()=>{
       }
     console.log(this.props.formData)
 
-    this.props.editHandler(this.props.formData)
+    this.props.editHandler(e,this.props.formData)
 
   }
   addItemHandler=(e)=> {

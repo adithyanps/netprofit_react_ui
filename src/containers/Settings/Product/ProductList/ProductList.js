@@ -37,6 +37,11 @@ componentWillMount(){
 
 
   this.loadProductCats()
+  this.setState({
+      end_point: this.state.start_point + this.state.perpage,
+    })
+  this.loadProducts()
+
 }
  componentDidMount(){
     this.setState({
@@ -268,7 +273,7 @@ componentWillMount(){
           formData={this.props.productData}
           editwindow={this.props.spotEditWindowOpen}
           deletewindow={this.props.spotDeleteWindowOpen}
-          product_CatList={this.state.product_CatList}
+          product_CatList={this.props.productCategoryData}
           />
       )
   }
@@ -281,7 +286,7 @@ componentWillMount(){
           formData={this.props.productData}
           editId={this.state.editId}
           productList={this.state.productList}
-          editHandler={this.props.spotObjEditHandler}
+          editHandler={this.spotObjEditHandler}
           product_CatList={this.state.product_CatList}
 
 
@@ -295,12 +300,70 @@ componentWillMount(){
         show={this.props.isDeletePage}
         close={this.props.spotDeleteWindowClose}
         formData={this.props.productData}
-        deleteHandler={this.props.spotObjDeleteHandler}
+        deleteHandler={this.spotObjDeleteHandler}
         product_CatList={this.state.product_CatList}
 
         />
       )
   }
+spotObjDeleteHandler=(id)=>{
+  console.log(id)
+  // const updatedOrders = this.state.productList;
+  console.log(updatedOrders)
+  let data = this.state.productList;
+  data.map((sample,index)=>{
+    this.state.product_CatList.map((proCat)=>{
+      if (proCat.id === sample.product_Cat) {
+        sample.product_Cat = proCat.name;
+
+      }
+    })
+  })
+  let updatedOrders = data
+  let deleteObject = this.state.productList.filter(item =>  item.id === id)
+  console.log(deleteObject)
+
+  let delIndex = updatedOrders.indexOf(deleteObject[0])
+  console.log(delIndex)
+
+  axios.delete('/invoice/item/'+id).then(
+     response => {
+       console.log(response.data)
+         updatedOrders.splice(delIndex,1)
+         this.setState({
+             productList: updatedOrders,
+
+         })
+        this.props.deleteProductSuccess()
+     }
+  )
+}
+
+spotObjEditHandler = (event,obj)=>{
+  console.log(obj)
+  let list = []
+  list.push(obj)
+  axios.patch('/invoice/item/' + obj.id + '/',obj).then(
+    response => {
+      console.log(response.data);
+      this.props.editProductSuccess(response.data)
+
+      let updatedProducts = this.state.productList.map(obj => list.find(o=> o.id === obj.id) || obj)
+      console.log(updatedProducts)
+      let data = updatedProducts;
+      data.map((sample,index)=>{
+        this.state.product_CatList.map((proCat)=>{
+          if (proCat.id === sample.product_Cat) {
+            sample.product_Cat = proCat.name;
+
+          }
+        })
+      })
+      console.log(data)
+      this.setState({productList:data})
+    }
+  )
+}
   render(){
     console.log(this.state)
     console.log(this.props)
@@ -372,7 +435,7 @@ const mapStateToProps = state => {
     productListPageOpen:state.product.productListPageOpen,
     isDeletePage:state.product.isDeletePage,
     isEditPage:state.product.isEditPage,
-
+    productCategoryData:state.product.productCategoryData,
   }
 }
 const mapDispatchToProps = dispatch => {
@@ -382,8 +445,10 @@ const mapDispatchToProps = dispatch => {
       spotEditWindowClose: ()=>dispatch(actions.productEditWindowClose()),
       spotDeleteWindowOpen: ()=>dispatch(actions.productDeleteWindowOpen()),
       spotDeleteWindowClose: ()=>dispatch(actions.productDeleteWindowClose()),
-      spotObjEditHandler: (obj)=>dispatch(actions.productObjEditHandler(obj)),
-      spotObjDeleteHandler: (id)=>dispatch(actions.productObjDeleteHandler(id))
+      // spotObjEditHandler: (obj)=>dispatch(actions.productObjEditHandler(obj)),
+      // spotObjDeleteHandler: (id)=>dispatch(actions.productObjDeleteHandler(id)),
+      deleteProductSuccess: ()=>dispatch(actions.deleteProductSuccess()),
+      editProductSuccess: (data)=>dispatch(actions.editProductSuccess(data))
     };
 };
 

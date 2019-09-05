@@ -9,6 +9,7 @@
     "moment": "^2.24.0",
     "react": "^16.8.5",
     "react-bootstrap": "^1.0.0-beta.6",
+    "react-chartjs-2": "^2.7.6",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.8.5",
     "react-mdl": "^1.11.0",

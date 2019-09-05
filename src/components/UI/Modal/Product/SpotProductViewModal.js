@@ -2,6 +2,7 @@ import React from 'react';
 import {Col, FormControl, FormGroup, Form, Button, Glyphicon, Table, Modal, OverlayTrigger} from 'react-bootstrap';
 // import ControlLabel from 'react-bootstrap/lib/FormControl';
 import { Link } from 'react-router-dom';
+import axios from '../../../../axios';
 
 
 class SpotProductView extends React.Component {
@@ -32,7 +33,8 @@ class SpotProductView extends React.Component {
               </div>
               <div>
                 <p>PRODUCT CATEGORY:</p>
-                {this.props.product_CatList.filter(item => item.id === this.props.formData.product_Cat)[0].name}
+
+                {(this.props.product_CatList.length !== 0) ? (this.props.product_CatList.filter(item => item.id === this.props.formData.product_Cat)[0].name ) : (null)}
               </div>
               <div>
                   <p>PRICE:</p>
@@ -48,7 +50,7 @@ class SpotProductView extends React.Component {
   <Modal.Footer>
             <button className="OkBtn" onClick={this.props.close}>OK</button>
 
-            <Link to="/create-partner"><i className="fas fa-plus"></i></Link>
+            <Link to="/create-products"><i className="fas fa-plus"></i></Link>
             <Button  type="submit" onClick={(e,id) => this.props.editwindow(e,this.props.formData.id)} ><i className="fas fa-pencil-alt"></i></Button>
             <Button  type="submit"  onClick={(e,id) => this.props.deletewindow(e,this.props.formData.id)}><i className="fas fa-trash"></i></Button>
             </Modal.Footer>

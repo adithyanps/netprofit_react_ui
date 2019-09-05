@@ -120,12 +120,18 @@ class CreateExpense extends Component {
       }
     }
     console.log(Data)
-    this.props.onCreateExpense(Data)
-    this.setState({expenseListPage:true})
+    // this.props.onCreateExpense(Data)
+    // this.setState({expenseListPage:true})
 
-    // axios.post('invoice/expenses/',Data).then(
-    //   res=>{console.log(res.data)}
-    // ).catch(error=>console.log(error))
+    axios.post('/invoice/expenses/',Data).then(
+      res=>{
+        console.log(res.data)
+        this.props.createExpenseSuccess(res.data)
+        this.setState({expenseListPage:true})
+      }
+    ).catch(error=>{
+      this.props.onCreateExpenseFail(error)
+    })
   }
   openExpenseListPage=()=>{
     return (
@@ -228,7 +234,10 @@ class CreateExpense extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateExpense: (data) => dispatch(actions.createExpense(data))
+        // onCreateExpense: (data) => dispatch(actions.createExpense(data)),
+        createExpenseSuccess: (data) => dispatch(actions.createExpenseSuccess(data)),
+        onCreateExpenseFail: (error) => dispatch(actions.createExpenseFail(error))
+
     };
 };
 

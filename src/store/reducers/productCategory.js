@@ -3,12 +3,17 @@ import { updateObject } from '../../utility';
 
 const initialState ={
   productCategoryData:[],
+  productCategoryDataList:[],
   productCategoryListPageOpen:false,
   isDeletePage:false,
   isEditPage:false,
 
 }
-
+const getAllProductCategotyData =(state, action)=>{
+  return updateObject( state, {
+    productCategoryDataList:action.productCategoryDataList,
+  })
+}
 const createProductCategorySuccess =(state,action) => {
   return updateObject( state, {
     productCategoryData:action.productCategoryData,
@@ -69,6 +74,8 @@ const reducer =(state=initialState,action)=>{
     case actionTypes.PRODUCT_CATEGORY_EDIT_FAIL: return editProductCategoryFail(state,action);
     case actionTypes.PRODUCT_CATEGORY_DELETE_SUCCESS: return deleteProductCategorySuccess(state,action);
     case actionTypes.PRODUCT_CATEGORY_DELETE_FAIL: return deleteProductCategoryFail(state,action);
+    case actionTypes.GET_ALL_PRODUCT_CATEGORY_DATA: return getAllProductCategotyData(state,action);
+
     default: return state;
 
   }

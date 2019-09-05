@@ -31,7 +31,9 @@ class SpotDeleteModal extends React.Component {
                       <td>
                       {this.props.formData.name}</td>
                       <td>
-                      {this.props.product_CatList.filter(item => item.id === this.props.formData.ParentCategory)[0].name}
+                      {this.props.product_CatList.length !== 0 ? (
+                        (this.props.formData.ParentCategory !== null ) ? (this.props.product_CatList.filter(item => item.id === this.props.formData.ParentCategory)[0].name) : (null)
+                      ):(null)}
                       </td>
                     </tr>
                   </tbody>
@@ -50,3 +52,4 @@ class SpotDeleteModal extends React.Component {
   }
 
 export default SpotDeleteModal;
+// {this.props.product_CatList.length!==0 ? ( this.props.product_CatList.filter(item => item.id === this.props.formData.ParentCategory)[0].name) :(null)}

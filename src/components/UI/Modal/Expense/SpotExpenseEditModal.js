@@ -84,7 +84,7 @@ class SpotExpenseEditModal extends React.Component {
     this.props.formData.journal_entry.transaction_type="EXPENSE"
     this.props.formData.journal_entry.description = this.state.narration
     this.props.formData.journal_entry.journal_item=output
-    this.props.editHandler(Data)
+    this.props.editHandler(e,Data)
     console.log(this.props.formData)
 
   }

@@ -4,6 +4,8 @@ import './App.css';
 import { withRouter} from 'react-router-dom';
 import { BrowserRouter  as Router  } from 'react-router-dom';
 import { Switch , Route ,Redirect} from 'react-router-dom';
+import { browserHistory,IndexRoute} from 'react-router';
+
 import { connect } from 'react-redux';
 import axios from './axios';
 import * as actions from './store/actions/index';
@@ -31,12 +33,20 @@ import CreateProduct from './containers/Settings/Product/CreateProductPage';
 import ProductListPage from './containers/Settings/Product/ProductsListPage';
 import CreateProductCategory from './containers/Settings/ProductCategory/CreateProductCategoryPage';
 import ProductCategoryListPage from './containers/Settings/ProductCategory/ProductCategoryListPage';
+import CreateBranch from './containers/Settings/Branch/CreateBranchPage';
+import BranchListPage from './containers/Settings/Branch/BranchListPage';
+import CreateArea from './containers/Settings/Area/CreateAreaPage';
+import AreaListPage from './containers/Settings/Area/AreaListPage';
+
+
 
 
 class App extends Component {
 
   componentDidMount(){
     this.props.onTryAutoSignup()
+    this.props.currentUser()
+
   }
   render() {
     console.log(this.props.user_choice)
@@ -69,7 +79,10 @@ class App extends Component {
             <Route path="/products" exact component={ProductListPage} />
             <Route path="/create-productCategory" exact component={CreateProductCategory} />
             <Route path="/productCategorys" exact component={ProductCategoryListPage} />
-
+            <Route path="/create-branch" exact component={CreateBranch} />
+            <Route path="/branches" exact component={BranchListPage} />
+            <Route path="/create-area" exact component={CreateArea} />
+            <Route path="/areas" exact component= {AreaListPage}/>
 
           </Switch>
           </Navbar >
@@ -78,7 +91,7 @@ class App extends Component {
     if(this.props.loginToken === null ){
       routes =(
         <Switch>
-        <Route path="/" exact component={Login} />
+          <Route path="/" exact component={Login} />
         </Switch>
       )
     }
@@ -107,13 +120,28 @@ const mapDispatchToProps = dispatch => {
   return {
     onTryAutoSignup: () => dispatch(actions.authCheckState()),
     onRedirect : ()=>dispatch(actions.redirect()),
+    currentUser: ()=>dispatch(actions.currentUser()),
+
   }
 }
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));
-// routes =(
-//   <Switch>
-//   <Route path="/" exact component={Login} />
-//   </Switch>
-// )
-// {this.props.loginToken === null ? (<Redirect to="/" />) : (null)}
+// if (this.props.currentUserData.user_choice === "FULL_ACCESS") {
+//   routes=(
+//       <Navbar >
+//         <Switch>
+//           <Route path="/settings" exact component={SettingsPage} />
+//           <Route path="/create-partner" exact component={CreatePartnerPage} />
+//           <Route path="/partners" exact component={PartnerListPage} />
+//           <Route path="/create-products" exact component={CreateProduct} />
+//           <Route path="/products" exact component={ProductListPage} />
+//           <Route path="/create-productCategory" exact component={CreateProductCategory} />
+//           <Route path="/productCategorys" exact component={ProductCategoryListPage} />
+//           <Route path="/create-branch" exact component={CreateBranch} />
+//           <Route path="/branches" exact component={BranchListPage} />
+//           <Route path="/create-area" exact component={CreateArea} />
+//           <Route path="/areas" exact component= {AreaListPage}/>
+//        </Switch>
+//       </Navbar >
+//   )
+// }

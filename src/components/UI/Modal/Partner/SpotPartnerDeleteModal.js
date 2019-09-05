@@ -24,6 +24,8 @@ class SpotPartnerDeleteModal extends React.Component {
                     <th>CUSOTMER_ID</th>
                     <th>TYPE</th>
                     <th>NAME</th>
+                    <th>AREA</th>
+
                   </tr>
                   </thead>
                   <tbody>
@@ -31,6 +33,9 @@ class SpotPartnerDeleteModal extends React.Component {
                       <td>{this.props.formData.customer_id}</td>
                       <td>{this.props.formData.type}</td>
                       <td>{this.props.formData.name}</td>
+                      <td>
+                      {this.props.areaList.filter(item => item.id === this.props.formData.area)[0].area}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

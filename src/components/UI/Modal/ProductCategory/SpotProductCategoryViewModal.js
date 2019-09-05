@@ -8,6 +8,8 @@ class ProductCategoryView extends React.Component {
 
     render() {
       console.log(this.props.formData)
+      console.log(this.props)
+
       return (
         <Modal
         {...this.props}
@@ -28,7 +30,9 @@ class ProductCategoryView extends React.Component {
               </div>
               <div>
                 <p>PRODUCT CATEGORY:</p>
-                {(this.props.formData.ParentCategory !== null ) ? (this.props.product_CatList.filter(item => item.id === this.props.formData.ParentCategory)[0].name) : (null)}
+              {this.props.product_CatList.length !== 0 ? (
+                (this.props.formData.ParentCategory !== null ) ? (this.props.product_CatList.filter(item => item.id === this.props.formData.ParentCategory)[0].name) : (null)
+              ):(null)}
               </div>
           </div>
           <br />
@@ -40,7 +44,7 @@ class ProductCategoryView extends React.Component {
   <Modal.Footer>
             <button className="OkBtn" onClick={this.props.close}>OK</button>
 
-            <Link to="/create-partner"><i className="fas fa-plus"></i></Link>
+            <Link to="/create-productCategory"><i className="fas fa-plus"></i></Link>
             <Button  type="submit" onClick={(e,id) => this.props.editwindow(e,this.props.formData.id)} ><i className="fas fa-pencil-alt"></i></Button>
             <Button  type="submit"  onClick={(e,id) => this.props.deletewindow(e,this.props.formData.id)}><i className="fas fa-trash"></i></Button>
             </Modal.Footer>
@@ -50,5 +54,5 @@ class ProductCategoryView extends React.Component {
     }
   }
 
-
 export default ProductCategoryView;
+// {(this.props.formData.ParentCategory !== null ) ? (this.props.product_CatList.filter(item => item.id === this.props.formData.ParentCategory)[0].name) : (null)}

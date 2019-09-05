@@ -39,6 +39,7 @@ class ProductCategoryList extends Component {
         end_point: this.state.start_point + this.state.perpage,
       })
       this.loadProductCats()
+      this.props.getAllProductCategoty()
 
   }
   loadProductCats=()=>{
@@ -264,7 +265,7 @@ class ProductCategoryList extends Component {
             close={this.props.spotEditWindowClose}
             formData={this.props.productCategoryData}
             editId={this.state.editId}
-            editHandler={this.props.spotObjEditHandler}
+            editHandler={this.spotObjEditHandler}
             product_CatList={this.state.product_CatList}
         />
       )
@@ -276,11 +277,68 @@ class ProductCategoryList extends Component {
         show={this.props.isDeletePage}
         close={this.props.spotDeleteWindowClose}
         formData={this.props.productCategoryData}
-        deleteHandler={this.props.spotObjDeleteHandler}
+        deleteHandler={this.spotObjDeleteHandler}
         product_CatList={this.state.product_CatList}
 
         />
       )
+  }
+  spotObjDeleteHandler=(id)=>{
+    console.log(id)
+    // const updatedOrders = this.state.productList;
+    console.log(updatedOrders)
+    let data = this.state.product_CatList;
+    data.map((sample,index)=>{
+      this.state.product_CatList.map((proCat)=>{
+        if (proCat.id === sample.ParentCategory) {
+          sample.ParentCategory = proCat.name;
+        }
+      })
+    })
+    let updatedOrders = data
+    let deleteObject = this.state.product_CatList.filter(item =>  item.id === id)
+    console.log(deleteObject)
+
+    let delIndex = updatedOrders.indexOf(deleteObject[0])
+    console.log(delIndex)
+
+    axios.delete('/invoice/product-category/'+id).then(
+       response => {
+         console.log(response.data)
+           updatedOrders.splice(delIndex,1)
+           this.setState({
+               product_CatList: updatedOrders,
+           })
+          this.props.deleteProductCategorySuccess()
+       }
+    ).catch(error=>{
+      this.props.deleteProductCategoryFail(error)
+    })
+  }
+  spotObjEditHandler = (event,obj)=>{
+    console.log(obj)
+    let list = []
+    list.push(obj)
+    axios.patch('/invoice/product-category/' + obj.id + '/',obj).then(
+      response => {
+        console.log(response.data);
+        this.props.editProductCategorySuccess(response.data)
+
+        let updatedProductCategories = this.state.product_CatList.map(obj => list.find(o=> o.id === obj.id) || obj)
+        console.log(updatedProductCategories)
+        let data = updatedProductCategories;
+        data.map((sample,index)=>{
+          this.state.product_CatList.map((proCat)=>{
+            if (proCat.id === sample.ParentCategory) {
+              sample.ParentCategory = proCat.name;
+
+            }
+          })
+        })
+        console.log(data)
+        this.setState({product_CatList:data})
+      }
+    )
   }
   render(){
     console.log(this.state)
@@ -346,11 +404,13 @@ class ProductCategoryList extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
     productCategoryData:state.productCategory.productCategoryData,
     productCategoryListPageOpen:state.productCategory.productCategoryListPageOpen,
     isDeletePage:state.productCategory.isDeletePage,
     isEditPage:state.productCategory.isEditPage,
+    productCategoryDataList:state.productCategory.productCategoryDataList,
 
   }
 }
@@ -363,7 +423,13 @@ const mapDispatchToProps = dispatch => {
       spotDeleteWindowOpen: ()=>dispatch(actions.productCategoryDeleteWindowOpen()),
       spotDeleteWindowClose: ()=>dispatch(actions.productCategoryDeleteWindowClose()),
       spotObjEditHandler: (obj)=>dispatch(actions.productCategoryObjEditHandler(obj)),
-      spotObjDeleteHandler: (id)=>dispatch(actions.productCategoryObjDeleteHandler(id))
+      spotObjDeleteHandler: (id)=>dispatch(actions.productCategoryObjDeleteHandler(id)),
+      getAllProductCategoty: ()=>dispatch(actions.getAllProductCategory()),
+      deleteProductCategorySuccess: ()=>dispatch(actions.deleteProductCategorySuccess()),
+      deleteProductCategoryFail: (error)=>dispatch(actions.deleteProductCategoryFail(error)),
+      editProductCategorySuccess: (obj)=>dispatch(actions.editProductCategorySuccess(obj)),
+      editProductCategoryFail: (error)=>dispatch(actions.editProductCategoryFail(error)),
+
     };
 };
 

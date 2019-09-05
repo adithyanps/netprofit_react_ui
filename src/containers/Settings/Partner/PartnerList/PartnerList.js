@@ -15,6 +15,7 @@ import * as actions from '../../../../store/actions/index';
 class ParnerList extends Component {
   state ={
     partnerList : [],
+    areaList:[],
     isEdit:false,
     isDelete:false,
     deleteId:null,
@@ -39,6 +40,17 @@ class ParnerList extends Component {
     this.props.currentUser()
 
     this.loadPartner()
+    this.loadArea()
+  }
+  componentWillMount(){
+    this.loadArea()
+    this.loadPartner()
+
+  }
+  loadArea=()=>{
+    axios.get('invoice/area/').then(
+      response=>{this.setState({areaList:response.data})}
+    )
   }
   loadPartner=()=>{
       axios.get('invoice/partner/').then(
@@ -172,6 +184,7 @@ class ParnerList extends Component {
               formData={this.state.viewObject}
               deletewindow={this.deleteWindowOpen}
               editwindow={this.editWindowOpen}
+              areaList={this.state.areaList}
         />
       )
   }
@@ -186,6 +199,7 @@ class ParnerList extends Component {
           editHandler={this.objEditHandler}
           partnerList={this.state.partnerList}
           currentUserData={this.props.currentUserData}
+          areaList={this.state.areaList}
        />
     )
   }
@@ -196,6 +210,7 @@ class ParnerList extends Component {
           close={this.deleteWindowClose}
           deleteHandler = {this.deleteHandler}
           formData={this.state.viewObject}
+          areaList={this.state.areaList}
       />
     )
   }
@@ -237,6 +252,9 @@ class ParnerList extends Component {
           formData={this.props.partnerData}
           editwindow={this.props.spotEditWindowOpen}
           deletewindow={this.props.spotDeleteWindowOpen}
+          areaList={this.state.areaList}
+          partnerList={this.state.partnerList}
+
           />
       )
   }
@@ -249,8 +267,9 @@ class ParnerList extends Component {
           formData={this.props.partnerData}
           editId={this.state.editId}
           partnerList={this.state.partnerList}
-          editHandler={this.props.spotObjEditHandler}
+          editHandler={this.spotObjEditHandler}
           currentUserData={this.props.currentUserData}
+          areaList={this.state.areaList}
 
         />
       )
@@ -262,11 +281,54 @@ class ParnerList extends Component {
         show={this.props.isDeletePage}
         close={this.props.spotDeleteWindowClose}
         formData={this.props.partnerData}
-        deleteHandler={this.props.spotObjDeleteHandler}
+        deleteHandler={this.spotObjDeleteHandler}
+        areaList={this.state.areaList}
+        partnerList={this.state.partnerList}
+
         />
       )
   }
+
+  spotObjDeleteHandler=(id)=>{
+    console.log(id)
+    let updatedPartners = this.state.partnerList
+    let deleteObject = this.state.partnerList.filter(item =>  item.id === id)
+    console.log(deleteObject)
+    let delIndex = updatedPartners.indexOf(deleteObject[0])
+    console.log(delIndex)
+    axios.delete('/invoice/partner/'+id).then(
+       response => {
+         console.log(response.data)
+           updatedPartners.splice(delIndex,1)
+           this.setState({
+               partnerList: updatedPartners,
+
+           })
+          this.props.deletePartnerSuccess()
+       }
+    ).catch(error=>{
+      this.props.deletePartnerFail(error)
+    })
+  }
+
+spotObjEditHandler=(event,obj)=>{
+  let list = []
+  list.push(obj)
+  axios.patch('/invoice/partner/'+obj.id + '/',obj).then(
+    response=>{
+      this.props.editPartnerSuccess(response.data)
+      let updatedProducts = this.state.partnerList.map(obj => list.find(o=> o.id === obj.id) || obj)
+
+      this.setState({partnerList:updatedProducts})
+    }
+  ).catch(error=>{
+    this.props.editPartnerFail(error)
+  })
+}
   render(){
+    console.log(this.state)
+    console.log(this.props)
+
     const itemlist = this.state.partnerList.slice(this.state.start_point,this.state.end_point).map((branch, index)=> {
         return(
           <tr key={branch.id}>
@@ -346,7 +408,13 @@ const mapDispatchToProps = dispatch => {
       spotDeleteWindowOpen: ()=>dispatch(actions.partnerDeleteWindowOpen()),
       spotDeleteWindowClose: ()=>dispatch(actions.partnerDeleteWindowClose()),
       spotObjEditHandler: (obj)=>dispatch(actions.partnerObjEditHandler(obj)),
-      spotObjDeleteHandler: (id)=>dispatch(actions.partnerObjDeleteHandler(id))
+      spotObjDeleteHandler: (id)=>dispatch(actions.partnerObjDeleteHandler(id)),
+
+      deletePartnerSuccess: ()=>dispatch(actions.deletePartnerSuccess()),
+      deletePartnerFail: (error)=>dispatch(actions.deletePartnerFail(error)),
+      editPartnerSuccess: (data)=>dispatch(actions.editPartnerSuccess(data)),
+      editPartnerFail: (error)=>dispatch(actions.editPartnerFail(error)),
+
     };
 };
 

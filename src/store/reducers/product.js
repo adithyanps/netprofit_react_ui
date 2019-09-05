@@ -6,6 +6,7 @@ const initialState ={
   productListPageOpen:false,
   isDeletePage:false,
   isEditPage:false,
+  productCategoryData:[],
 
 }
 
@@ -15,7 +16,12 @@ const createProductSuccess =(state,action) => {
     productListPageOpen:true,
   })
 }
-
+const loadProductCategory = (state,action) => {
+  return updateObject(state, {
+    productCategoryData: action.productCategoryData,
+    productListPageOpen:true,
+  })
+}
 const createProductFail = (state,action)=> {
   return  updateObject(state)
 }
@@ -69,6 +75,7 @@ const reducer =(state=initialState,action)=>{
     case actionTypes.PRODUCT_EDIT_FAIL: return editProductFail(state,action);
     case actionTypes.PRODUCT_DELETE_SUCCESS: return deleteProductSuccess(state,action);
     case actionTypes.PRODUCT_DELETE_FAIL: return deleteProductFail(state,action);
+    case actionTypes.GET_ALL_PRODUCT_CAT_SUCCESS: return loadProductCategory(state,action);
     default: return state;
 
   }

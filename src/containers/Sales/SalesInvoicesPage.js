@@ -172,7 +172,7 @@ class SalesInvoicesPage extends Component {
       <DeleteFromSalesInvoice
           show={this.props.isDeletePage}
           close={this.props.salesDeleteWindowClose}
-          deleteHandler = {this.props.salesDeleteHandler}
+          deleteHandler = {this.spotObjDeleteHandler}
           formData={this.props.invoiceData}/>
         )
   }
@@ -184,13 +184,51 @@ class SalesInvoicesPage extends Component {
           close={this.props.salesEditWindowClose}
           formData={this.props.invoiceData}
           editId={this.state.editId}
-          editHandler={this.props.salseObjEditHandler}
+          editHandler={this.spotObjEditHandler}
           settingsAcnt={this.state.settingsAcnt}
           customerList={this.state.customerList}
           />
     )
   }
+  spotObjDeleteHandler=(id)=>{
+    console.log(id)
+    let data = this.state.invoiceData;
+    console.log(data)
+    let updatedInvoices = data
+    let deleteObject = this.state.invoiceData.filter(item =>  item.id === id)
+    console.log(deleteObject)
 
+    let delIndex = updatedInvoices.indexOf(deleteObject[0])
+    console.log(delIndex)
+
+    axios.delete('/invoice/parantdata/'+id).then(
+       response => {
+         console.log(response.data)
+           updatedInvoices.splice(delIndex,1)
+           this.setState({
+               invoiceData: updatedInvoices,
+
+           })
+          this.props.deleteInvoiceSucces()
+       }
+    ).catch(error=>{
+      this.props.deleteInvoiceFail(error)
+    })
+  }
+  spotObjEditHandler=(event,obj)=>{
+    let list = []
+    list.push(obj)
+    axios.patch('/invoice/parantdata/'+obj.id + '/',obj).then(
+      response=>{
+        this.props.editInvoiceSuccess(response.data)
+        let updatedInvoices = this.state.invoiceData.map(obj => list.find(o=> o.id === obj.id) || obj)
+
+        this.setState({invoiceData:updatedInvoices})
+      }
+    ).catch(error=>{
+      this.props.editInvoiceFail(error)
+    })
+  }
   viewModal = () => {
     return(
       <ViewModal
@@ -468,6 +506,12 @@ class SalesInvoicesPage extends Component {
       salesEditWindowOpen:()=>dispatch(actions.salesEditWindowOpen()),
       salesEditWindowClose:()=>dispatch(actions.salesEditWindowClose()),
       salseObjEditHandler:(obj)=>dispatch(actions.salseObjEditHandler(obj)),
+
+      deleteInvoiceSucces: ()=>dispatch(actions.deleteInvoiceSucces()),
+      deleteInvoiceFail: (error)=>dispatch(actions.deleteInvoiceFail(error)),
+      editInvoiceSuccess: (data)=>dispatch(actions.editInvoiceSuccess(data)),
+      editInvoiceFail: (error)=>dispatch(actions.editInvoiceFail(error)),
+
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(SalesInvoicesPage);

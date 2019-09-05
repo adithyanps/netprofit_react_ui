@@ -8,8 +8,13 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ProductCategoryList from './ProductCategoryList/ProductCategoryList';
 import {Button, Table, Modal} from 'react-bootstrap';
+import * as actions from '../../../store/actions/index';
 
 class ProductCategoryListPage extends Component {
+  componentDidMount(){
+    this.props.currentUser()
+  }
+  
   render() {
     return(
       <div className="saleswrapper">
@@ -21,7 +26,9 @@ class ProductCategoryListPage extends Component {
               product categories
             </div>
             <br />
-          <ProductCategoryList />
+            {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
+              <ProductCategoryList />
+            ):(<div>YOU HAVE NO PERMISSION TO ACCESS THIS PAGE</div>)}
      </div>
      <div>
        <QuickLink />
@@ -30,5 +37,16 @@ class ProductCategoryListPage extends Component {
     )
   }
 }
+const mapStateToProps =(state)=>{
+  console.log(state)
+  return {
+    currentUserData:state.currentUser.userData
+  }
+}
 
-export default ProductCategoryListPage
+const mapDispatchToProps = dispatch => {
+  return {
+    currentUser: ()=>dispatch(actions.currentUser()),
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ProductCategoryListPage)

@@ -40,7 +40,7 @@ class ProductCategoryView extends React.Component {
   <Modal.Footer>
             <button className="OkBtn" onClick={this.props.close}>OK</button>
 
-            <Link to="/create-partner"><i className="fas fa-plus"></i></Link>
+            <Link to="/create-productCategory"><i className="fas fa-plus"></i></Link>
             <Button  type="submit" onClick={(e,id) => this.props.editwindow(e,this.props.formData.id)} ><i className="fas fa-pencil-alt"></i></Button>
             <Button  type="submit"  onClick={(e,id) => this.props.deletewindow(e,this.props.formData.id)}><i className="fas fa-trash"></i></Button>
             </Modal.Footer>

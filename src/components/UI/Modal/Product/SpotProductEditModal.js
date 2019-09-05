@@ -53,7 +53,7 @@ class SpotProductEdit extends React.Component {
       product_Cat: this.state.product_CatList.filter(item=>item.name === this.state.selectedCategory)[0].id,
     }
     console.log(Data)
-    this.props.editHandler(Data)
+    this.props.editHandler(e,Data)
     console.log(this.props.formData)
 
   }

@@ -105,7 +105,7 @@ class ExpenseList extends Component {
 
       sample.ExpenseAcct = accntName
       sample.CreditAcct = accntName
-
+      console.log(sample)
       sample.journal_entry.journal_item.map((child,index)=>{
         this.state.accountList.map((acc,accIndex)=>{
           if (acc.id === child.account) {
@@ -154,6 +154,16 @@ class ExpenseList extends Component {
     this.setState({expenseDataList:data})
 
   }
+
+  handleInputChange = (event) => {
+    event.preventDefault();
+    console.log(event.target.name,event.target.value)
+    let key = event.target.name
+    let  value = event.target.value
+  this.setState({[key]:value})
+
+  }
+
   pagexClickHandler = (pageNo) => {
         console.log(pageNo)
         let length = this.state.expenseDataList.length
@@ -375,7 +385,7 @@ class ExpenseList extends Component {
           categoryList={this.state.categoryList}
           cashAccnts={this.state.cashAccnts}
           expenseAccnts={this.state.expenseAccnts}
-          editHandler={this.props.spotObjEditHandler}
+          editHandler={this.spotObjEditHandler}
 
         />
       )
@@ -389,18 +399,114 @@ class ExpenseList extends Component {
           categoryList={this.state.categoryList}
           cashAccnts={this.state.cashAccnts}
           expenseAccnts={this.state.expenseAccnts}
-          deleteHandler={this.props.spotObjDeleteHandler}
+          deleteHandler={this.spotObjDeleteHandler}
         />
       )
   }
+  spotObjDeleteHandler=(id)=>{
+    console.log(id)
+    let data = this.state.expenseDataList;
+    console.log(data)
+    let updatedExpenses = data
+    let deleteObject = this.state.expenseDataList.filter(item =>  item.id === id)
+    console.log(deleteObject)
 
-  handleInputChange = (event) => {
-    event.preventDefault();
-    console.log(event.target.name,event.target.value)
-    let key = event.target.name
-    let  value = event.target.value
-  this.setState({[key]:value})
+    let delIndex = updatedExpenses.indexOf(deleteObject[0])
+    console.log(delIndex)
 
+    axios.delete('/invoice/expenses/'+id).then(
+       response => {
+         console.log(response.data)
+           updatedExpenses.splice(delIndex,1)
+           this.setState({
+               expenseDataList: updatedExpenses,
+
+           })
+          this.props.deleteExpenseSuccess()
+       }
+    ).catch(error=>{
+      this.props.deleteExpenseFail(error)
+    })
+  }
+
+  spotObjEditHandler=(event,obj)=>{
+    let list = []
+    list.push(obj)
+    console.log(list)
+
+
+    axios.patch('/invoice/expenses/'+obj.id + '/',obj).then(
+      response=>{
+        console.log(response.data);
+
+        this.props.editExpenseSuccess(response.data)
+        console.log(obj);
+        console.log(this.state.expenseDataList);
+
+        let data = []
+        data.push(response.data)
+          console.log(data)
+          console.log(this.state.expenseDataList)
+
+            data.map((sample,index) => {
+
+
+              let creditJrnlItem=[];
+              let debitJrnlItem=[];
+              let accntName= ''
+
+              sample.ExpenseAcct = accntName
+              sample.CreditAcct = accntName
+              console.log(sample)
+              console.log(this.state.accountList)
+
+
+              sample.journal_entry.journal_item.map((child,index)=>{
+                this.state.accountList.map((acc,accIndex)=>{
+                  if (acc.id === child.account) {
+                    child.account = acc.name;
+                    accntName = acc.name
+                    // alert(creditName)
+                  }
+                });
+
+                if(child.credit_amount > 0){
+                  // creditJrnlItem.push(child);
+                  creditJrnlItem = child
+                  sample.CreditAcct = accntName
+
+                } else {
+                  debitJrnlItem = child;
+                  sample.ExpenseAcct = accntName
+                }
+              });
+              sample.journal_entry.journal_item = null;
+              sample.journal_entry.creditJrnlItem = creditJrnlItem;
+              sample.journal_entry.debitJrnlItem = debitJrnlItem;
+              this.state.categoryList.map((cat,idx)=>{
+                console.log(sample)
+
+                // alert(sample.ExpenseCategory)
+                if(sample.ExpenseCategory === cat.id){
+                  sample.ExpenseCategory = cat.name
+                }
+
+              });
+
+
+            });
+            console.log(data)
+            let updatedExpenses = this.state.expenseDataList.map(obj => data.find(o=> o.id === obj.id) || obj)
+            console.log(data)
+
+            this.setState({expenseDataList:updatedExpenses})
+
+          }
+    )
+    .catch(error=>{
+      console.log(error);
+      this.props.editExpenseFail(error)
+    })
   }
 
   filterHandler=(e)=>{
@@ -548,6 +654,12 @@ const mapDispatchToProps =(dispatch)=>{
     spotDeleteWindowClose:()=>dispatch(actions.expenseDeleteWindowClose()),
     spotObjEditHandler:(obj)=>dispatch(actions.expenseObjEditHandler(obj)),
     spotObjDeleteHandler:(id)=>dispatch(actions.expenseObjDeleteHandler(id)),
+
+    deleteExpenseSuccess: ()=>dispatch(actions.deleteExpenseSuccess()),
+    deleteExpenseFail: (error)=>dispatch(actions.deleteExpenseFail(error)),
+    editExpenseSuccess: (data)=>dispatch(actions.editExpenseSuccess(data)),
+    editExpenseFail: (error)=>dispatch(actions.editExpenseFail(error)),
+
   }
 }
 

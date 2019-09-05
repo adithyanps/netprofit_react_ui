@@ -7,13 +7,21 @@ import * as actions from '../../../../store/actions/index';
 
 class CreatePartner extends Component {
   state={
+    areaList:[],
     customer_id:null,
     type:null,
     name:null,
     partnerPage:false,
+    area:null,
   }
   componentDidMount(){
     this.props.currentUser()
+    this.loadArea()
+  }
+  loadArea=()=>{
+    axios.get('invoice/area/').then(
+      response=>{this.setState({areaList:response.data})}
+    )
   }
   handleInputChange = (event) => {
     event.preventDefault();
@@ -28,15 +36,17 @@ class CreatePartner extends Component {
       customer_id:this.state.customer_id,
       type:this.state.type,
       name:this.state.name,
+      area:this.state.areaList.filter(item=> item.area ===this.state.area)[0].id,
       created_by:this.props.currentUserData.id
     }
+    console.log(Data)
 
     axios.post('invoice/partner/',Data).then(
       response=>{
         console.log(response.data)
         this.props.onCreatePartnerSuccess(response.data)
-      },
-      this.setState({partnerPage:true})
+        this.setState({partnerPage:true})
+      }
     )
   }
   openPartnerPage=()=>{
@@ -88,6 +98,16 @@ class CreatePartner extends Component {
               required='required'/>
           </div>
           <div>
+            <label>AREA</label><br />
+            <select
+                className="select"
+                onChange={(e) => this.setState({area:e.target.value})}
+                >
+                <option value=""> {this.state.area}</option>
+                {this.state.areaList.map((m,index)=>
+                    <option key={m.id} value={m.area}>{m.area}</option>
+                )}
+            </select>
           </div>
       </div>
       <br/>

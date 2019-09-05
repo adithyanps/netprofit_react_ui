@@ -7,6 +7,38 @@ export const createProductSuccess =(productData)=>{
     productData: productData
   }
 }
+export const loadProductCategory =(productCategoryData)=>{
+  return{
+    type : actionTypes.GET_ALL_PRODUCT_CAT_SUCCESS,
+    productCategoryData: productCategoryData
+  }
+}
+
+export const productDataHandler = (productData)=>{
+  console.log(productData)
+
+  return dispatch => {
+    dispatch(createProductSuccess(productData));
+    // axios.get('invoice/product-category/').then(
+    //   res => {
+    //     let data = res.data;
+    //     let dataTemp = res.data;
+    //     data.map((sample,index)=>{
+    //       dataTemp.map((proCat)=>{
+    //         if (proCat.id === sample.ParentCategory) {
+    //           sample.ParentCategory = proCat.name;
+    //         }
+    //       })
+    //     })
+    //     dispatch(loadProductCategory(data))
+    //
+    //   }
+    //
+    // )
+    // dispatch(createProductSuccess(productData))
+
+  }
+}
 
 export const createProductFail =()=> {
   return{
@@ -14,11 +46,13 @@ export const createProductFail =()=> {
   }
 }
 
+
 export const productViewWindowClose=()=>{
   return{
     type:actionTypes.PRODUCT_LIST_PAGE_CLOSE
   }
 }
+
 
 export const productViewWindowOpen=()=>{
   return{
@@ -26,11 +60,13 @@ export const productViewWindowOpen=()=>{
   }
 }
 
+
 export const productDeleteWindowOpen=()=>{
   return{
     type:actionTypes.PRODUCT_DELETE_WINDOW_OPEN
   }
 }
+
 
 export const productDeleteWindowClose=()=>{
   return{
@@ -38,11 +74,13 @@ export const productDeleteWindowClose=()=>{
   }
 }
 
+
 export const productEditWindowOpen=()=>{
   return{
     type:actionTypes.PRODUCT_EDIT_WINDOW_OPEN
   }
 }
+
 
 export const productEditWindowClose=()=>{
   return{
@@ -50,11 +88,13 @@ export const productEditWindowClose=()=>{
   }
 }
 
+
 export const editProductSuccess=()=>{
   return{
     type:actionTypes.PRODUCT_EDIT_SUCCESS
   }
 }
+
 
 export const editProductFail=()=>{
   return{
@@ -62,11 +102,13 @@ export const editProductFail=()=>{
   }
 }
 
+
 export const deleteProductSuccess=()=>{
   return {
     type:actionTypes.PRODUCT_DELETE_SUCCESS
   }
 }
+
 
 export const deleteProductFail=()=>{
   return {
@@ -74,48 +116,45 @@ export const deleteProductFail=()=>{
   }
 }
 
-export const productObjDeleteHandler=(id)=>{
-  return dispatch =>{
-    axios.delete('/invoice/item/'+ id).then(
-      response => {
-
-        dispatch(deleteProductSuccess())
-      }
-    )
-    .catch(error=>{
-      dispatch(deleteProductFail(error))
-    })
-  }
-}
-
-export const productObjEditHandler=(obj)=>{
-  return dispatch => {
-    axios.patch('/invoice/item/' + obj.id + '/',obj).then(
-      response => {
-        console.log(response.data);
-        dispatch(editProductSuccess(response.data))
-      }
-    )
-    .catch(error => {
-      dispatch(editProductFail(error))
-    })
-  }
-}
+//
+// export const productObjDeleteHandler=(id)=>{
+//   console.log(id)
+//   return dispatch =>{
+//     axios.delete('/invoice/item/'+ id).then(
+//       response => {
+//
+//         dispatch(deleteProductSuccess())
+//       }
+//     )
+//     .catch(error=>{
+//       dispatch(deleteProductFail(error))
+//     })
+//   }
+// }
+//
+//
+// export const productObjEditHandler=(obj)=>{
+//   return dispatch => {
+//     axios.patch('/invoice/item/' + obj.id + '/',obj).then(
+//       response => {
+//         console.log(response.data);
+//         dispatch(editProductSuccess(response.data))
+//       }
+//     )
+//     .catch(error => {
+//       dispatch(editProductFail(error))
+//     })
+//   }
+// }
+//
 
 export const createProduct=(data)=>{
   return dispatch => {
-    axios.post('/invoice/item/',data,{
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(
-      response=> {
-        dispatch(createProductSuccess(response.data))
+    dispatch(createProductSuccess(data))
+    axios.get('invoice/product-category/').then(
+      res => {
+        dispatch(loadProductCategory(res.data))
       }
     )
-    .catch(error => {
-      console.log(error)
-      dispatch(createProductFail(error))
-    })
   }
 }

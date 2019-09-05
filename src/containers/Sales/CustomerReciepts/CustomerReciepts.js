@@ -350,7 +350,7 @@ spotEditModal=()=>{
         editId={this.state.editId}
         accountList={this.state.accountList}
         partnerList={this.state.partnerList}
-        editHandler={this.props.spotObjEditHandler}
+        editHandler={this.spotObjEditHandler}
         debitJrnlItem={this.props.debitJrnlItem}
         creditJrnlItem={this.props.creditJrnlItem}
 
@@ -366,11 +366,90 @@ spotDeletModal=()=>{
       formData={this.props.recieptData}
       accountList={this.state.accountList}
       partnerList={this.state.partnerList}
-      deleteHandler={this.props.spotObjDeleteHandler}
+      deleteHandler={this.spotObjDeleteHandler}
       debitJrnlItem={this.props.debitJrnlItem}
       creditJrnlItem={this.props.creditJrnlItem}
       />
     )
+}
+
+spotObjDeleteHandler=(id)=>{
+  console.log(id)
+  let data = this.state.recieptData;
+  console.log(data)
+  let updatedReciepts = data
+  let deleteObject = this.state.recieptData.filter(item =>  item.id === id)
+  console.log(deleteObject)
+
+  let delIndex = updatedReciepts.indexOf(deleteObject[0])
+  console.log(delIndex)
+
+  axios.delete('/invoice/customerReceipt/'+id).then(
+     response => {
+       console.log(response.data)
+         updatedReciepts.splice(delIndex,1)
+         this.setState({
+             recieptData: updatedReciepts,
+         })
+        this.props.deleteCustomerRecieptSuccess()
+     }
+  ).catch(error=>{
+    this.props.deleteCustomerRecieptFail(error)
+  })
+}
+spotObjEditHandler=(event,obj)=>{
+  let list = []
+  list.push(obj)
+  console.log(list)
+
+
+  axios.patch('/invoice/customerReceipt/'+obj.id + '/',obj).then(
+    response=>{
+      console.log(response.data);
+
+      this.props.editCustomerRecieptSuccess(response.data)
+      console.log(obj);
+
+      let data = []
+      data.push(response.data)
+        console.log(data)
+        console.log(this.state.recieptData)
+        data.map((sample,index)=>{
+          let creditJrnlItem=[];
+          let debitJrnlItem=[];
+          sample.journal_entry.journal_item.map((child,index)=>{
+            this.state.accountList.map((acc,accIndex)=>{
+              if (acc.id === child.account) {
+                child.account = acc.name;
+              }
+            });
+            this.state.partnerList.map((partner,pIndex)=>{
+              if (partner.id === child.partner) {
+                child.partner = partner.name;
+              }
+            });
+            if(child.credit_amount > 0){
+              creditJrnlItem.push(child);
+            } else {
+              debitJrnlItem = child;
+            }
+          });
+          sample.journal_entry.journal_item = null;
+          sample.journal_entry.creditJrnlItem = creditJrnlItem;
+          sample.journal_entry.debitJrnlItem = debitJrnlItem;
+        });
+          console.log(data)
+          let updatedExpenses = this.state.recieptData.map(obj => data.find(o=> o.id === obj.id) || obj)
+          console.log(data)
+
+          this.setState({recieptData:updatedExpenses})
+
+        }
+  )
+  .catch(error=>{
+    console.log(error);
+    this.props.editCustomerRecieptFail(error)
+  })
 }
 
 handleInputChange = (event) => {
@@ -518,6 +597,12 @@ const mapDispatchToProps =(dispatch)=>{
     spotDeleteWindowClose:()=>dispatch(actions.customerReceiptDeleteWindowClose()),
     spotObjEditHandler:(obj)=>dispatch(actions.customerReceiptObjEditHandler(obj)),
     spotObjDeleteHandler:(id)=>dispatch(actions.customerReceiptObjDeleteHandler(id)),
+
+    deleteCustomerRecieptSuccess: ()=>dispatch(actions.deleteCustomerRecieptSuccess()),
+    deleteCustomerRecieptFail: (error)=>dispatch(actions.deleteCustomerRecieptFail(error)),
+    editCustomerRecieptSuccess: (data)=>dispatch(actions.editCustomerRecieptSuccess(data)),
+    editCustomerRecieptFail: (error)=>dispatch(actions.editCustomerRecieptFail(error)),
+
   }
 }
 
