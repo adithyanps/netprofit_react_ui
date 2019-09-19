@@ -488,6 +488,7 @@ class CreateInvoice extends Component {
                   <input
                       className='grand'
                       value={this.state.total}
+                      readOnly
                       />
                   </div>
                   <br />

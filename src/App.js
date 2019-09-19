@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import axios from './axios';
 import * as actions from './store/actions/index';
 
-import Navbar from './components/UI/Layout/Navbar';
+import Navbar from './components/UI/Layout/Navbar1';
 import Login from './containers/Auth/Login/Login';
 import Logout from './containers/Auth/Logout/Logout';
 import Home from './containers/MainPages/Home';
@@ -24,6 +24,8 @@ import SalesInvoicesPage from './containers/Sales/SalesInvoicesPage';
 import CreateRecieptPage from './containers/Sales/CreateRecieptPage';
 import CustomerRecieptsPage from './containers/Sales/CustomerRecieptsPage';
 import ExpenseListPage from './containers/QuickLink/ExpenseListPage';
+import PermissionDeniedPage from './containers/MainPages/PermissionDeniedPage';
+
 
 import Customers from './containers/Sales/Customers';
 import CreateExpensePage from './containers/QuickLink/CreateExpensePage';
@@ -37,6 +39,15 @@ import CreateBranch from './containers/Settings/Branch/CreateBranchPage';
 import BranchListPage from './containers/Settings/Branch/BranchListPage';
 import CreateArea from './containers/Settings/Area/CreateAreaPage';
 import AreaListPage from './containers/Settings/Area/AreaListPage';
+import AccountListPage from './containers/Settings/Accounts/AccountListPage';
+import CreateAccountPage from './containers/Settings/Accounts/CreateAccountPage';
+import CreateExpenseCategoryPage from './containers/Settings/ExpenseCategory/CreateExpenseCategoryPage';
+import ExpenseCategoryListPage from './containers/Settings/ExpenseCategory/ExpenseCategoryListPage';
+import CreateCreditNotePage from './containers/Accounts/CreditNote/CreateCreditNotePage';
+import CreditNoteListPage from './containers/Accounts/CreditNote/CreditNoteListPage';
+
+
+
 
 
 
@@ -83,7 +94,16 @@ class App extends Component {
             <Route path="/branches" exact component={BranchListPage} />
             <Route path="/create-area" exact component={CreateArea} />
             <Route path="/areas" exact component= {AreaListPage}/>
+            <Route path="/create-accounts" exact component={CreateAccountPage} />
+            <Route path="/account-lists" exact component={AccountListPage} />
+            <Route path="/permission-denied" exact component={PermissionDeniedPage} />
+            <Route path="/create-expense-category" exact component={CreateExpenseCategoryPage} />
+            <Route path="/expense-categories" exact component={ExpenseCategoryListPage} />
+            <Route path="/create-creditnote" exact component={CreateCreditNotePage} />
+            <Route path="/creditnotes" exact component={CreditNoteListPage} />
 
+
+s
           </Switch>
           </Navbar >
       </div>

@@ -133,11 +133,13 @@ class DefaultSettings extends Component {
   }
   render() {
     console.log(this.state)
+    console.log(Object.keys(this.state.accountIdObj).length)
+
 
     console.log(this.props)
 
     return (
-      <div className="SettingsAcntBox">
+      <div className="CreateInvoiceBox">
         {this.state.isEditSettings ? (this.editWindowOpen()) : null }
         <p>DefaultSettings</p>
         <div className="SettingsAcntBoxwrapper">
@@ -163,7 +165,7 @@ class DefaultSettings extends Component {
         </div><br />
 
         <div style={{marginLeft:"200px"}}>
-          <button className="cancelBtn" onClick={this.EditSettings}>EDIT</button>
+          <button className="cancelBtn" onClick={this.EditSettings}>{Object.keys(this.state.accountIdObj).length === 0 ? 'ADD' : 'EDIT'}</button>
         </div>
       </div>
     )

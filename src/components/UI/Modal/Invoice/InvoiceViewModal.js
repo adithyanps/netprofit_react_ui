@@ -8,10 +8,15 @@ import Toggle from '../../Buttons/Toggle/Toggle';
 
 class PopUp extends React.Component {
   state={
-    serial_no:0
+    serial_no:0,
+
   }
+
+
     render() {
       console.log(this.props.formData)
+      console.log(this.state)
+
 
       return (
         <Modal
@@ -103,7 +108,8 @@ class PopUp extends React.Component {
                                       size="5"/>
                             </td>
                             </tr>
-                          ))}</tbody>
+                          ))
+                        }</tbody>
           </table>
           <div className="invoiceviewbtm">
               TOTAL:{this.props.formData.total_amount}<br/>

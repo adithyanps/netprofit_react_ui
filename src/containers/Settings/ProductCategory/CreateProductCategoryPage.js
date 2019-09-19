@@ -21,7 +21,7 @@ class CreateProductCategoryPage extends Component {
           <div>
             <SettingsNav />
           </div>
-          <div className="SettingsAcntBox">
+          <div className="CreateInvoiceBox">
           {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
             <CreateProductCategory />
           ):(<div>YOU HAVE NO PERMISSION TO ACCESS THIS PAGE</div>)}

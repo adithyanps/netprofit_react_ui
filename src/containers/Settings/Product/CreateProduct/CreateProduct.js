@@ -63,7 +63,7 @@ loadProductCats=()=>{
       {this.state.productPage ? (this.openProductPage()) : (null)}
 
       <br />
-      <div ccreateProductlassName="SettingsAcntBoxwrapper">
+      <div className="SettingsAcntBoxwrapper">
         <div>
           <label>PRODUCT NAME</label><br />
           <input

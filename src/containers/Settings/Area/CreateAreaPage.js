@@ -20,7 +20,7 @@ class CreateAreaPage extends Component {
         <div>
           <SettingsNav />
         </div>
-        <div className="SettingsAcntBox">
+        <div className="CreateInvoiceBox">
         {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
           <CreateArea />
         ):(<div>YOU HAVE NO PERMISSION TO ACCESS THIS PAGE</div>)}

@@ -310,7 +310,7 @@ class ExpenseList extends Component {
   }
 
   objEditHandler = (event,objTemp) => {
-  console.log(objTemp)
+  console.log(objTemp,'from list')
       event.preventDefault()
       axios.patch('/invoice/expenses/' + objTemp.id + '/', objTemp).then(
           response => {
@@ -404,7 +404,7 @@ class ExpenseList extends Component {
       )
   }
   spotObjDeleteHandler=(id)=>{
-    console.log(id)
+    console.log(id,"xxxxx")
     let data = this.state.expenseDataList;
     console.log(data)
     let updatedExpenses = data

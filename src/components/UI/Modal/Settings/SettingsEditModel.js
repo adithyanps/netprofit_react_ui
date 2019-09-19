@@ -11,7 +11,10 @@ class SettingsEditModel extends React.Component {
     customerAccntList:[],
     supplierAccntList:[],
     isEditSettings:false,
-    salesId:{}
+    salesId:null,
+    purchseId:null,
+    customerId:null,
+    supplierId:null
 
   }
   componentWillMount(){
@@ -34,25 +37,53 @@ class SettingsEditModel extends React.Component {
   submitDataHandler=(e)=>{
     e.preventDefault()
     console.log(this.state.salesId)
-    if (this.state.purchseId === undefined) {
-      this.setState({purchseId:this.props.PurchaseObj.id})
-    }
-    if (this.state.salesId === undefined) {
-      this.setState({salesId:this.props.SalesObj.id})
-    }
-    if (this.state.customerId === undefined) {
-      this.setState({customerId:this.props.CustomerObj.id})
-    }
-    if (this.state.supplierId === undefined) {
-      this.setState({supplierId:this.props.SupplierObj.id})
-    }
+    console.log(this.state.purchseId)
+    console.log(this.state.customerId)
+    console.log(this.state.supplierId)
+    console.log(this.props.SalesObj)
+    console.log(this.props.PurchaseObj)
+    console.log(this.props.CustomerObj)
+
+
+
+
+
+    // if (this.state.purchseId === undefined) {
+    //   this.setState({purchseId:this.props.PurchaseObj.id})
+    // }
+    // if (this.state.salesId === null) {
+    //   this.setState({salesId:this.props.SalesObj.id})
+    // }
+    // if (this.state.customerId === undefined) {
+    //   this.setState({customerId:this.props.CustomerObj.id})
+    // }
+    // if (this.state.supplierId === undefined) {
+    //   this.setState({supplierId:this.props.SupplierObj.id})
+    // }
     let Data = {
+
       SalesAccont:this.state.salesId,
       PurchaseAccont:this.state.purchseId,
       CustomerAccount:this.state.customerId,
       SupplierAccount:this.state.supplierId,
     }
+    if(this.state.salesId === null){
+      Data.SalesAccont = this.props.SalesObj.id
+    }
+    if(this.state.purchseId === null){
+      Data.PurchaseAccont = this.props.PurchaseObj.id
+    }
+    if(this.state.customerId === null){
+      Data.CustomerAccount = this.props.CustomerObj.id
+    }
+    if(this.state.supplierId === null){
+      Data.SupplierAccount = this.props.SupplierObj.id
+    }
     console.log(Data)
+    console.log(this.props.PurchaseObj.id)
+    console.log(this.props.SalesObj.id)
+    console.log(this.props.CustomerObj.id)
+
     this.props.editHandler(Data)
     // this.submitHandler(Data)
   }
@@ -65,6 +96,10 @@ class SettingsEditModel extends React.Component {
   }
   purchseHandler=(e)=>{
     let PurchaseObj = this.props.purchaseAccntList.filter(item => item.name === e.target.value)
+    console.log(PurchaseObj)
+    console.log(this.state.salesId)
+
+
     this.setState({purchseId:PurchaseObj[0].id})
   }
   customerHandler=(e)=>{

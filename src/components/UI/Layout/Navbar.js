@@ -41,7 +41,6 @@ class Navbars extends Component {
 
     return (
       <div className="homeBackground">
-
         <div className="nav">
           <li ><a className="nav-link-th" href="/home">NETPROFIT</a></li>
           <li ><a className="nav-link-t" href="/sales">SALES</a></li>
@@ -49,42 +48,39 @@ class Navbars extends Component {
           <li ><a className="nav-link-t" href="/accounts">ACCOUNTS</a></li>
           <li ><a className="nav-link-t" href="/reports">REPORTS</a></li>
 
+          <li ><a className="nav-link-th" href="/settings">  <img src={SettingsLogo} /></a></li>
+          <li className="nav-link-th"><img  src={SearhLogo} /></li>
+          <img src={AlarmLogo} />
+                <div className="dropdown" style={{"float":"right"}}>
+                    <button className="dropbtn">
+                    <img src={UserLogo} style={{"fontsize":"30px","color":"green"}}/>
+                    </button>
+                    <div className="dropdown-content" >
+                      <Link to="/logout" className="nav-link">logout</Link>
+                    </div>
+                </div>
+        </div>
 
-          <a href="/settings">  <img src={SettingsLogo} /></a>
-            <img src={SearhLogo} />
-
-            <img src={AlarmLogo} />
-            <div className="dropdown" style={{"float":"right"}}>
-              <button className="dropbtn">
-            <img src={UserLogo} style={{"fontsize":"30px","color":"green"}}/>
-              </button>
-              <div className="dropdown-content" >
-                <Link to="/logout" className="nav-link">logout</Link>
-              </div>
+            <div className="idBox">
+                <div>
+                  <p>id:{this.state.userData.email}</p>
+                </div>
             </div>
-        </div>
+            <div className="breadCrmbBox">
 
-        <div className="idBox">
-          <div>
-            <p>id:{this.state.userData.email}</p>
-          </div>
-        </div>
-        <div className="breadCrmbBox">
-
-        </div>
-        <div>{this.props.children}</div>
-        <div className="footer">
-        <ul>
-
-          <li ><a className="footer-link-t" href="/news">NEWS</a></li>
-          <li><a className="footer-link-t" href="/sport">SPORT</a></li>
-          <li><a className="footer-link-t" href="/wheather">WHEATHER</a></li>
-          <li><a  className="footer-link-t" href="/future">FUTURE</a></li>
-          </ul>
-          <button onClick={this.topFunction}>top</button>
+            </div>
+            <div>{this.props.children}</div>
+            <div className="footer">
+                <ul>
+                    <li ><a className="footer-link-t" href="/news">NEWS</a></li>
+                    <li><a className="footer-link-t" href="/sport">SPORT</a></li>
+                    <li><a className="footer-link-t" href="/wheather">WHEATHER</a></li>
+                    <li><a  className="footer-link-t" href="/future">FUTURE</a></li>
+                </ul>
+                <button onClick={this.topFunction}>top</button>
 
 
-        </div>
+            </div>
 
 
     </div>

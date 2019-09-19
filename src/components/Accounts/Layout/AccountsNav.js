@@ -11,6 +11,11 @@ class SalesNav extends Component {
         <a href="/journal-entries">Journal Entries</a>
         <a href="/journal-items">Journal Items</a>
         <a href="/accounts">Accounts</a>
+        <a href="/create-creditnote">Create CreditNote</a>
+        <a href="/creditnotes">CreditNotes</a>
+
+
+
       </div>
     )
   }

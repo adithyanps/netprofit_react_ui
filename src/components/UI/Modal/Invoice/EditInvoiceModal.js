@@ -240,7 +240,7 @@ handleGrandTotalChange=()=>{
       this.props.formData.customer=this.state.selectedName
       this.props.formData.branch=this.state.selectedBranch
       this.props.formData.status=this.state.status
-      this.props.formData.narrationchildObject=this.state.narration
+      this.props.formData.narration=this.state.narration
       this.props.formData.date=this.state.holder.date
       this.props.formData.total_amount=this.state.holder.total_amount
       this.props.formData.grant_total=this.state.holder.grant_total

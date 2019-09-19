@@ -5,6 +5,8 @@ class SettingsNav extends Component {
   render() {
     return(
       <div className="salesSideNav">
+        <a href="/create-accounts">Create-Accounts</a>
+        <a href="/account-lists">Accounts</a>
         <a href="/create-products">Create-Products</a>
         <a href="/products">Products</a>
         <a href="/create-partner">Create-Partner</a>
@@ -15,6 +17,10 @@ class SettingsNav extends Component {
         <a href="/branches">Branch List</a>
         <a href="/create-area">Create Area</a>
         <a href="/areas">Area List</a>
+        <a href="/create-expense-category"> Create ExpenseCategory</a>
+        <a href="/expense-categories">ExpenseCategory List</a>
+
+
 
       </div>
     )

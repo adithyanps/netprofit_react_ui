@@ -16,3 +16,8 @@
   grid-template-columns: 0.5fr 1fr;
   margin-left: 200px;
 }
+.SettingsAcntBoxwrapper1{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-left: 200px;
+}
