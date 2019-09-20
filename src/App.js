@@ -45,7 +45,8 @@ import CreateExpenseCategoryPage from './containers/Settings/ExpenseCategory/Cre
 import ExpenseCategoryListPage from './containers/Settings/ExpenseCategory/ExpenseCategoryListPage';
 import CreateCreditNotePage from './containers/Accounts/CreditNote/CreateCreditNotePage';
 import CreditNoteListPage from './containers/Accounts/CreditNote/CreditNoteListPage';
-
+import CreateDebitNotePage from './containers/Accounts/DebitNote/CreateDebitNotePage';
+import DebitNoteListPage from './containers/Accounts/DebitNote/DebitNoteListPage';
 
 
 
@@ -101,9 +102,11 @@ class App extends Component {
             <Route path="/expense-categories" exact component={ExpenseCategoryListPage} />
             <Route path="/create-creditnote" exact component={CreateCreditNotePage} />
             <Route path="/creditnotes" exact component={CreditNoteListPage} />
+            <Route path="/create-debitnote" exact component={CreateDebitNotePage} />
+            <Route path="/debitnotes" exact component={DebitNoteListPage} />
 
 
-s
+
           </Switch>
           </Navbar >
       </div>
