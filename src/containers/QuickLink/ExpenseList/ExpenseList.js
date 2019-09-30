@@ -53,19 +53,19 @@ class ExpenseList extends Component {
   }
 
   loadExpenseCategory=()=>{
-    axios.get('/invoice/expense-category/').then(
+    axios.get('/expenses/expense-category/').then(
       response=>{this.setState({categoryList:response.data});
     }
     )
   }
   loadAccount=()=>{
-    axios.get('/invoice/account/').then(
+    axios.get('/masters/account/').then(
       response=>{this.setState({accountList:response.data});
     }
     )
   }
   loadExpenseAccnts=()=>{
-    axios.get('/invoice/account/?search=EXPENSE').then(
+    axios.get('/masters/account/?search=EXPENSE').then(
       res => {
         this.setState({expenseAccnts:res.data})
       }
@@ -73,7 +73,7 @@ class ExpenseList extends Component {
   }
 
   loadCashAccnts=()=>{
-    axios.get('/invoice/account/?search=CASH').then(
+    axios.get('/masters/account/?search=CASH').then(
       res => {
         this.setState({cashAccnts:res.data})
       }
@@ -81,7 +81,7 @@ class ExpenseList extends Component {
   }
 
   loadExpenseData=()=>{
-    axios.get('/invoice/expenses/').then(
+    axios.get('/expenses/expenses/').then(
       res =>{
         this.setState(
           {
@@ -297,7 +297,7 @@ class ExpenseList extends Component {
     const updatedOrders = this.state.expenseDataList;
     let deleteObject = this.state.expenseDataList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/expenses/'+id).then(
+    axios.delete('expenses/expenses/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -312,7 +312,7 @@ class ExpenseList extends Component {
   objEditHandler = (event,objTemp) => {
   console.log(objTemp,'from list')
       event.preventDefault()
-      axios.patch('/invoice/expenses/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/expenses/expenses/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -414,7 +414,7 @@ class ExpenseList extends Component {
     let delIndex = updatedExpenses.indexOf(deleteObject[0])
     console.log(delIndex)
 
-    axios.delete('/invoice/expenses/'+id).then(
+    axios.delete('/expenses/expenses/'+id).then(
        response => {
          console.log(response.data)
            updatedExpenses.splice(delIndex,1)
@@ -435,7 +435,7 @@ class ExpenseList extends Component {
     console.log(list)
 
 
-    axios.patch('/invoice/expenses/'+obj.id + '/',obj).then(
+    axios.patch('/expenses/expenses/'+obj.id + '/',obj).then(
       response=>{
         console.log(response.data);
 
@@ -511,14 +511,14 @@ class ExpenseList extends Component {
 
   filterHandler=(e)=>{
     if (this.state.selectedName === null) {
-      axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+      axios.get('expenses/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
         response=>{
           // this.setState({invoiceData:response.data});
           console.log(response.data)
           this.ExpenseDataHandlers(response.data)        }
       )
     } else {
-      axios.get('invoice/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
+      axios.get('expenses/expenses/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
         response=>{
           // this.setState({invoiceData:response.data});
           console.log(response.data)

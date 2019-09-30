@@ -17,7 +17,7 @@ class createProductCategory extends Component{
 
   }
   loadProductCats=()=>{
-    axios.get('invoice/product-category/').then(
+    axios.get('masters/product-category/').then(
       res => {
         this.setState({product_CatList:res.data});
       }
@@ -48,7 +48,7 @@ class createProductCategory extends Component{
     }
 
     console.log(data)
-    axios.post('invoice/product-category/',data).then(
+    axios.post('masters/product-category/',data).then(
       response=>{
         console.log(response.data)
         this.props.onCreateProductCategorySuccess(response.data)

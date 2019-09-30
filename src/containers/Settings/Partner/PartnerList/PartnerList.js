@@ -48,12 +48,12 @@ class ParnerList extends Component {
 
   }
   loadArea=()=>{
-    axios.get('invoice/area/').then(
+    axios.get('masters/area/').then(
       response=>{this.setState({areaList:response.data})}
     )
   }
   loadPartner=()=>{
-      axios.get('invoice/partner/').then(
+      axios.get('masters/partner/').then(
         res => {
           this.setState({partnerList:res.data});
         }
@@ -216,7 +216,7 @@ class ParnerList extends Component {
   }
   objEditHandler = (event,objTemp) => {
       event.preventDefault()
-      axios.patch('/invoice/partner/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/partner/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -232,7 +232,7 @@ class ParnerList extends Component {
     const updatedOrders = this.state.partnerList;
     let deleteObject = this.state.partnerList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/partner/'+id).then(
+    axios.delete('masters/partner/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -296,7 +296,7 @@ class ParnerList extends Component {
     console.log(deleteObject)
     let delIndex = updatedPartners.indexOf(deleteObject[0])
     console.log(delIndex)
-    axios.delete('/invoice/partner/'+id).then(
+    axios.delete('/masters/partner/'+id).then(
        response => {
          console.log(response.data)
            updatedPartners.splice(delIndex,1)
@@ -314,7 +314,7 @@ class ParnerList extends Component {
 spotObjEditHandler=(event,obj)=>{
   let list = []
   list.push(obj)
-  axios.patch('/invoice/partner/'+obj.id + '/',obj).then(
+  axios.patch('/masters/partner/'+obj.id + '/',obj).then(
     response=>{
       this.props.editPartnerSuccess(response.data)
       let updatedProducts = this.state.partnerList.map(obj => list.find(o=> o.id === obj.id) || obj)

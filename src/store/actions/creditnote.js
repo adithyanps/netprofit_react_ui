@@ -86,7 +86,7 @@ export const getAllCreditNoteData =(creditNoteDataList)=>{
 
 export const getAllCreditNote = (data)=>{
   return dispatch => {
-    axios.get('invoice/creditnote/').then(
+    axios.get('credit_note/creditnote/').then(
       response => {
         console.log(response.data)
 

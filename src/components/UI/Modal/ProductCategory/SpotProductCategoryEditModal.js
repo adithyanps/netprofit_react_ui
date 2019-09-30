@@ -28,7 +28,7 @@ class SpotProductCategoryEdit extends React.Component {
 }
 
   loadProductCats=()=>{
-    axios.get('invoice/product-category/').then(
+    axios.get('masters/product-category/').then(
       res => {
         this.setState({product_CatList:res.data});
       }

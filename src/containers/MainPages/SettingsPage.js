@@ -14,7 +14,9 @@ class SettingsPage extends Component {
       PurchaseObj:{},
       CustomerObj:{},
       SupplierObj:{},
-      accountList:[]
+      accountList:[],
+
+      currentUser:{}
 
 
   }
@@ -22,7 +24,17 @@ class SettingsPage extends Component {
     this.props.currentUser()
     this.props.onDefaultAccountList();
     this.props.onAccount()
-
+    this.currentUser()
+  }
+  currentUser=()=>{
+    axios.get('/user/me', {
+      headers: {
+        'Authorization':'Token '+localStorage.getItem('token'),
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+    }).then(res=>{
+      this.setState({currentUser:res.data})
+    })
   }
 
 
@@ -37,7 +49,7 @@ class SettingsPage extends Component {
       <div>
         <SettingsNav />
       </div>
-       {(this.props.currentUserData.user_choice === "FULL_ACCESS") ? (
+       {(this.state.currentUser.user_choice === "FULL_ACCESS") ? (
          <DefaultSettings
             />
        ):(<div>YOU HAVE NO PERMISSION TO ACCESS THIS PAGE</div>)}

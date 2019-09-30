@@ -19,7 +19,7 @@ export const productDataHandler = (productData)=>{
 
   return dispatch => {
     dispatch(createProductSuccess(productData));
-    // axios.get('invoice/product-category/').then(
+    // axios.get('masters/product-category/').then(
     //   res => {
     //     let data = res.data;
     //     let dataTemp = res.data;
@@ -120,7 +120,7 @@ export const deleteProductFail=()=>{
 // export const productObjDeleteHandler=(id)=>{
 //   console.log(id)
 //   return dispatch =>{
-//     axios.delete('/invoice/item/'+ id).then(
+//     axios.delete('/masters/product/'+ id).then(
 //       response => {
 //
 //         dispatch(deleteProductSuccess())
@@ -135,7 +135,7 @@ export const deleteProductFail=()=>{
 //
 // export const productObjEditHandler=(obj)=>{
 //   return dispatch => {
-//     axios.patch('/invoice/item/' + obj.id + '/',obj).then(
+//     axios.patch('/masters/product/' + obj.id + '/',obj).then(
 //       response => {
 //         console.log(response.data);
 //         dispatch(editProductSuccess(response.data))
@@ -151,7 +151,7 @@ export const deleteProductFail=()=>{
 export const createProduct=(data)=>{
   return dispatch => {
     dispatch(createProductSuccess(data))
-    axios.get('invoice/product-category/').then(
+    axios.get('masters/product-category/').then(
       res => {
         dispatch(loadProductCategory(res.data))
       }

@@ -27,7 +27,7 @@ class CreateExpenseCategory extends Component {
     }
     console.log(Data)
 
-    axios.post('invoice/expense-category/',Data).then(
+    axios.post('expenses/expense-category/',Data).then(
       response=>{
         this.props.createExpenseCategorySuccess(response.data)
         this.setState({expenseCategoryListPage:true})

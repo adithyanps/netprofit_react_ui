@@ -19,7 +19,7 @@ class CreateCreditNote extends Component {
 
     prefix:null,
     suffix:null,
-    digits:null,
+    padding:null,
     start_date:null,
 
     creditNoteListPage:false,
@@ -36,7 +36,7 @@ class CreateCreditNote extends Component {
 
   }
   loadSettingsAccnt=()=>{
-    axios.get('invoice/accountDefault/1/').then(
+    axios.get('masters/accountDefault/1/').then(
       res => {
         this.setState({settingsAcnt:res.data});
         console.log(res.data)
@@ -45,7 +45,7 @@ class CreateCreditNote extends Component {
   }
 
   loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
         console.log(res.data)
@@ -54,7 +54,7 @@ class CreateCreditNote extends Component {
   }
 
   loadCreditNotes=()=>{
-    axios.get('invoice/creditnote/').then(
+    axios.get('credit_note/creditnote/').then(
       res => {
         this.setState({creditnoteList:res.data});
         console.log(res.data)
@@ -91,20 +91,22 @@ class CreateCreditNote extends Component {
     )
   }
   loadCreditNoteNumber=()=>{
-    axios.get('invoice/creditnote-number/').then(
-      res=>{
+    axios.get('masters/serial-number/').then(
+      res=>{if(res.data.filter(item=>item.type === "CN").length>0){
         this.setState(
           {
-            prefix:res.data.filter(item=>item.id === 1)[0].prefix,
-            suffix:res.data.filter(item=>item.id === 1)[0].suffix,
+            prefix:res.data.filter(item=>item.type === "CN")[0].prefix,
+            suffix:res.data.filter(item=>item.type === "CN")[0].suffix,
             // start_number:res.data.filter(item=>item.id === 1)[0].start_number,
-            digits:res.data.filter(item=>item.id === 1)[0].digits
+            padding:res.data.filter(item=>item.type === "CN")[0].padding
           })
-          console.log(res.data.filter(item=>item.id === 1)[0].prefix)
-          let start_number =res.data.filter(item=>item.id === 1)[0].start_number
-          let digits=res.data.filter(item=>item.id === 1)[0].digits
+          console.log(res.data.filter(item=>item.type === "CN")[0].prefix)
+          let start_number =res.data.filter(item=>item.type === "CN")[0].start_number
+          let padding=res.data.filter(item=>item.type === "CN")[0].padding
           console.log(typeof start_number)
-          this.credit_noChangeHandler(start_number,digits)
+          this.credit_noChangeHandler(start_number,padding)
+      }
+
       }
     )
   }
@@ -118,12 +120,12 @@ class CreateCreditNote extends Component {
 
   }
 
-  credit_noChangeHandler=(start_number,digits)=>{
+  credit_noChangeHandler=(start_number,padding)=>{
     console.log(start_number)
     let start_numberCount = start_number.toString().length;
     console.log(start_numberCount)
-    if(digits>start_numberCount){
-      let digit_diff = digits - start_numberCount
+    if(padding>start_numberCount){
+      let digit_diff = padding - start_numberCount
       console.log(digit_diff)
       let zero = 0;
       let zeros = "0".repeat(digit_diff)
@@ -173,8 +175,9 @@ submitDataHandler=()=>{
     }
   }
   console.log(data)
-  axios.post('invoice/creditnote/',data).then(
+  axios.post('credit_note/creditnote/',data).then(
     response=>{
+      console.log(response.data)
       this.props.createCreditNoteSuccess(response.data,this.state.partnerList,this.state.settingsAcnt)
       this.setState({creditNoteListPage:true})
 
@@ -252,7 +255,7 @@ openCreditNoteListPage=()=>{
       </div>
       <br />
       <br />
-      <button className="cancelBtn" onClick={(this.state.selectedPartner ) ? (this.submitDataHandler) :(null)}>SAVE</button>
+      <button className="cancelBtn" onClick={(JSON.stringify(this.state.settingsAcnt) !== '{}' && this.state.selectedPartner) ? (this.submitDataHandler) :(null)}>SAVE</button>
 
       </div>
     )

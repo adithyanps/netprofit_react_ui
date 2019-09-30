@@ -20,6 +20,11 @@ class CreateExpense extends Component {
     selectedExpnseAcccnt:'',
     selectedCashAccnt:'',
     expenseListPage:false,
+
+    prefix:null,
+    suffix:null,
+    padding:null,
+    start_date:null,
   }
 
   componentDidMount(){
@@ -33,22 +38,89 @@ class CreateExpense extends Component {
   }
 
   loadExpenseData=()=>{
-    axios.get('/invoice/expenses/').then(
+    axios.get('/expenses/expenses/').then(
       res =>{
         this.setState({expenseDataList:res.data})
+        console.log(res.data)
+        if(res.data.length === 0){
+          this.loadExpenseNumber()
+          console.log(res.data.length)
+        } else{
+          var mostBiggerExpenseNoDict = res.data.reduce(function (oldest, item) {
+            return (oldest.Doc_no || 0) > item.Doc_no ? oldest : item;
+          }, {});
+          console.log(mostBiggerExpenseNoDict['Doc_no'])
+          let mostBiggerExpenseNo = mostBiggerExpenseNoDict['Doc_no']
+          let start_no = parseInt(mostBiggerExpenseNo,10)
+          console.log(start_no,typeof start_no)
+          console.log(typeof mostBiggerExpenseNo)
+          var r = /\d+/;
+          var m;
+          m= r.exec(mostBiggerExpenseNo)
+          console.log(m)
+          console.log(typeof m[0])
+          var splitNumber = m[0].split(Number(m[0]))
+          console.log(splitNumber)
+          console.log( splitNumber[0])
+
+          var splitStr = mostBiggerExpenseNo.split(m[0])
+          console.log(splitStr)
+          let afterZeroNum = Number(m[0])+1
+          console.log(typeof String(afterZeroNum))
+          let number = splitNumber[0]+String(afterZeroNum)
+          console.log(number)
+          this.setState({start_no:number,prefix:splitStr[0],suffix:splitStr[1]})
+        }
       }
     )
   }
 
+  loadExpenseNumber=()=>{
+    axios.get('masters/serial-number/').then(
+      res=>{if(res.data.filter(item=>item.type === "EP").length>0){
+        this.setState(
+          {
+            prefix:res.data.filter(item=>item.type === "EP")[0].prefix,
+            suffix:res.data.filter(item=>item.type === "EP")[0].suffix,
+            // start_number:res.data.filter(item=>item.id === 1)[0].start_number,
+            padding:res.data.filter(item=>item.type === "EP")[0].padding
+          })
+          console.log(res.data.filter(item=>item.type === "EP")[0].prefix)
+          let start_number =res.data.filter(item=>item.type === "EP")[0].start_number
+          let padding=res.data.filter(item=>item.type === "EP")[0].padding
+          console.log(typeof start_number)
+          this.expense_noChangeHandler(start_number,padding)
+      }
+
+      }
+    )
+  }
+
+  expense_noChangeHandler=(start_number,padding)=>{
+    console.log(start_number)
+    let start_numberCount = start_number.toString().length;
+    console.log(start_numberCount)
+    if(padding>start_numberCount){
+      let digit_diff = padding - start_numberCount
+      console.log(digit_diff)
+      let zero = 0;
+      let zeros = "0".repeat(digit_diff)
+      console.log(zeros,typeof zeros)
+      let number = zeros+start_number
+      console.log(number)
+      this.setState({start_no:number})
+    }
+  }
+
   loadExpenseCategory=()=>{
-    axios.get('/invoice/expense-category/').then(
+    axios.get('/expenses/expense-category/').then(
       response=>{this.setState({categoryList:response.data});
     }
     )
   }
 
   loadExpenseAccnts=()=>{
-    axios.get('/invoice/account/?search=EXPENSE').then(
+    axios.get('/masters/account/?search=EXPENSE').then(
       res => {
         this.setState({expenseAccnts:res.data})
       }
@@ -56,7 +128,7 @@ class CreateExpense extends Component {
   }
 
   loadCashAccnts=()=>{
-    axios.get('/invoice/account/?search=CASH').then(
+    axios.get('/masters/account/?search=CASH').then(
       res => {
         this.setState({cashAccnts:res.data})
       }
@@ -71,22 +143,25 @@ class CreateExpense extends Component {
   this.setState({[key]:value})
   }
 
-  doc_noChangeHandler=()=> {
-    console.log(this.state.Doc_no)
-    var mostBiggerInvoiceNoDict = this.state.expenseDataList.reduce(function (oldest, item) {
-      return (oldest.Doc_no || 0) > item.Doc_no ? oldest : item;
-    }, {});
-    console.log(mostBiggerInvoiceNoDict['Doc_no'])
-    let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['Doc_no']
-    console.log(this.state.expenseDataList)
-    if (this.state.expenseDataList.length===0 ) {
-      this.state.Doc_no = 1
-    }
-     else {
-      this.state.Doc_no = mostBiggerInvoiceNo + 1
-    }
-  }
+  // doc_noChangeHandler=()=> {
+  //   console.log(this.state.Doc_no)
+  //   var mostBiggerInvoiceNoDict = this.state.expenseDataList.reduce(function (oldest, item) {
+  //     return (oldest.Doc_no || 0) > item.Doc_no ? oldest : item;
+  //   }, {});
+  //   console.log(mostBiggerInvoiceNoDict['Doc_no'])
+  //   let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['Doc_no']
+  //   console.log(this.state.expenseDataList)
+  //   if (this.state.expenseDataList.length===0 ) {
+  //     this.state.Doc_no = 1
+  //   }
+  //    else {
+  //     this.state.Doc_no = mostBiggerInvoiceNo + 1
+  //   }
+  // }
+  
   submitDataHandler=(e)=>{
+    let recieptNum = this.state.prefix+this.state.start_no+this.state.suffix
+
     let expenseCategoryObj = this.state.categoryList.filter(item => item.name === this.state.selectedCategory)
     let expenseAccntObj = this.state.expenseAccnts.filter(item => item.name === this.state.selectedExpnseAcccnt)
     let cashAccntObj = this.state.cashAccnts.filter(item => item.name === this.state.selectedCashAccnt)
@@ -106,7 +181,7 @@ class CreateExpense extends Component {
     output.push(debitSection)
 
     let Data = {
-      Doc_no:this.state.Doc_no,
+      Doc_no:recieptNum,
       Date:this.state.date,
       Amount:this.state.cashAmount,
       ExpenseCategory:expenseCategoryObj[0].id,
@@ -123,7 +198,7 @@ class CreateExpense extends Component {
     // this.props.onCreateExpense(Data)
     // this.setState({expenseListPage:true})
 
-    axios.post('/invoice/expenses/',Data).then(
+    axios.post('/expenses/expenses/',Data).then(
       res=>{
         console.log(res.data)
         this.props.createExpenseSuccess(res.data)
@@ -152,9 +227,11 @@ class CreateExpense extends Component {
         <br />
         <div className="row-wrapper">
           <div>
-          {this.doc_noChangeHandler()}
             <label>Doc No</label><br />
-            <input readOnly className="grand"  />
+            <input
+              readOnly
+              className="grand"
+              />
           </div>
           <div>
             <label>CATEGORY</label><br />

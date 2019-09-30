@@ -48,6 +48,7 @@ import CreditNoteListPage from './containers/Accounts/CreditNote/CreditNoteListP
 import CreateDebitNotePage from './containers/Accounts/DebitNote/CreateDebitNotePage';
 import DebitNoteListPage from './containers/Accounts/DebitNote/DebitNoteListPage';
 
+import SerialNumberMain from './containers/Settings/SerialNumber/SerialNumberMain';
 
 
 
@@ -58,7 +59,6 @@ class App extends Component {
   componentDidMount(){
     this.props.onTryAutoSignup()
     this.props.currentUser()
-
   }
   render() {
     console.log(this.props.user_choice)
@@ -104,6 +104,7 @@ class App extends Component {
             <Route path="/creditnotes" exact component={CreditNoteListPage} />
             <Route path="/create-debitnote" exact component={CreateDebitNotePage} />
             <Route path="/debitnotes" exact component={DebitNoteListPage} />
+            <Route path="/serial-numbers" exact component={SerialNumberMain} />
 
 
 
@@ -111,6 +112,8 @@ class App extends Component {
           </Navbar >
       </div>
     )
+
+
     if(this.props.loginToken === null ){
       routes =(
         <Switch>
@@ -118,7 +121,98 @@ class App extends Component {
         </Switch>
       )
     }
+    // let routes = null
+    // if(this.props.loginToken !== null){
+    //   console.log(this.props,'props')
+    //   if(this.props.currentUserData.user_choice === "FULL_ACCESS"){
+    //      routes=(
+    //         <div>
+    //         <Navbar>
+    //           <Switch>
+    //           <Route path="/" exact component={Login} />
+    //           <Route path="/home" exact component={Home} />
+    //           <Route path="/sales" exact component={SalesPage} />
+    //           <Route path="/accounts" exact component={AccountsPage} />
+    //           <Route path="/reports" exact component={ReportsPage} />
+    //           <Route path="/purchase" exact component={PurchasePage} />
+    //           <Route path="/settings" exact component={SettingsPage} />
+    //           <Route path="/create-invoice" exact component={CreateInvoice} />
+    //           <Route path="/sales-invoices" exact component={SalesInvoicesPage} />
+    //           <Route path="/create-reciept" exact component={CreateRecieptPage} />
+    //           <Route path="/customer-reciepts" exact component={CustomerRecieptsPage} />
+    //           <Route path="/expense-list" exact component={ExpenseListPage} />
+    //           <Route path="/Customers" exact component={Customers} />
+    //           <Route  path="/logout" component={Logout} />
+    //           <Route path="/create-expense" exact component={CreateExpensePage} />
+    //           <Route path="/create-partner" exact component={CreatePartnerPage} />
+    //           <Route path="/partners" exact component={PartnerListPage} />
+    //           <Route path="/create-products" exact component={CreateProduct} />
+    //           <Route path="/products" exact component={ProductListPage} />
+    //           <Route path="/create-productCategory" exact component={CreateProductCategory} />
+    //           <Route path="/productCategorys" exact component={ProductCategoryListPage} />
+    //           <Route path="/create-branch" exact component={CreateBranch} />
+    //           <Route path="/branches" exact component={BranchListPage} />
+    //           <Route path="/create-area" exact component={CreateArea} />
+    //           <Route path="/areas" exact component= {AreaListPage}/>
+    //           <Route path="/create-accounts" exact component={CreateAccountPage} />
+    //           <Route path="/account-lists" exact component={AccountListPage} />
+    //           <Route path="/create-expense-category" exact component={CreateExpenseCategoryPage} />
+    //           <Route path="/expense-categories" exact component={ExpenseCategoryListPage} />
+    //           <Route path="/create-creditnote" exact component={CreateCreditNotePage} />
+    //           <Route path="/creditnotes" exact component={CreditNoteListPage} />
+    //           <Route path="/create-debitnote" exact component={CreateDebitNotePage} />
+    //           <Route path="/debitnotes" exact component={DebitNoteListPage} />
+    //           <Route path="/serial-numbers" exact component={SerialNumberMain} />
+    //
+    //           </Switch>
+    //           </Navbar>
+    //         </div>
+    //     )
+    //   } else {
+    //     routes=(
+    //       <div>
+    //       <Navbar>
+    //         <Switch>
+    //         <Route path="/" exact component={Login} />
+    //         <Route path="/home" exact component={Home} />
+    //         <Route path="/sales" exact component={SalesPage} />
+    //         <Route path="/accounts" exact component={AccountsPage} />
+    //         <Route path="/reports" exact component={ReportsPage} />
+    //         <Route path="/purchase" exact component={PurchasePage} />
+    //         <Route path="/create-invoice" exact component={CreateInvoice} />
+    //         <Route path="/sales-invoices" exact component={SalesInvoicesPage} />
+    //         <Route path="/create-reciept" exact component={CreateRecieptPage} />
+    //         <Route path="/customer-reciepts" exact component={CustomerRecieptsPage} />
+    //         <Route path="/expense-list" exact component={ExpenseListPage} />
+    //         <Route  path="/logout" component={Logout} />
+    //         <Route path="/create-expense" exact component={CreateExpensePage} />
+    //         <Route path="/create-expense-category" exact component={CreateExpenseCategoryPage} />
+    //         <Route path="/expense-categories" exact component={ExpenseCategoryListPage} />
+    //         <Route path="/create-creditnote" exact component={CreateCreditNotePage} />
+    //         <Route path="/creditnotes" exact component={CreditNoteListPage} />
+    //         <Route path="/create-debitnote" exact component={CreateDebitNotePage} />
+    //         <Route path="/debitnotes" exact component={DebitNoteListPage} />
+    //         <Route path="/permission-denied" exact component={PermissionDeniedPage} />
+    //
+    //         </Switch>
+    //         </Navbar>
+    //       </div>
+    //     )
+    //
+    //   }
+    // } else {
+    //  routes =(
+    //     <Switch>
+    //       <Route path="/" exact component={Login} />
+    //     </Switch>
+    //   )
+    // }
 
+    if(this.props.error !== null){
+      return(
+        <div>server error found</div>
+      )
+    }
 
     return (
       <div className="App">
@@ -135,7 +229,8 @@ const mapStateToProps = (state)=> {
   return {
     loginToken:state.login.token,
     user_choice:state.login.user_choice,
-    currentUserData:state.currentUser.userData
+    currentUserData:state.currentUser.userData,
+    error:state.auth.error
   }
 }
 
@@ -144,7 +239,7 @@ const mapDispatchToProps = dispatch => {
     onTryAutoSignup: () => dispatch(actions.authCheckState()),
     onRedirect : ()=>dispatch(actions.redirect()),
     currentUser: ()=>dispatch(actions.currentUser()),
-
+    authFail:()=>dispatch(actions.authFail())
   }
 }
 

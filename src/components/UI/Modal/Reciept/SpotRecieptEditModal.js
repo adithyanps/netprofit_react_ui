@@ -57,14 +57,14 @@ class SpotRecieptEdit extends React.Component {
     this.setState({creditJrnlItem:output})
   }
   loadAccount=()=>{
-    axios.get('/invoice/account/').then(
+    axios.get('/masters/account/').then(
       response=>{
         this.setState({accountList:response.data})
       }
     )
   }
   loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
       }

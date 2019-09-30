@@ -40,13 +40,19 @@ class ViewFromSalesInvoice extends React.Component {
             </div>
             <div>
               <p>CUSTOMER:</p>
-              {this.props.formData.customer}
+              {this.props.customerList.length !==0
+                ? (this.props.customerList.filter(
+                  item=>item.id === this.props.formData.customer)[0].name)
+                : (null)
+              }
             </div>
             <div>
                 <p>DATE:</p>
                 {this.props.formData.date}
             </div>
         </div>
+        <br />
+        
         <div className="invoiceviewWrapper">
             <div>
               <p>DOC NO:</p>
@@ -54,7 +60,10 @@ class ViewFromSalesInvoice extends React.Component {
             </div>
             <div>
               <p>BRANCH:</p>
-              {this.props.formData.branch}
+              {this.props.branchList.length !==0 ? (
+                this.props.branchList.filter
+                (item=>item.id === this.props.formData.branch)[0].branch
+              ) : (null)}
             </div>
         </div>
         <br />

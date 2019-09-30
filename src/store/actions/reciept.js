@@ -76,7 +76,7 @@ export const deleteCustomerRecieptFail=()=>{
 
 export const customerReceiptObjDeleteHandler=(id)=>{
   return dispatch =>{
-    axios.delete('/invoice/customerReceipt/'+ id).then(
+    axios.delete('/customer_reciepts/customerReceipt/'+ id).then(
       response => {
         dispatch(deleteCustomerRecieptSuccess())
       }
@@ -89,7 +89,7 @@ export const customerReceiptObjDeleteHandler=(id)=>{
 
 export const customerReceiptObjEditHandler=(obj)=>{
   return dispatch => {
-    axios.patch('/invoice/customerReceipt/' + obj.id + '/',obj).then(
+    axios.patch('/customer_reciepts/customerReceipt/' + obj.id + '/',obj).then(
       response => {
         dispatch(editCustomerRecieptSuccess(response.data))
       }
@@ -102,7 +102,7 @@ export const customerReceiptObjEditHandler=(obj)=>{
 
 export const createCustomerReciept=(data)=>{
   return dispatch => {
-    axios.post('/invoice/customerReceipt/',data,{
+    axios.post('/customer_reciepts/customerReceipt/',data,{
         headers: {
             'Content-Type': 'application/json',
         }

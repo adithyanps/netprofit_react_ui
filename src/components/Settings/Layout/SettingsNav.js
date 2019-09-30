@@ -19,6 +19,8 @@ class SettingsNav extends Component {
         <a href="/areas">Area List</a>
         <a href="/create-expense-category"> Create ExpenseCategory</a>
         <a href="/expense-categories">ExpenseCategory List</a>
+        <a href="/serial-numbers">Serial Numbers</a>
+
 
 
 

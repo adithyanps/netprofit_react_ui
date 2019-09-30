@@ -82,7 +82,7 @@ export const getAllProductCategoryData =(productCategoryDataList)=>{
 }
 export const productCategoryObjDeleteHandler=(id)=>{
   return dispatch =>{
-    axios.delete('/invoice/product-category/'+ id).then(
+    axios.delete('/masters/product-category/'+ id).then(
       response => {
 
         dispatch(deleteProductCategorySuccess())
@@ -96,7 +96,7 @@ export const productCategoryObjDeleteHandler=(id)=>{
 
 export const productCategoryObjEditHandler=(obj)=>{
   return dispatch => {
-    axios.patch('/invoice/product-category/' + obj.id + '/',obj).then(
+    axios.patch('/masters/product-category/' + obj.id + '/',obj).then(
       response => {
         console.log(response.data);
         dispatch(editProductCategorySuccess(response.data))
@@ -110,7 +110,7 @@ export const productCategoryObjEditHandler=(obj)=>{
 
 // export const createProductCategory=(data)=>{
 //   return dispatch => {
-//     axios.post('/invoice/product-category/',data,{
+//     axios.post('/masters/product-category/',data,{
 //         headers: {
 //             'Content-Type': 'application/json',
 //         }
@@ -119,7 +119,7 @@ export const productCategoryObjEditHandler=(obj)=>{
 //         dispatch(createProductCategorySuccess(response.data))
 //         // dispatch(getAllProductCategory())
 //
-//         axios.get('/invoice/product-category/').then(
+//         axios.get('/masters/product-category/').then(
 //           response=>{
 //             console.log(response.data)
 //             dispatch(getAllProductCategoryData(response.data))
@@ -138,7 +138,7 @@ export const productCategoryObjEditHandler=(obj)=>{
 export const createProductCategory=(data)=>{
   return dispatch => {
     dispatch(createProductCategorySuccess(data))
-    axios.get('invoice/product-category/').then(
+    axios.get('masters/product-category/').then(
       res => {
         dispatch(getAllProductCategoryData(res.data))
       }
@@ -148,7 +148,7 @@ export const createProductCategory=(data)=>{
 
 export const getAllProductCategory=(data)=>{
   return dispatch => {
-    axios.get('invoice/product-category/').then(
+    axios.get('masters/product-category/').then(
       response => {
         console.log(response.data)
 

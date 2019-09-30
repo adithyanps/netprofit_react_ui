@@ -17,6 +17,7 @@ class ProductView extends React.Component {
         show={this.props.show} onHide={this.props.close}
       >
         <Modal.Header closeButton>
+          CREDIT NOTE SERIAL NUMBER - VIEW
         </Modal.Header>
         <Modal.Body>
         <div >

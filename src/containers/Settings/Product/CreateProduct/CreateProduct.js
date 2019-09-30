@@ -18,7 +18,7 @@ componentDidMount(){
 
 }
 loadProductCats=()=>{
-  axios.get('invoice/product-category/').then(
+  axios.get('masters/product-category/').then(
     res => {
       this.setState({product_CatList:res.data});
     }
@@ -39,7 +39,7 @@ loadProductCats=()=>{
       product_Cat:this.state.product_CatList.filter(item=>item.name === this.state.selectedCategory)[0].id,
     }
     console.log(Data['product_Cat'])
-    axios.post('invoice/item/',Data).then(
+    axios.post('masters/product/',Data).then(
       response=>{
         console.log(response.data)
         this.props.onCreateProductSuccess(response.data)

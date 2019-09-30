@@ -66,7 +66,7 @@ export const editInvoiceFail=()=>{
 
 export const salseObjEditHandler=(obj)=>{
   return dispatch => {
-    axios.patch('/invoice/parantdata/' + obj.id + '/', obj).then(
+    axios.patch('/sales/salesInvoice/' + obj.id + '/', obj).then(
       response => {
         dispatch(editInvoiceSuccess(response.data))
       }
@@ -79,7 +79,7 @@ export const salseObjEditHandler=(obj)=>{
 export const salesDeleteHandler=(id)=> {
   console.log(id)
   return dispatch => {
-    axios.delete('/invoice/parantdata/'+id).then(
+    axios.delete('/sales/salesInvoice/'+id).then(
       response => {
         dispatch(deleteInvoiceSucces(response.data))
       }
@@ -92,7 +92,7 @@ export const salesDeleteHandler=(id)=> {
 }
 export const createInvoice=(data)=>{
   return dispatch => {
-    axios.post('/invoice/parantdata/',data).then(
+    axios.post('/sales/salesInvoice/',data).then(
       response=>{
         dispatch(createInvoiceSuccess(response.data));
       }

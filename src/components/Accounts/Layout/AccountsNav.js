@@ -14,6 +14,8 @@ class SalesNav extends Component {
         <a href="/create-creditnote">CustomerCreditNote+</a>
         <a href="/create-debitnote">CustomerDebitNote+</a>
         <a href="/creditnotes">CreditNotes</a>
+        <a href="/debitnotes">DebitNotes</a>
+
 
       </div>
     )

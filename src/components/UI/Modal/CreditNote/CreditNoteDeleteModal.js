@@ -32,7 +32,9 @@ class CreditNoteDeleteModal extends React.Component {
                   <tr>
                     <td>{this.props.formData.Doc_no}</td>
                     <td>{this.props.formData.Date}</td>
-                    <td>{this.props.formData.Partner}</td>
+                    <td>{(typeof this.props.formData.Partner=== 'string')?(this.props.formData.Partner):(
+                      this.props.partnerList.filter(item=>item.id === this.props.formData.Partner)[0].name
+                    )}</td>
                     <td>{this.props.formData.Grand_total}</td>
                   </tr>
                 </tbody>

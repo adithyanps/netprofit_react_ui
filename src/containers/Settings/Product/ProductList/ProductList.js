@@ -51,7 +51,7 @@ componentWillMount(){
 
   }
   loadProducts=()=>{
-      axios.get('invoice/item/').then(
+      axios.get('masters/product/').then(
         res => {
           let data = res.data;
           data.map((sample,index)=>{
@@ -70,7 +70,7 @@ componentWillMount(){
   }
 
   loadProductCats=()=>{
-    axios.get('invoice/product-category/').then(
+    axios.get('masters/product-category/').then(
       res => {
         this.setState({product_CatList:res.data});
       }
@@ -237,7 +237,7 @@ componentWillMount(){
       // event.preventDefault()
       // objTemp.product_Cat =   this.state.product_CatList.map(item=>item.name === objTemp.product_Cat)[0].id
 
-      axios.patch('/invoice/item/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/product/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -253,7 +253,7 @@ componentWillMount(){
     const updatedOrders = this.state.productList;
     let deleteObject = this.state.productList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/item/'+id).then(
+    axios.delete('masters/product/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -326,7 +326,7 @@ spotObjDeleteHandler=(id)=>{
   let delIndex = updatedOrders.indexOf(deleteObject[0])
   console.log(delIndex)
 
-  axios.delete('/invoice/item/'+id).then(
+  axios.delete('/masters/product/'+id).then(
      response => {
        console.log(response.data)
          updatedOrders.splice(delIndex,1)
@@ -343,7 +343,7 @@ spotObjEditHandler = (event,obj)=>{
   console.log(obj)
   let list = []
   list.push(obj)
-  axios.patch('/invoice/item/' + obj.id + '/',obj).then(
+  axios.patch('/masters/product/' + obj.id + '/',obj).then(
     response => {
       console.log(response.data);
       this.props.editProductSuccess(response.data)

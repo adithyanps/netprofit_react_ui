@@ -49,7 +49,7 @@ class CreditNoteList extends Component {
       this.loadSettingsAccnt()
   }
   loadSettingsAccnt=()=>{
-    axios.get('invoice/accountDefault/1/').then(
+    axios.get('masters/accountDefault/1/').then(
       res => {
         this.setState({settingsAcnt:res.data});
         console.log(res.data)
@@ -57,7 +57,7 @@ class CreditNoteList extends Component {
     )
   }
   loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
 
@@ -67,7 +67,7 @@ class CreditNoteList extends Component {
   }
 
   loadCreditNotes=()=>{
-      axios.get('invoice/creditnote/').then(
+      axios.get('credit_note/creditnote/').then(
         res => {
           // this.setState({creditNoteList:res.data});
           this.creditNoteListHandler(res.data)
@@ -253,7 +253,7 @@ creditNoteListHandler=(data)=>{
       // event.preventDefault()
       // objTemp.product_Cat =   this.state.product_CatList.map(item=>item.name === objTemp.product_Cat)[0].id
 
-      axios.patch('/invoice/creditnote/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/credit_note/creditnote/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -269,7 +269,7 @@ creditNoteListHandler=(data)=>{
     const updatedOrders = this.state.creditNoteList;
     let deleteObject = this.state.creditNoteList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/creditnote/'+id).then(
+    axios.delete('credit_note/creditnote/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -328,7 +328,7 @@ creditNoteListHandler=(data)=>{
     console.log(deleteObject)
     let delIndex = updatedCreditNotes.indexOf(deleteObject[0])
     console.log(delIndex)
-    axios.delete('/invoice/creditnote/'+id).then(
+    axios.delete('/credit_note/creditnote/'+id).then(
        response => {
          console.log(response.data)
            updatedCreditNotes.splice(delIndex,1)
@@ -348,7 +348,7 @@ spotObjEditHandler=(event,obj)=>{
   console.log(list)
   console.log(obj)
 
-  axios.patch('/invoice/creditnote/'+obj.id + '/',obj).then(
+  axios.patch('/credit_note/creditnote/'+obj.id + '/',obj).then(
     response=>{
       this.props.editCreditNoteSuccess(response.data)
       // obj.map((sample,index)=>{

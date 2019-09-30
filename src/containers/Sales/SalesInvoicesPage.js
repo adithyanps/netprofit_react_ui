@@ -21,8 +21,10 @@ import * as actions from '../../store/actions/index';
 class SalesInvoicesPage extends Component {
   state={
     invoiceData:[],
+    branchList:[],
     customerList:[],
     settingsAcnt:[],
+    productList:[],
     formData:[],
     editObject:[],
     isEdit:false,
@@ -55,14 +57,30 @@ class SalesInvoicesPage extends Component {
     this.loadInvoiceData()
     this.loadCustomer()
     this.loadSettingsAccnt()
+    this.loadBranches()
+    this.loadProducts()
+
 
   }
   componentWillMount(){
     this.setState({salesPageOpen:this.props.salesPageOpen})
   }
-
+  loadBranches=()=>{
+      axios.get('masters/branch/').then(
+        res => {
+          this.setState({branchList:res.data});
+        }
+      )
+  }
+  loadProducts=()=>{
+      axios.get('masters/product/').then(
+        res => {
+          this.setState({productList:res.data});
+        }
+      )
+  }
   loadCustomer=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER')});
         console.log(res.data)
@@ -71,16 +89,57 @@ class SalesInvoicesPage extends Component {
   }
 
   loadInvoiceData(){
-    axios.get('invoice/parantdata').then(
+    axios.get('sales/salesInvoice/').then(
       res => {
-        this.setState({invoiceData:res.data});
         console.log(res.data)
+        this.InvoiceDataHandler(res.data)
       }
     )
   }
+  InvoiceDataHandler=(data)=>{
+    console.log(typeof data)
+    console.log( data)
 
+    data.map((sample,index)=>{
+      let childItemSample = []
+      let itemName=''
+      this.state.branchList.map((branch,idx)=>{
+        if(sample.branch === branch.id){
+          sample.branch = branch.branch
+        }
+      })
+
+      this.state.customerList.map((customer,idx)=>{
+        if(sample.customer===customer.id){
+          sample.customer = customer.name
+        }
+      })
+
+      // sample.child.map((childItem,index)=>{
+      //   console.log(this.state.productList)
+      //   childItemSample.push(childItem)
+      //
+      //   this.state.productList.map((product,idx)=>{
+      //     console.log(product)
+      //     console.log(childItem)
+      //
+      //     if( childItem.item === product.id) {
+      //       console.log(childItem)
+      //
+      //       childItem.item = product.item;
+      //       itemName = product.item
+      //     }
+      //   })
+      // })
+      // sample.childItem = childItemSample
+
+    });
+    console.log(data)
+    this.setState({invoiceData:data})
+
+  }
   loadSettingsAccnt=()=>{
-    axios.get('invoice/accountDefault/1/').then(
+    axios.get('masters/accountDefault/1/').then(
       res => {
         this.setState({settingsAcnt:res.data});
         console.log(res.data)
@@ -163,6 +222,8 @@ class SalesInvoicesPage extends Component {
             formData={this.props.invoiceData}
             deletewindow={this.props.salesDeleteWindowOpen}
             editwindow={this.props.salesEditWindowOpen}
+            customerList={this.state.customerList}
+            branchList={this.state.branchList}
       />
     )
   }
@@ -173,7 +234,9 @@ class SalesInvoicesPage extends Component {
           show={this.props.isDeletePage}
           close={this.props.salesDeleteWindowClose}
           deleteHandler = {this.spotObjDeleteHandler}
-          formData={this.props.invoiceData}/>
+          formData={this.props.invoiceData}
+          customerList={this.state.customerList}
+          branchList={this.state.branchList}/>
         )
   }
 
@@ -187,6 +250,7 @@ class SalesInvoicesPage extends Component {
           editHandler={this.spotObjEditHandler}
           settingsAcnt={this.state.settingsAcnt}
           customerList={this.state.customerList}
+          branchList={this.state.branchList}
           />
     )
   }
@@ -201,7 +265,7 @@ class SalesInvoicesPage extends Component {
     let delIndex = updatedInvoices.indexOf(deleteObject[0])
     console.log(delIndex)
 
-    axios.delete('/invoice/parantdata/'+id).then(
+    axios.delete('/sales/salesInvoice/'+id).then(
        response => {
          console.log(response.data)
            updatedInvoices.splice(delIndex,1)
@@ -218,15 +282,37 @@ class SalesInvoicesPage extends Component {
   spotObjEditHandler=(event,obj)=>{
     let list = []
     list.push(obj)
-    axios.patch('/invoice/parantdata/'+obj.id + '/',obj).then(
+    console.log(obj)
+    axios.patch('/sales/salesInvoice/'+obj.id + '/',obj).then(
       response=>{
-        this.props.editInvoiceSuccess(response.data)
-        let updatedInvoices = this.state.invoiceData.map(obj => list.find(o=> o.id === obj.id) || obj)
 
-        this.setState({invoiceData:updatedInvoices})
+        this.props.editInvoiceSuccess(response.data);
+        console.log(response.data)
+        // let data = obj
+        console.log(obj)
+        let updatedInvoices = this.state.invoiceData.map(obj => list.find(o=> o.id === obj.id) || obj)
+        let data = updatedInvoices
+        data.map((sample,index)=>{
+          this.state.customerList.map((item,id)=>{
+            if(sample.customer === item.id){
+              sample.customer = item.name
+            }
+          })
+          this.state.branchList.map((item,id)=>{
+            if(sample.branch === item.id){
+              sample.branch = item.branch
+            }
+          })
+        })
+        console.log(data,'modified')
+
+        // this.InvoiceDataHandler(updatedInvoices)
+
+        this.setState({invoiceData:data})
       }
     ).catch(error=>{
-      this.props.editInvoiceFail(error)
+      this.props.editInvoiceFail(error);
+      console.log(error)
     })
   }
   viewModal = () => {
@@ -237,6 +323,10 @@ class SalesInvoicesPage extends Component {
             formData={this.state.viewObject}
             deletewindow={this.deleteWindowOpen}
             editwindow={this.editWindowOpen}
+            productList = {this.state.productList}
+            branchList = {this.state.branchList}
+            customerList = {this.state.customerList}
+
       />
     )
   }
@@ -271,7 +361,7 @@ class SalesInvoicesPage extends Component {
     const updatedOrders = this.state.invoiceData;
     let deleteObject = this.state.invoiceData.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/parantdata/'+id).then(
+    axios.delete('sales/salesInvoice/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -316,7 +406,14 @@ class SalesInvoicesPage extends Component {
   }
   objEditHandler = (event,obj) => {
       event.preventDefault()
-      axios.patch('/invoice/parantdata/' + obj.id + '/', obj).then(
+      console.log(typeof obj,'test')
+
+      let data = []
+      console.log(obj,'sccs')
+
+      console.log(data,'sccs')
+
+      axios.patch('/sales/salesInvoice/' + obj.id + '/', obj).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -357,13 +454,13 @@ class SalesInvoicesPage extends Component {
   }
   filterHandler=(e)=>{
     if (this.state.selectedName === null) {
-      axios.get('invoice/parantdata'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+      axios.get('sales/salesInvoice'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
         response=>{
           this.setState({invoiceData:response.data});
         }
       )
     } else {
-      axios.get('invoice/parantdata/'+ '?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&customer='+this.state.selectedName).then(
+      axios.get('sales/salesInvoice/'+ '?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&customer='+this.state.selectedName).then(
         response=>{
           this.setState({invoiceData:response.data});
 

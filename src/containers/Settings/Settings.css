@@ -21,3 +21,37 @@
   grid-template-columns: 1fr 1fr;
   margin-left: 200px;
 }
+.snumberwrapper{
+  padding-left: 20px;
+  padding-top: 20px
+}
+
+.snumBox{
+  display: flex;
+  align-items: stretch;
+  padding-left: 50px;
+
+}
+.serialInput{
+  padding: 20px;
+}
+.serialBtn{
+  padding-bottom: 100px;
+}
+.longBtn {
+  /* width: 115px; */
+  height: 32px;
+  border-radius: 3px;
+  box-shadow: 4.95px 4.95px 7px rgba(0,0,0,0.16);
+  background-color: #b2d6f5;
+  border: 1px solid #83afdb;
+
+}
+.smallModel{
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  padding:10px;
+  align-items: center;
+  padding-left: 60px;
+
+}

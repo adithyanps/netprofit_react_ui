@@ -82,7 +82,7 @@ export const getAllBranchData =(branchDataList)=>{
 }
 // export const branchObjDeleteHandler=(id)=>{
 //   return dispatch =>{
-//     axios.delete('/invoice/branch/'+ id).then(
+//     axios.delete('/masters/branch/'+ id).then(
 //       response => {
 //
 //         dispatch(deleteBranchSuccess())
@@ -96,7 +96,7 @@ export const getAllBranchData =(branchDataList)=>{
 //
 // export const branchObjEditHandler=(e,obj)=>{
 //   return dispatch => {
-//     axios.patch('/invoice/branch/' + obj.id + '/',obj).then(
+//     axios.patch('/masters/branch/' + obj.id + '/',obj).then(
 //       response => {
 //         console.log(response.data);
 //         dispatch(editBranchSuccess(response.data))
@@ -110,7 +110,7 @@ export const getAllBranchData =(branchDataList)=>{
 
 // export const createBranch=(data)=>{
 //   return dispatch => {
-//     axios.post('/invoice/branch/',data,{
+//     axios.post('/masters/branch/',data,{
 //         headers: {
 //             'Content-Type': 'application/json',
 //         }
@@ -119,7 +119,7 @@ export const getAllBranchData =(branchDataList)=>{
 //         dispatch(createBranchSuccess(response.data))
 //         dispatch(getAllBranch())
 //
-//         axios.get('/invoice/branch/').then(
+//         axios.get('/masters/branch/').then(
 //           response=>{
 //             console.log(response.data)
 //             dispatch(getAllBranchData(response.data))
@@ -137,7 +137,7 @@ export const getAllBranchData =(branchDataList)=>{
 
 export const getAllBranch = (data)=>{
   return dispatch => {
-    axios.get('invoice/branch/').then(
+    axios.get('masters/branch/').then(
       response => {
         console.log(response.data)
 

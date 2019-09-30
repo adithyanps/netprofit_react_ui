@@ -82,7 +82,7 @@ export const getAllExpenseCategoryData =(expenseCategoryDataList)=>{
 }
 // export const areaObjDeleteHandler=(id)=>{
 //   return dispatch =>{
-//     axios.delete('/invoice/area/'+ id).then(
+//     axios.delete('/expenses/area/'+ id).then(
 //       response => {
 //
 //         dispatch(deleteAreaSuccess())
@@ -96,7 +96,7 @@ export const getAllExpenseCategoryData =(expenseCategoryDataList)=>{
 //
 // export const areaObjEditHandler=(e,obj)=>{
 //   return dispatch => {
-//     axios.patch('/invoice/area/' + obj.id + '/',obj).then(
+//     axios.patch('/expenses/area/' + obj.id + '/',obj).then(
 //       response => {
 //         console.log(response.data);
 //         dispatch(editAreaSuccess(response.data))
@@ -109,7 +109,7 @@ export const getAllExpenseCategoryData =(expenseCategoryDataList)=>{
 
 // export const createArea=(data)=>{
 //   return dispatch => {
-//     axios.post('/invoice/area/',data,{
+//     axios.post('/expenses/area/',data,{
 //         headers: {
 //             'Content-Type': 'application/json',
 //         }
@@ -136,7 +136,7 @@ export const getAllExpenseCategoryData =(expenseCategoryDataList)=>{
 
 export const getAllExpenseCategory = (data)=>{
   return dispatch => {
-    axios.get('invoice/expense-category/').then(
+    axios.get('expenses/expense-category/').then(
       response => {
         console.log(response.data)
 

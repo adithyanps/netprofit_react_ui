@@ -32,7 +32,7 @@ class DefaultSettings extends Component {
     this.loadAccount()
   }
   loadAccountDefault =()=>{
-    axios.get('invoice/accountDefault/1/').then(
+    axios.get('masters/accountDefault/1/').then(
       res => {
         console.log(res.data)
         this.setState({
@@ -46,7 +46,7 @@ class DefaultSettings extends Component {
     )
   }
   loadAccount =()=> {
-    axios.get('invoice/account/').then(
+    axios.get('masters/account/').then(
       res=>{
         this.setState({
           accountList:res.data,
@@ -86,11 +86,11 @@ class DefaultSettings extends Component {
     console.log(obj)
     // console.log(this.state.accountIdObj.isEmpty)
     if(JSON.stringify(this.state.accountIdObj) === '{}') {
-      axios.post("invoice/accountDefault/",obj).then(response=>{
+      axios.post("masters/accountDefault/",obj).then(response=>{
         console.log(response.data)
       })
     } else {
-      axios.patch("invoice/accountDefault/1/",obj).then(
+      axios.patch("masters/accountDefault/1/",obj).then(
         response => {
           console.log(response.data)
         }

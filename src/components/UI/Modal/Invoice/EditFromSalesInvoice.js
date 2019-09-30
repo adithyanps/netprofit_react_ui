@@ -26,32 +26,47 @@ class BranchEdit extends React.Component {
   }
 
   componentWillMount(){
+    console.log(this.props.formData)
+    console.log(this.props.customerList)
+    console.log(this.props.branchList)
 
     this.setState({
       holder:this.props.formData,
       settingsAcnt:this.props.settingsAcnt,
       customerList:this.props.customerList,
-      selectedName:this.props.formData.customer,
-      selectedBranch:this.props.formData.branch,
+      // selectedName:this.props.formData.customer,
+      // selectedBranch:this.props.formData.branch,
       status:this.props.formData.status,
       // doc_no:this.props.formData.doc_no,
       date:this.props.formData.date,
       total:this.props.formData.total_amount,
       // discount:this.props.formData.discount,
       grant_total:this.props.formData.grant_total,
-      narration:this.props.formData.narration
+      narration:this.props.formData.narration,
+      selectedBranch:this.props.branchList.filter(item=>
+        item.id === this.props.formData.branch)[0].branch,
+      selectedName:this.props.customerList.filter(item=>
+        item.id === this.props.formData.customer)[0].name
     })
+    console.log(this.state.selectedName)
+    console.log(this.state.selectedBranch)
+
     // this.setState({child: this.props.childObject})
     this.loadItems()
     // this.loadCustomer()
     this.loadBranch()
     console.log('will')
     console.log(this.state)
+    // if(this.props.branchList.length !== 0) {
+      // this.setState(
+      //   {
 
+        // })
+    // }
   }
 
   loadItems = () => {
-    axios.get('invoice/item/').then(
+    axios.get('masters/product/').then(
       res => {
         this.setState({items:res.data});
         console.log(res.data)
@@ -60,7 +75,7 @@ class BranchEdit extends React.Component {
   }
 
   loadCustomer = () => {
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
         console.log(res.data)
@@ -69,7 +84,7 @@ class BranchEdit extends React.Component {
   }
 
   loadBranch=()=> {
-    axios.get('invoice/branch').then(
+    axios.get('masters/branch').then(
       res=>{
         this.setState({branchList:res.data});
       }
@@ -249,8 +264,8 @@ handleGrandTotalChange=()=>{
     console.log(this.state.child)
       this.props.formData.invoice_no=this.props.formData.invoice_no
       this.props.formData.doc_no=this.state.holder.doc_no
-      this.props.formData.customer=this.state.selectedName
-      this.props.formData.branch=this.state.selectedBranch
+      this.props.formData.customer=this.props.customerList.filter(item=>item.name === this.state.selectedName)[0].id
+      this.props.formData.branch=this.props.branchList.filter(item=>item.branch === this.state.selectedBranch)[0].id
       this.props.formData.state=this.state.status
       this.props.formData.narration=this.state.narration
       this.props.formData.date=this.state.holder.date
@@ -265,8 +280,29 @@ handleGrandTotalChange=()=>{
         journal_item:output,
       }
     console.log(this.props.formData)
+    let data = {
+      id:this.props.formData.id,
+      invoice_no:this.props.formData.invoice_no,
+      doc_no:this.props.formData.doc_no,
+      status:this.state.status,
+      narration:this.state.narration,
+      date:this.state.holder.date,
+      total_amount:this.state.holder.total_amount,
+      discount:this.state.holder.discount,
+      grant_total:this.state.holder.grant_total,
+      customer:this.props.customerList.filter(item=>item.name === this.state.selectedName)[0].id,
+      branch:this.props.branchList.filter(item=>item.branch === this.state.selectedBranch)[0].id,
+      child:this.state.holder.child,
+      journal_entry:{
+        date:this.state.holder.date,
+        transaction_type:"SALES",
+        description:this.state.narration,
+        journal_item:output,
+      }
 
-    this.props.editHandler(e,this.props.formData)
+    }
+    console.log(data)
+    this.props.editHandler(e,data)
 
   }
   addItemHandler=(e)=> {
@@ -308,7 +344,9 @@ handleGrandTotalChange=()=>{
       console.log(this.state.holder)
       console.log(this.state.holder.child)
       console.log(this.state.child)
-      console.log(this.props.childObject)
+      console.log(this.props)
+      console.log(this.state)
+
 
       return (
         <Modal
@@ -344,7 +382,7 @@ handleGrandTotalChange=()=>{
           <div>
             <label>COSTUMER</label><br />
             <select className="select" onChange={(e) => this.setState({selectedName:e.target.value})}>
-                <option value="">{this.props.formData.customer}</option>
+                <option value="">{this.state.selectedName}</option>
                 {this.state.customerList.map((m ,index)=>
                     <option key={m.id}
                           value={m.name}>{m.name}</option>)
@@ -363,6 +401,8 @@ handleGrandTotalChange=()=>{
           </div>
         </div>
         <br />
+        <br />
+        
         <div className="row-wrapper">
           <div>
             <label>DOC NO</label><br />
@@ -376,7 +416,7 @@ handleGrandTotalChange=()=>{
           <div>
             <label>BRANCH</label><br />
             <select className="select" onChange={(e) => this.setState({selectedBranch:e.target.value})}>
-                <option value="">{this.state.holder.branch}</option>
+                <option value="">{this.state.selectedBranch}</option>
                 {this.state.branchList.map((m ,index)=>
                     <option key={m.id}
                           value={m.branch}>{m.branch}</option>)

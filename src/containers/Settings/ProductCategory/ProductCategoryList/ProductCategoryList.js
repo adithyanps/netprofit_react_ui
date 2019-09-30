@@ -43,7 +43,7 @@ class ProductCategoryList extends Component {
 
   }
   loadProductCats=()=>{
-      axios.get('invoice/product-category/').then(
+      axios.get('masters/product-category/').then(
         res => {
           let data = res.data;
           let dataTemp = res.data;
@@ -217,7 +217,7 @@ class ProductCategoryList extends Component {
   }
   objEditHandler = (event,objTemp) => {
 
-      axios.patch('/invoice/product-category/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/product-category/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -233,7 +233,7 @@ class ProductCategoryList extends Component {
     const updatedOrders = this.state.product_CatList;
     let deleteObject = this.state.product_CatList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/product-category/'+id).then(
+    axios.delete('masters/product-category/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -302,7 +302,7 @@ class ProductCategoryList extends Component {
     let delIndex = updatedOrders.indexOf(deleteObject[0])
     console.log(delIndex)
 
-    axios.delete('/invoice/product-category/'+id).then(
+    axios.delete('/masters/product-category/'+id).then(
        response => {
          console.log(response.data)
            updatedOrders.splice(delIndex,1)
@@ -319,7 +319,7 @@ class ProductCategoryList extends Component {
     console.log(obj)
     let list = []
     list.push(obj)
-    axios.patch('/invoice/product-category/' + obj.id + '/',obj).then(
+    axios.patch('/masters/product-category/' + obj.id + '/',obj).then(
       response => {
         console.log(response.data);
         this.props.editProductCategorySuccess(response.data)

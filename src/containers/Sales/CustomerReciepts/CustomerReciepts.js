@@ -60,7 +60,7 @@ componentDidMount(){
 }
 
 loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
       }
@@ -68,7 +68,7 @@ loadPartner=()=>{
 }
 
 loadRecieptData=()=>{
-    axios.get('invoice/customerReceipt/').then(
+    axios.get('customer_reciepts/customerReceipt/').then(
       res => {
         this.setState(
           {
@@ -115,7 +115,7 @@ RecieptDataHandler=(data)=>{
 }
 
 loadAccount=()=>{
-      axios.get('/invoice/account/').then(
+      axios.get('/masters/account/').then(
         response=>{
           this.setState(
             {accountList:response.data,
@@ -260,7 +260,7 @@ deleteHandler = (event) => {
   const updatedOrders = this.state.recieptData;
   let deleteObject = this.state.recieptData.filter(item =>  item.id === id)
   let delIndex = updatedOrders.indexOf(deleteObject[0])
-  axios.delete('invoice/customerReceipt/'+id).then(
+  axios.delete('customer_reciepts/customerReceipt/'+id).then(
      response => {
          updatedOrders.splice(delIndex,1)
          this.setState({
@@ -275,7 +275,7 @@ objEditHandler = (event,objTemp) => {
 
 console.log(objTemp)
     event.preventDefault()
-    axios.patch('/invoice/customerReceipt/' + objTemp.id + '/', objTemp).then(
+    axios.patch('/customer_reciepts/customerReceipt/' + objTemp.id + '/', objTemp).then(
         response => {
             console.log(response.data)
             this.setState({
@@ -384,7 +384,7 @@ spotObjDeleteHandler=(id)=>{
   let delIndex = updatedReciepts.indexOf(deleteObject[0])
   console.log(delIndex)
 
-  axios.delete('/invoice/customerReceipt/'+id).then(
+  axios.delete('/customer_reciepts/customerReceipt/'+id).then(
      response => {
        console.log(response.data)
          updatedReciepts.splice(delIndex,1)
@@ -403,7 +403,7 @@ spotObjEditHandler=(event,obj)=>{
   console.log(list)
 
 
-  axios.patch('/invoice/customerReceipt/'+obj.id + '/',obj).then(
+  axios.patch('/customer_reciepts/customerReceipt/'+obj.id + '/',obj).then(
     response=>{
       console.log(response.data);
 
@@ -463,7 +463,7 @@ this.setState({[key]:value})
 
 filterHandler=(e)=>{
   if (this.state.selectedName === null) {
-    axios.get('invoice/customerReceipt/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
+    axios.get('customer_reciepts/customerReceipt/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date).then(
       response=>{
         // this.setState({invoiceData:response.data});
         console.log(response.data)
@@ -471,7 +471,7 @@ filterHandler=(e)=>{
       }
     )
   } else {
-    axios.get('invoice/customerReceipt/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
+    axios.get('customer_reciepts/customerReceipt/'+'?start_date='+this.state.start_date+'&end_date='+this.state.end_date+'&ExpenseAcct='+this.state.expenseAccnts.filter(item=>item.name === this.state.selectedName)[0].id).then(
       response=>{
         // this.setState({invoiceData:response.data});
         console.log(response.data)

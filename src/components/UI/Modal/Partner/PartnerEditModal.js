@@ -29,7 +29,7 @@ class PartnerEdit extends React.Component {
 }
 
   loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({partnerList:res.data});
       }

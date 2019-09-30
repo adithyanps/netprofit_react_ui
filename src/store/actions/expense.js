@@ -76,7 +76,7 @@ export const deleteExpenseFail=()=>{
 
 export const expenseObjDeleteHandler=(id)=>{
   return dispatch =>{
-    axios.delete('/invoice/expenses/'+ id).then(
+    axios.delete('/expenses/expenses/'+ id).then(
       response => {
         dispatch(deleteExpenseSuccess())
       }
@@ -90,7 +90,7 @@ export const expenseObjDeleteHandler=(id)=>{
 export const expenseObjEditHandler=(obj)=>{
   console.log(obj)
   return dispatch => {
-    axios.patch('/invoice/expenses/' + obj.id + '/',obj).then(
+    axios.patch('/expenses/expenses/' + obj.id + '/',obj).then(
       response => {
         dispatch(editExpenseSuccess(response.data))
       }
@@ -103,7 +103,7 @@ export const expenseObjEditHandler=(obj)=>{
 
 export const createExpense=(data)=>{
   return dispatch => {
-    axios.post('/invoice/expenses/',data,{
+    axios.post('/expenses/expenses/',data,{
         headers: {
             'Content-Type': 'application/json',
         }

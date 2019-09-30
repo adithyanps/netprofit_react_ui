@@ -21,7 +21,7 @@ class SettingsEditModel extends React.Component {
     this.loadAccount()
   }
   loadAccount=()=>{
-    axios.get('invoice/account/').then(
+    axios.get('masters/account/').then(
       res => {
         this.setState({
           salesAccntList:res.data.filter(item => item.type === "SALES"),

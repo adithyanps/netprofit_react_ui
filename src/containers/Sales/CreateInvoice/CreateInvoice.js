@@ -41,8 +41,17 @@ class CreateInvoice extends Component {
          sub_total:null,
        }],
     salesPage:false,
+    error:null,
+
+    prefix:null,
+    suffix:null,
+    padding:null,
+    start_date:null,
 
   }
+  componentDidCatch(error, info) {
+  this.setState({ error: error.message });
+}
   componentDidMount(){
     this.setState({
       date:moment(new Date()).format('YYYY-MM-DD'),
@@ -55,7 +64,7 @@ class CreateInvoice extends Component {
 
   }
   loadSettingsAccnt=()=>{
-    axios.get('invoice/accountDefault/1/').then(
+    axios.get('masters/accountDefault/1/').then(
       res => {
         this.setState({settingsAcnt:res.data});
         console.log(res.data)
@@ -63,7 +72,7 @@ class CreateInvoice extends Component {
     )
   }
   loadCustomer=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
         console.log(res.data)
@@ -71,14 +80,14 @@ class CreateInvoice extends Component {
     )
   }
   loadBranch=()=> {
-    axios.get('invoice/branch').then(
+    axios.get('masters/branch').then(
       res=>{
         this.setState({branchList:res.data});
       }
     )
   }
   loadItem = () => {
-    axios.get('invoice/item/').then(
+    axios.get('masters/product/').then(
       res => {
         this.setState({itemList:res.data});
         console.log(res.data)
@@ -86,14 +95,85 @@ class CreateInvoice extends Component {
     )
   }
   loadParantData=()=>{
-    axios.get('invoice/parantdata/').then(
+    axios.get('sales/salesInvoice/').then(
       res=>{
         this.setState({parantdataList:res.data})
+        console.log(res.data)
+        if(res.data.length === 0){
+          this.loadSalesInvoiceNumber()
+          console.log(res.data.length)
+        } else{
+          var mostBiggerInvoiceNoDict = res.data.reduce(function (oldest, item) {
+            return (oldest.invoice_no || 0) > item.invoice_no ? oldest : item;
+          }, {});
+          console.log(mostBiggerInvoiceNoDict['invoice_no'])
+          let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['invoice_no']
+          let start_no = parseInt(mostBiggerInvoiceNo,10)
+          console.log(start_no,typeof start_no)
+          console.log(typeof mostBiggerInvoiceNo)
+          var r = /\d+/;
+          var m;
+          m= r.exec(mostBiggerInvoiceNo)
+          console.log(m)
+          console.log(typeof m[0])
+          var splitNumber = m[0].split(Number(m[0]))
+          console.log(splitNumber)
+          console.log( splitNumber[0])
+
+          var splitStr = mostBiggerInvoiceNo.split(m[0])
+          console.log(splitStr)
+          let afterZeroNum = Number(m[0])+1
+          console.log(typeof String(afterZeroNum))
+          let number = splitNumber[0]+String(afterZeroNum)
+          console.log(number)
+          this.setState({start_no:number,prefix:splitStr[0],suffix:splitStr[1]})
+        }
       }
     )
   }
+
+  loadSalesInvoiceNumber=()=>{
+    axios.get('masters/serial-number/').then(
+      res=>{if(res.data.filter(item=>item.type === "SI").length>0){
+        this.setState(
+          {
+            prefix:res.data.filter(item=>item.type === "SI")[0].prefix,
+            suffix:res.data.filter(item=>item.type === "SI")[0].suffix,
+            // start_number:res.data.filter(item=>item.id === 1)[0].start_number,
+            padding:res.data.filter(item=>item.type === "SI")[0].padding
+          })
+          console.log(res.data.filter(item=>item.type === "SI")[0].prefix)
+          let start_number =res.data.filter(item=>item.type === "SI")[0].start_number
+          let padding=res.data.filter(item=>item.type === "SI")[0].padding
+          console.log(typeof start_number)
+          this.salesInvoice_noChangeHandler(start_number,padding)
+      }
+
+      }
+    )
+  }
+
+  salesInvoice_noChangeHandler=(start_number,padding)=>{
+    console.log(start_number)
+    let start_numberCount = start_number.toString().length;
+    console.log(start_numberCount)
+    if(padding>start_numberCount){
+      let digit_diff = padding - start_numberCount
+      console.log(digit_diff)
+      let zero = 0;
+      let zeros = "0".repeat(digit_diff)
+      console.log(zeros,typeof zeros)
+      let number = zeros+start_number
+      console.log(number)
+      this.setState({start_no:number})
+    }
+    // let invoiceNum = this.state.prefix+this.state.start_no+this.state.suffix
+    // this.setState({invoice_no:invoiceNum})
+
+  }
+
   postData=(formData)=>{
-    axios.post('/invoice/parantdata/',formData).then(
+    axios.post('/sales/salesInvoice/',formData).then(
       response=>{
         console.log(response.data)
         // this.setState({openModel:true,viewObject:response.data})
@@ -140,21 +220,21 @@ class CreateInvoice extends Component {
     console.log(grant_total)
     this.state.grant_total = grant_total
   }
-  invoice_noChangeHandler=()=> {
-    console.log(this.state.invoice_no)
-    var mostBiggerInvoiceNoDict = this.state.parantdataList.reduce(function (oldest, item) {
-      return (oldest.invoice_no || 0) > item.invoice_no ? oldest : item;
-    }, {});
-    console.log(mostBiggerInvoiceNoDict['invoice_no'])
-    let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['invoice_no']
-    console.log(this.state.parantdataList)
-    if (this.state.parantdataList.length===0 ) {
-      this.state.invoice_no = 1
-    }
-     else {
-      this.state.invoice_no = mostBiggerInvoiceNo + 1
-    }
-  }
+  // invoice_noChangeHandler=()=> {
+  //   console.log(this.state.invoice_no)
+  //   var mostBiggerInvoiceNoDict = this.state.parantdataList.reduce(function (oldest, item) {
+  //     return (oldest.invoice_no || 0) > item.invoice_no ? oldest : item;
+  //   }, {});
+  //   console.log(mostBiggerInvoiceNoDict['invoice_no'])
+  //   let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['invoice_no']
+  //   console.log(this.state.parantdataList)
+  //   if (this.state.parantdataList.length===0 ) {
+  //     this.state.invoice_no = 1
+  //   }
+  //    else {
+  //     this.state.invoice_no = mostBiggerInvoiceNo + 1
+  //   }
+  // }
   totalHandler=()=>{
     console.log(this.state.holder)
       let list=[]
@@ -223,6 +303,8 @@ class CreateInvoice extends Component {
     let isChecked = e.target.checked;
   }
   submitDataHandler = (evt) => {
+    let invoiceNum = this.state.prefix+this.state.start_no+this.state.suffix
+
     let creditSection = {}
     let salesAcntObjct = {}
     let customerAcntObj ={}
@@ -251,10 +333,10 @@ class CreateInvoice extends Component {
 
 
     let data={
-      invoice_no:this.state.invoice_no,
+      invoice_no:invoiceNum,
       doc_no:this.state.doc_no,
-      customer:this.state.selectedName,
-      branch:this.state.selectedBranch,
+      customer:this.state.customerList.filter(item=>item.name ===this.state.selectedName)[0].id,
+      branch:this.state.branchList.filter(item=>item.branch === this.state.selectedBranch)[0].id,
       status:this.state.status,
       narration:this.state.narration,
       date:this.state.date,
@@ -272,7 +354,7 @@ class CreateInvoice extends Component {
     console.log(data)
     // this.postData(formData)
     if (this.state.selectedBranch !== null) {
-      axios.post('invoice/parantdata/',data).then(
+      axios.post('sales/salesInvoice/',data).then(
         res => {
           this.props.onCreateInvoice(res.data)
           this.setState({salesPage:true})
@@ -341,12 +423,18 @@ class CreateInvoice extends Component {
 
     }
   }
-
+errorPage=()=>{
+  return(
+    <div>error</div>
+  )
+}
   render() {
     console.log(this.state)
     return(
       <div >
       {this.state.salesPage ? (this.openSalesInvoice()) : (null)}
+      {this.state.error ? (this.errorPage()) : (null)}
+
 
         <br />
         <div className="row-wrapper1">
@@ -359,9 +447,11 @@ class CreateInvoice extends Component {
         <br />
         <div className="row-wrapper">
           <div>
-          {this.invoice_noChangeHandler()}
             <label>INVOICE</label><br />
-            <input readOnly className="grand" value={this.state.invoice_no} onChange={this.invoice_noChangeHandler()}/>
+            <input
+              readOnly
+              className="grand"
+             />
           </div>
           <div>
             <label>COSTUMER</label><br />

@@ -111,7 +111,7 @@ class CreditNoteEditModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
         <div style={{"textAlign":"center"}}>
-          <h1 className="ptag">Edit - Credit CreditNote</h1>
+          <h1 className="ptag">Edit - CreditNote</h1>
           <div className="row-wrapper">
           <div>
             <label>Doc NO:</label><br />

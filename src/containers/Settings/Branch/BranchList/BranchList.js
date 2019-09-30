@@ -44,7 +44,7 @@ class BranchList extends Component {
 
   }
   loadBranches=()=>{
-      axios.get('invoice/branch/').then(
+      axios.get('masters/branch/').then(
         res => {
           this.setState({branchList:res.data});
         }
@@ -205,7 +205,7 @@ class BranchList extends Component {
       // event.preventDefault()
       // objTemp.product_Cat =   this.state.product_CatList.map(item=>item.name === objTemp.product_Cat)[0].id
 
-      axios.patch('/invoice/branch/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/branch/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -221,7 +221,7 @@ class BranchList extends Component {
     const updatedOrders = this.state.branchList;
     let deleteObject = this.state.branchList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/branch/'+id).then(
+    axios.delete('masters/branch/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -274,7 +274,7 @@ class BranchList extends Component {
     console.log(deleteObject)
     let delIndex = updatedBranches.indexOf(deleteObject[0])
     console.log(delIndex)
-    axios.delete('/invoice/branch/'+id).then(
+    axios.delete('/masters/branch/'+id).then(
        response => {
          console.log(response.data)
            updatedBranches.splice(delIndex,1)
@@ -292,7 +292,7 @@ class BranchList extends Component {
 spotObjEditHandler=(event,obj)=>{
   let list = []
   list.push(obj)
-  axios.patch('/invoice/branch/'+obj.id + '/',obj).then(
+  axios.patch('/masters/branch/'+obj.id + '/',obj).then(
     response=>{
       this.props.editBranchSuccess(response.data)
       let updatedProducts = this.state.branchList.map(obj => list.find(o=> o.id === obj.id) || obj)

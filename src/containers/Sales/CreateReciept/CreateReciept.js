@@ -14,7 +14,7 @@ class CreateRecieptPage extends Component {
       partnerList:[],
       recieptData:[],
       serial_no:0,
-      reciept_no:0,
+      // reciept_no:0,
       holder:[{
         customer:'',
         credit_amount:null,
@@ -23,7 +23,12 @@ class CreateRecieptPage extends Component {
       narration:'',
       total:null,
       accountList:[],
-      customerRecieptPage:false
+      customerRecieptPage:false,
+
+      prefix:null,
+      suffix:null,
+      padding:null,
+      start_date:null,
 
   }
 
@@ -38,16 +43,82 @@ class CreateRecieptPage extends Component {
     this.loadRecieptData()
   }
   loadRecieptData=()=>{
-    axios.get('invoice/customerReceipt/').then(
+    axios.get('customer_reciepts/customerReceipt/').then(
       res => {
         this.setState({recieptData:res.data});
         console.log(res.data)
+        if(res.data.length === 0){
+          this.loadRecieptNumber()
+          console.log(res.data.length)
+        } else{
+          var mostBiggerRecieptNoDict = res.data.reduce(function (oldest, item) {
+            return (oldest.reciept_no || 0) > item.reciept_no ? oldest : item;
+          }, {});
+          console.log(mostBiggerRecieptNoDict['reciept_no'])
+          let mostBiggerRecieptNo = mostBiggerRecieptNoDict['reciept_no']
+          let start_no = parseInt(mostBiggerRecieptNo,10)
+          console.log(start_no,typeof start_no)
+          console.log(typeof mostBiggerRecieptNo)
+          var r = /\d+/;
+          var m;
+          m= r.exec(mostBiggerRecieptNo)
+          console.log(m)
+          console.log(typeof m[0])
+          var splitNumber = m[0].split(Number(m[0]))
+          console.log(splitNumber)
+          console.log( splitNumber[0])
+
+          var splitStr = mostBiggerRecieptNo.split(m[0])
+          console.log(splitStr)
+          let afterZeroNum = Number(m[0])+1
+          console.log(typeof String(afterZeroNum))
+          let number = splitNumber[0]+String(afterZeroNum)
+          console.log(number)
+          this.setState({start_no:number,prefix:splitStr[0],suffix:splitStr[1]})
+        }
       }
     )
   }
 
+  loadRecieptNumber=()=>{
+    axios.get('masters/serial-number/').then(
+      res=>{if(res.data.filter(item=>item.type === "CR").length>0){
+        this.setState(
+          {
+            prefix:res.data.filter(item=>item.type === "CR")[0].prefix,
+            suffix:res.data.filter(item=>item.type === "CR")[0].suffix,
+            // start_number:res.data.filter(item=>item.id === 1)[0].start_number,
+            padding:res.data.filter(item=>item.type === "CR")[0].padding
+          })
+          console.log(res.data.filter(item=>item.type === "CR")[0].prefix)
+          let start_number =res.data.filter(item=>item.type === "CR")[0].start_number
+          let padding=res.data.filter(item=>item.type === "CR")[0].padding
+          console.log(typeof start_number)
+          this.reciept_noChangeHandler(start_number,padding)
+      }
+
+      }
+    )
+  }
+
+  reciept_noChangeHandler=(start_number,padding)=>{
+    console.log(start_number)
+    let start_numberCount = start_number.toString().length;
+    console.log(start_numberCount)
+    if(padding>start_numberCount){
+      let digit_diff = padding - start_numberCount
+      console.log(digit_diff)
+      let zero = 0;
+      let zeros = "0".repeat(digit_diff)
+      console.log(zeros,typeof zeros)
+      let number = zeros+start_number
+      console.log(number)
+      this.setState({start_no:number})
+    }
+  }
+
   loadPartner=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER')});
       }
@@ -56,7 +127,7 @@ class CreateRecieptPage extends Component {
 
 
   loadCustomer=()=>{
-    axios.get('invoice/partner/').then(
+    axios.get('masters/partner/').then(
       res => {
         this.setState({customerList:res.data.filter(item => item.type !== 'SUPPLIER')});
         console.log(res.data)
@@ -66,7 +137,7 @@ class CreateRecieptPage extends Component {
 
 
   loadAccount=()=>{
-    axios.get('/invoice/account/').then(
+    axios.get('/masters/account/').then(
       response=>{
         this.setState({accountList:response.data})
       }
@@ -169,6 +240,8 @@ class CreateRecieptPage extends Component {
 
   submitDataHandler=(e)=>{
     // alert('work on progress')
+    let recieptNum = this.state.prefix+this.state.start_no+this.state.suffix
+
     console.log(this.state.holder)
     let cashAccntObj = this.state.accountList.filter(item=>item.type === 'CASH')
     console.log(this.state.accountList)
@@ -200,7 +273,7 @@ class CreateRecieptPage extends Component {
     console.log(output)
 
     let Data={
-      reciept_no:this.state.reciept_no,
+      reciept_no:recieptNum,
       journal_entry:{
         date:this.state.date,
         transaction_type:"COSTOMER_RECIEPT",
@@ -209,7 +282,7 @@ class CreateRecieptPage extends Component {
       }
     }
     console.log(Data)
-    axios.post('invoice/customerReceipt/',Data).then(
+    axios.post('customer_reciepts/customerReceipt/',Data).then(
       res=>{
         console.log(res.data)
       this.props.onCreateCustomerReciept(res.data)
@@ -221,21 +294,21 @@ class CreateRecieptPage extends Component {
     })
 
   }
-  reciept_noChangeHandler=()=> {
-    console.log(this.state.reciept_no)
-    var mostBiggerInvoiceNoDict = this.state.recieptData.reduce(function (oldest, item) {
-      return (oldest.reciept_no || 0) > item.reciept_no ? oldest : item;
-    }, {});
-    console.log(mostBiggerInvoiceNoDict['reciept_no'])
-    let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['reciept_no']
-    console.log(this.state.recieptData)
-    if (this.state.recieptData.length===0 ) {
-      this.state.reciept_no = 1
-    }
-     else {
-      this.state.reciept_no = mostBiggerInvoiceNo + 1
-    }
-  }
+  // reciept_noChangeHandler=()=> {
+  //   console.log(this.state.reciept_no)
+  //   var mostBiggerInvoiceNoDict = this.state.recieptData.reduce(function (oldest, item) {
+  //     return (oldest.reciept_no || 0) > item.reciept_no ? oldest : item;
+  //   }, {});
+  //   console.log(mostBiggerInvoiceNoDict['reciept_no'])
+  //   let mostBiggerInvoiceNo = mostBiggerInvoiceNoDict['reciept_no']
+  //   console.log(this.state.recieptData)
+  //   if (this.state.recieptData.length===0 ) {
+  //     this.state.reciept_no = 1
+  //   }
+  //    else {
+  //     this.state.reciept_no = mostBiggerInvoiceNo + 1
+  //   }
+  // }
   openCustomerRecieptPage=()=>{
     return (
       <Redirect to="/customer-reciepts" />
@@ -255,16 +328,25 @@ class CreateRecieptPage extends Component {
           <br />
           <div className="row-wrapper">
             <div>
-            {this.reciept_noChangeHandler()}
               <label>RECEIPT NO:</label><br />
-              <input readOnly className="grand"  />
+              <input
+                readOnly
+                className="grand"  />
             </div>
             <div>
               <label>ACCOUNT</label><br />
-              <select className="select" onChange={(e) => this.setState({selectedAcnt:e.target.value})}>
+              <select
+                  className="select"
+                  onChange={(e) => this.setState({selectedAcnt:e.target.value})}
+              >
                   <option value=""> </option>
                   {this.state.accountList.map((m,index)=>
-                      <option key={m.id} value={m.name}>{m.name}</option>
+                      <option
+                          key={m.id}
+                          value={m.name}
+                      >
+                        {m.name}
+                      </option>
                   )}
               </select>
             </div>
@@ -280,7 +362,9 @@ class CreateRecieptPage extends Component {
             </div>
           </div>
           <br />
-          <button className="addBtn" onClick={this.addItemHandler}>ADD+</button>
+          <button
+              className="addBtn"
+              onClick={this.addItemHandler}>ADD+</button>
           <div className="itemBox">
             {this.state.holder.map((shareholder, idx) => (
               <div className="row-wrapper">

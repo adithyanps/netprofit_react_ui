@@ -27,7 +27,7 @@ class CreateArea extends Component {
     }
     console.log(Data)
 
-    axios.post('invoice/area/',Data).then(
+    axios.post('masters/area/',Data).then(
       response=>{
         this.props.createAreaSuccess(response.data)
         this.setState({areaListPage:true})

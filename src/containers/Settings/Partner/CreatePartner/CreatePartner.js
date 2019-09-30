@@ -19,7 +19,7 @@ class CreatePartner extends Component {
     this.loadArea()
   }
   loadArea=()=>{
-    axios.get('invoice/area/').then(
+    axios.get('masters/area/').then(
       response=>{this.setState({areaList:response.data})}
     )
   }
@@ -41,7 +41,7 @@ class CreatePartner extends Component {
     }
     console.log(Data)
 
-    axios.post('invoice/partner/',Data).then(
+    axios.post('masters/partner/',Data).then(
       response=>{
         console.log(response.data)
         this.props.onCreatePartnerSuccess(response.data)

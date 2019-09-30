@@ -53,6 +53,8 @@ class PopUp extends React.Component {
                   {this.props.formData.date}
               </div>
           </div>
+          <br />
+          
           <div className="invoiceviewWrapper">
               <div>
                 <p>DOC NO:</p>
@@ -64,6 +66,7 @@ class PopUp extends React.Component {
               </div>
           </div>
           <br />
+
           <table className="tables">
             <thead>
               <tr >

@@ -86,14 +86,14 @@ class CreateInvoice extends Component {
     )
   }
   loadParantData=()=>{
-    axios.get('invoice/parantdataNu/').then(
+    axios.get('invoice/parantdata/').then(
       res=>{
         this.setState({parantdataList:res.data})
       }
     )
   }
   postData=(formData)=>{
-    axios.post('/invoice/parantdataNu/',formData).then(
+    axios.post('/invoice/parantdata/',formData).then(
       response=>{
         console.log(response.data)
         // this.setState({openModel:true,viewObject:response.data})

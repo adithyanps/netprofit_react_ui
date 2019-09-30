@@ -76,7 +76,7 @@ export const deletePartnerFail=()=>{
 
 export const partnerObjDeleteHandler=(id)=>{
   return dispatch =>{
-    axios.delete('/invoice/partner/'+ id).then(
+    axios.delete('/masters/partner/'+ id).then(
       response => {
         dispatch(deletePartnerSuccess())
       }
@@ -89,7 +89,7 @@ export const partnerObjDeleteHandler=(id)=>{
 
 export const partnerObjEditHandler=(obj)=>{
   return dispatch => {
-    axios.patch('/invoice/partner/' + obj.id + '/',obj).then(
+    axios.patch('/masters/partner/' + obj.id + '/',obj).then(
       response => {
         dispatch(editPartnerSuccess(response.data))
       }
@@ -102,7 +102,7 @@ export const partnerObjEditHandler=(obj)=>{
 
 export const createPartner=(data)=>{
   return dispatch => {
-    axios.post('/invoice/partner/',data,{
+    axios.post('/masters/partner/',data,{
         headers: {
             'Content-Type': 'application/json',
         }

@@ -17,7 +17,9 @@ import areaReducer from '../store/reducers/area';
 import accountTypesReducer from '../store/reducers/accountTypes';
 
 import expenseCategoryTypesReducer from '../store/reducers/expenseCategory';
-import creditNoteReducer from '../store/reducers/creditNote';
+import creditNoteReducer from '../store/reducers/creditnote';
+import debitNoteReducer from '../store/reducers/debitnote';
+
 
 
 
@@ -39,7 +41,8 @@ const rootReducer = combineReducers({
   area:areaReducer,
   accountTypes:accountTypesReducer,
   expenseCategory:expenseCategoryTypesReducer,
-  creditNote:creditNoteReducer
+  creditNote:creditNoteReducer,
+  debitNote:debitNoteReducer,
 
 })
 

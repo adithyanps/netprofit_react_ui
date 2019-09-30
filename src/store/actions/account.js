@@ -23,7 +23,7 @@ export const fetchOrdersSuccess = (defaultAccount) => {
 
 export const defaultAccountList =()=> {
   return dispatch => {
-    axios.get('invoice/accountDefault/')
+    axios.get('masters/accountDefault/')
       .then( res => {
         const defaultAccount = [];
         for ( let key in res.data) {
@@ -62,7 +62,7 @@ export const accountSuccess = (account) => {
 
 export const accountList =()=> {
   return dispatch => {
-    axios.get('invoice/account/')
+    axios.get('masters/account/')
       .then( res => {
         const account = [];
         for ( let key in res.data) {

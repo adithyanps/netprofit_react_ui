@@ -42,7 +42,7 @@ class AccountList extends Component {
 
   }
   loadAccounts=()=>{
-      axios.get('invoice/account/').then(
+      axios.get('masters/account/').then(
         res => {
           this.setState({accountList:res.data});
         }
@@ -203,7 +203,7 @@ class AccountList extends Component {
       // event.preventDefault()
       // objTemp.product_Cat =   this.state.product_CatList.map(item=>item.name === objTemp.product_Cat)[0].id
 
-      axios.patch('/invoice/account/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/account/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -219,7 +219,7 @@ class AccountList extends Component {
     const updatedOrders = this.state.accountList;
     let deleteObject = this.state.accountList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/account/'+id).then(
+    axios.delete('masters/account/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -271,7 +271,7 @@ class AccountList extends Component {
     console.log(deleteObject)
     let delIndex = updatedAccounts.indexOf(deleteObject[0])
     console.log(delIndex)
-    axios.delete('/invoice/account/'+id).then(
+    axios.delete('/masters/account/'+id).then(
        response => {
          console.log(response.data)
            updatedAccounts.splice(delIndex,1)
@@ -288,7 +288,7 @@ class AccountList extends Component {
 spotObjEditHandler=(event,obj)=>{
   let list = []
   list.push(obj)
-  axios.patch('/invoice/account/'+obj.id + '/',obj).then(
+  axios.patch('/masters/account/'+obj.id + '/',obj).then(
     response=>{
       this.props.editAccountSuccess(response.data)
       let updatedProducts = this.state.accountList.map(obj => list.find(o=> o.id === obj.id) || obj)

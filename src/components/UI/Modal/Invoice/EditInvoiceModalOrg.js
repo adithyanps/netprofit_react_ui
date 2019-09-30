@@ -39,9 +39,9 @@ class BranchEdit extends React.Component {
       total:this.props.formData.total_amount,
       // discount:this.props.formData.discount,
       grant_total:this.props.formData.grant_total,
-      narration:this.props.formData.narration,
+      narration:this.props.formData.narration
     })
-    this.setState({childItems: this.props.formData.child})
+    // this.setState({child: this.props.childObject})
     this.loadItems()
     this.loadCustomer()
     this.loadBranch()
@@ -232,22 +232,9 @@ handleGrandTotalChange=()=>{
     output.push(creditSection)
     output.push(debitSection)
     console.log(output)
-    console.log(this.state.holder.child)
-    const test =[]
-    test.push(this.state.holder.child)
-    let data = this.state.holder.child
-    console.log(data)
-    console.log(test)
 
-
-
+    delete this.state.child.id
     console.log(this.state.child)
-
-    console.log(this.state.holder)
-
-    console.log(this.state.items)
-
-
       this.props.formData.invoice_no=this.props.formData.invoice_no
       this.props.formData.doc_no=this.state.holder.doc_no
       this.props.formData.customer=this.state.selectedName
@@ -265,55 +252,9 @@ handleGrandTotalChange=()=>{
         description:this.state.narration,
         journal_item:output,
       }
-    // let branchId=this.state.customerList.filter(item=>item.name === this.state.selectedName)[0].id
-    // console.log(branchId)
-    // data.map((childItem,index)=>{
-    //   this.state.items.map((item,idx)=>{
-    //     console.log(item)
-    //     console.log(childItem)
-    //
-    //     if(item.item === childItem.item){
-    //       console.log(item.item)
-    //       console.log(childItem.item)
-    //
-    //       childItem.item = item.id
-    //       // item.item = childItem.item
-    //
-    //     }
-    //   })
-    // })
 
-    // delete this.state.child.id
-    // console.log(data)
-    // console.log(this.state.childItems)
-
-    let Data = {
-      id : this.props.formData.id,
-      journal_entry : {
-        date:this.state.holder.date,
-        transaction_type:"SALES",
-        description:this.state.narration,
-        journal_item:output,
-      },
-      child:this.state.holder.child,
-      invoice_no: this.props.formData.invoice_no,
-      doc_no: this.state.holder.doc_no,
-      status:this.state.status ,
-      narration: this.state.narration,
-      date:this.state.holder.date ,
-      total_amount: this.state.holder.total_amount,
-      discount: this.state.holder.discount,
-      grant_total:this.state.holder.grant_total ,
-      customer:this.state.customerList.filter(item=>item.name === this.state.selectedName)[0].id ,
-      branch : this.state.branchList.filter(item=>item.branch === this.state.selectedBranch)[0].id,
-    }
-    console.log(Data)
-
-    this.props.editHandler(e,Data)
+    this.props.editHandler(e,this.props.formData)
     console.log(this.props.formData)
-    console.log(this.state.holder)
-
-
   }
 
   addItemHandler=(e)=> {

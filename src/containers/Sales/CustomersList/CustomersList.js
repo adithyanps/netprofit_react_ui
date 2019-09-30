@@ -37,7 +37,7 @@ class CustomersList extends Component {
     this.loadPartner()
   }
   loadPartner=()=>{
-      axios.get('invoice/partner/').then(
+      axios.get('masters/partner/').then(
         res => {
           this.setState({partnerList:res.data.filter(item => item.type !== 'SUPPLIER' )});
         }
@@ -197,7 +197,7 @@ class CustomersList extends Component {
   }
   objEditHandler = (event,objTemp) => {
       event.preventDefault()
-      axios.patch('/invoice/partner/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/partner/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -213,7 +213,7 @@ class CustomersList extends Component {
     const updatedOrders = this.state.partnerList;
     let deleteObject = this.state.partnerList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/partner/'+id).then(
+    axios.delete('masters/partner/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({

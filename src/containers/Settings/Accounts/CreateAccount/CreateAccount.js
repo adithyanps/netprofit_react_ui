@@ -29,7 +29,7 @@ class CreateAccount extends Component {
     }
     console.log(Data)
 
-    axios.post('invoice/account/',Data).then(
+    axios.post('masters/account/',Data).then(
       response=>{
         console.log(response.data)
         this.props.createAccountSuccess(response.data)

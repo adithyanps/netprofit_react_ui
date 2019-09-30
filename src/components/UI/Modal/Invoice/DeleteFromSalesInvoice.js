@@ -32,7 +32,11 @@ class SpotDeleteModal extends React.Component {
                     <tr>
                       <td>{this.props.formData.invoice_no}</td>
                       <td>{this.props.formData.date}</td>
-                      <td>{this.props.formData.customer}</td>
+                      <td>{this.props.customerList.length !==0
+                        ? (this.props.customerList.filter(
+                          item=>item.id === this.props.formData.customer)[0].name)
+                        : (null)
+                      }</td>
                       <td>{this.props.formData.grant_total}</td>
                     </tr>
                   </tbody>

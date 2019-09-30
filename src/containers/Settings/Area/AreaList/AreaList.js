@@ -43,7 +43,7 @@ class AreaList extends Component {
 
   }
   loadAreas=()=>{
-      axios.get('invoice/area/').then(
+      axios.get('masters/area/').then(
         res => {
           this.setState({areaList:res.data});
         }
@@ -204,7 +204,7 @@ class AreaList extends Component {
       // event.preventDefault()
       // objTemp.product_Cat =   this.state.product_CatList.map(item=>item.name === objTemp.product_Cat)[0].id
 
-      axios.patch('/invoice/area/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/masters/area/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -220,7 +220,7 @@ class AreaList extends Component {
     const updatedOrders = this.state.areaList;
     let deleteObject = this.state.areaList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/area/'+id).then(
+    axios.delete('masters/area/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -273,7 +273,7 @@ class AreaList extends Component {
     console.log(deleteObject)
     let delIndex = updatedAreas.indexOf(deleteObject[0])
     console.log(delIndex)
-    axios.delete('/invoice/area/'+id).then(
+    axios.delete('/masters/area/'+id).then(
        response => {
          console.log(response.data)
            updatedAreas.splice(delIndex,1)
@@ -290,7 +290,7 @@ class AreaList extends Component {
 spotObjEditHandler=(event,obj)=>{
   let list = []
   list.push(obj)
-  axios.patch('/invoice/area/'+obj.id + '/',obj).then(
+  axios.patch('/masters/area/'+obj.id + '/',obj).then(
     response=>{
       this.props.editAreaSuccess(response.data)
       let updatedProducts = this.state.areaList.map(obj => list.find(o=> o.id === obj.id) || obj)

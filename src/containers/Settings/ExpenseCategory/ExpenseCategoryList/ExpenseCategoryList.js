@@ -43,7 +43,7 @@ class ExpenseCategoryList extends Component {
 
   }
   loadExpenseCategories=()=>{
-      axios.get('invoice/expense-category/').then(
+      axios.get('expenses/expense-category/').then(
         res => {
           this.setState({expenseCategoryList:res.data});
         }
@@ -204,7 +204,7 @@ class ExpenseCategoryList extends Component {
       // event.preventDefault()
       // objTemp.product_Cat =   this.state.product_CatList.map(item=>item.name === objTemp.product_Cat)[0].id
 
-      axios.patch('/invoice/expense-category/' + objTemp.id + '/', objTemp).then(
+      axios.patch('/expenses/expense-category/' + objTemp.id + '/', objTemp).then(
           response => {
               console.log(response.data)
               this.setState({
@@ -220,7 +220,7 @@ class ExpenseCategoryList extends Component {
     const updatedOrders = this.state.expenseCategoryList;
     let deleteObject = this.state.expenseCategoryList.filter(item =>  item.id === id)
     let delIndex = updatedOrders.indexOf(deleteObject[0])
-    axios.delete('invoice/expense-category/'+id).then(
+    axios.delete('expenses/expense-category/'+id).then(
        response => {
            updatedOrders.splice(delIndex,1)
            this.setState({
@@ -273,7 +273,7 @@ class ExpenseCategoryList extends Component {
     console.log(deleteObject)
     let delIndex = updatedExpenseCategories.indexOf(deleteObject[0])
     console.log(delIndex)
-    axios.delete('/invoice/expense-category/'+id).then(
+    axios.delete('/expenses/expense-category/'+id).then(
        response => {
          console.log(response.data)
            updatedExpenseCategories.splice(delIndex,1)
@@ -290,7 +290,7 @@ class ExpenseCategoryList extends Component {
 spotObjEditHandler=(event,obj)=>{
   let list = []
   list.push(obj)
-  axios.patch('/invoice/expense-category/'+obj.id + '/',obj).then(
+  axios.patch('/expenses/expense-category/'+obj.id + '/',obj).then(
     response=>{
       this.props.editExpenseCategorySuccess(response.data)
       let updatedProducts = this.state.expenseCategoryList.map(obj => list.find(o=> o.id === obj.id) || obj)

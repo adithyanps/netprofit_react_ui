@@ -82,7 +82,7 @@ export const getAllAreaData =(areaDataList)=>{
 }
 // export const areaObjDeleteHandler=(id)=>{
 //   return dispatch =>{
-//     axios.delete('/invoice/area/'+ id).then(
+//     axios.delete('/masters/area/'+ id).then(
 //       response => {
 //
 //         dispatch(deleteAreaSuccess())
@@ -96,7 +96,7 @@ export const getAllAreaData =(areaDataList)=>{
 //
 // export const areaObjEditHandler=(e,obj)=>{
 //   return dispatch => {
-//     axios.patch('/invoice/area/' + obj.id + '/',obj).then(
+//     axios.patch('/masters/area/' + obj.id + '/',obj).then(
 //       response => {
 //         console.log(response.data);
 //         dispatch(editAreaSuccess(response.data))
@@ -109,7 +109,7 @@ export const getAllAreaData =(areaDataList)=>{
 
 // export const createArea=(data)=>{
 //   return dispatch => {
-//     axios.post('/invoice/area/',data,{
+//     axios.post('/masters/area/',data,{
 //         headers: {
 //             'Content-Type': 'application/json',
 //         }
@@ -118,7 +118,7 @@ export const getAllAreaData =(areaDataList)=>{
 //         dispatch(createAreaSuccess(response.data))
 //         dispatch(getAllArea())
 //
-//         axios.get('/invoice/area/').then(
+//         axios.get('/masters/area/').then(
 //           response=>{
 //             console.log(response.data)
 //             dispatch(getAllAreaData(response.data))
@@ -136,7 +136,7 @@ export const getAllAreaData =(areaDataList)=>{
 
 export const getAllArea = (data)=>{
   return dispatch => {
-    axios.get('invoice/area/').then(
+    axios.get('masters/area/').then(
       response => {
         console.log(response.data)
 

@@ -25,7 +25,7 @@ class CreateBranch extends Component {
     let Data = {
       branch:this.state.selectedBranch,
     }
-    axios.post('invoice/branch/',Data).then(
+    axios.post('masters/branch/',Data).then(
       response=>{
         console.log(response.data);
         this.props.createBranchSuccess(response.data)
